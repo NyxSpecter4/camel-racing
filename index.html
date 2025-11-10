@@ -534,9 +534,7 @@
   <div class="cloud" style="animation-delay: 20s; top: 8%;"></div>
 
   <div class="gold-bar">
-    <div class="gold-amount">
-      💰 <span id="goldAmount">1000</span> GOLD
-    </div>
+    <div class="gold-amount">💰 <span id="goldAmount">1000</span> GOLD</div>
   </div>
 
   <div class="container">
@@ -629,7 +627,30 @@
       { id: 4, name: 'Dune Dancer', color: '#DEB887', jockey: '👴' }
     ];
 
+    // SAVE GOLD FUNCTIONS (NEW!)
+    function saveGold() {
+      try {
+        localStorage.setItem('duneRushGold', GameState.gold.toString());
+      } catch (e) {
+        // If save fails, game still works fine
+        console.log('Could not save gold');
+      }
+    }
+
+    function loadGold() {
+      try {
+        const savedGold = localStorage.getItem('duneRushGold');
+        if (savedGold !== null) {
+          GameState.gold = parseInt(savedGold) || 1000;
+        }
+      } catch (e) {
+        // If load fails, start with 1000 (default)
+        console.log('Could not load gold');
+      }
+    }
+
     function init() {
+      loadGold(); // Load saved gold on startup
       loadCamels();
       updateGoldDisplay();
     }
@@ -661,6 +682,7 @@
 
     function updateGoldDisplay() {
       document.getElementById('goldAmount').textContent = GameState.gold;
+      saveGold(); // Save gold whenever it changes
     }
 
     function startRace() {
