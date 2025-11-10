@@ -55,50 +55,88 @@
       margin: 10px;
     }
     button:hover { transform: scale(1.05); }
-    .race-container {
+
+    /* Race View */
+    .race-view {
+      display: none;
+      margin: 20px 0;
+    }
+
+    .main-track {
       width: 100%;
-      height: 700px;
-      overflow-x: auto;
-      overflow-y: hidden;
+      height: 500px;
       border: 4px solid #654321;
       border-radius: 10px;
-      margin: 20px auto;
-      background: #000;
+      margin: 20px 0;
+      background: linear-gradient(to bottom, #87CEEB 0%, #F4A460 40%, #D2691E 100%);
+      overflow: hidden;
       position: relative;
-      scroll-behavior: smooth;
     }
+
     canvas {
       display: block;
-      background: #f0e68c;
     }
-    #progressBar {
-      position: fixed;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 90%;
-      max-width: 600px;
-      height: 40px;
-      background: rgba(0,0,0,0.9);
+
+    /* Minimap */
+    .minimap-container {
+      width: 100%;
+      height: 100px;
+      background: rgba(0,0,0,0.8);
       border: 3px solid #FFD700;
-      border-radius: 20px;
-      overflow: hidden;
-      z-index: 1000;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      border-radius: 10px;
+      padding: 10px;
+      margin: 20px 0;
     }
-    #progressFill {
+
+    .minimap {
+      width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, #32CD32, #FFD700);
-      width: 0%;
-      transition: width 0.1s;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      padding-right: 10px;
-      color: #000;
-      font-weight: bold;
-      font-size: 1.1em;
+      background: linear-gradient(to right, #8B4513 0%, #D2691E 50%, #FFD700 100%);
+      border-radius: 5px;
+      position: relative;
+      overflow: hidden;
     }
+
+    .camel-dot {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      top: 50%;
+      transform: translateY(-50%);
+      transition: left 0.1s linear;
+    }
+
+    .finish-line-mini {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 3px;
+      height: 100%;
+      background: #FFD700;
+    }
+
+    /* Leaderboard */
+    .leaderboard {
+      background: rgba(0,0,0,0.7);
+      border: 3px solid #FFD700;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+
+    .leader-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      margin: 5px 0;
+      background: rgba(139, 69, 19, 0.4);
+      border-radius: 8px;
+      border-left: 4px solid;
+    }
+
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(-20px); }
       to { opacity: 1; transform: translateY(0); }
@@ -131,16 +169,31 @@
       </div>
     </div>
 
-    <div class="race-container" style="display: none;" id="raceContainer">
-      <canvas id="raceCanvas"></canvas>
-    </div>
+    <div class="race-view" id="raceView">
+      <h2 style="color: #FFD700; font-size: 2em; margin-bottom: 20px;">🏁 10KM EPIC RACE 🏁</h2>
 
-    <div id="progressBar" style="display: none;">
-      <div id="progressFill">0%</div>
-    </div>
+      <!-- Main Track View -->
+      <div class="main-track">
+        <canvas id="raceCanvas" width="1400" height="500"></canvas>
+      </div>
 
-    <div id="raceStatus" style="color: #32CD32; font-size: 1.5em; margin: 20px 0; display: none;"></div>
-    <button onclick="location.reload()" style="display: none;" id="resetBtn">🔄 NEW RACE</button>
+      <!-- Minimap -->
+      <div class="minimap-container">
+        <h3 style="color: #FFD700; margin-bottom: 10px;">📍 RACE PROGRESS</h3>
+        <div class="minimap" id="minimap">
+          <div class="finish-line-mini"></div>
+        </div>
+      </div>
+
+      <!-- Live Leaderboard -->
+      <div class="leaderboard">
+        <h3 style="color: #FFD700; font-size: 1.5em; margin-bottom: 15px;">🏆 LIVE STANDINGS</h3>
+        <div id="leaderboard"></div>
+      </div>
+
+      <div id="raceStatus" style="color: #32CD32; font-size: 1.5em; margin: 20px 0;"></div>
+      <button onclick="location.reload()" style="display: none;" id="resetBtn">🔄 NEW RACE</button>
+    </div>
   </div>
 
   <script>
@@ -159,116 +212,84 @@
     const RaceEngine = {
       canvas: null,
       ctx: null,
-      container: null,
       camels: [],
       raceInProgress: false,
       winner: null,
-      raceLength: 6000,
-      obstacles: [],
+      raceLength: 10000,
+      viewportX: 0,
 
       init() {
-        this.container = document.getElementById('raceContainer');
-        this.container.style.display = 'block';
         this.canvas = document.getElementById('raceCanvas');
-        this.canvas.width = this.raceLength + 500;
-        this.canvas.height = 700;
         this.ctx = this.canvas.getContext('2d');
 
-        this.camels = CAMELS.map(c => ({
+        this.camels = CAMELS.map((c, i) => ({
           ...c,
-          x: 100,
-          y: 250 + (Math.random() * 200),
+          x: 0,
+          y: 50 + (i * 50),
           speed: c.baseSpeed,
           stamina: 100,
-          distance: 0
+          distance: 0,
+          lane: i
         }));
 
-        this.generateObstacles();
-        this.drawTrack();
+        this.drawScene();
       },
 
-      generateObstacles() {
-        this.obstacles = [];
-        for (let i = 0; i < 25; i++) {
-          this.obstacles.push({
-            x: 300 + Math.random() * (this.raceLength - 500),
-            y: 200 + Math.random() * 400,
-            type: Math.random() > 0.5 ? 'cactus' : 'rock',
-            width: 30,
-            height: 40
-          });
-        }
-      },
-
-      drawTrack() {
+      drawScene() {
         const ctx = this.ctx;
         const canvas = this.canvas;
 
-        // Sky gradient
-        const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height * 0.4);
+        // CLEAR CANVAS - NO STREAKS!
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Sky
+        const gradient = ctx.createLinearGradient(0, 0, 0, 150);
         gradient.addColorStop(0, '#87CEEB');
         gradient.addColorStop(1, '#F4A460');
         ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, canvas.width, canvas.height * 0.4);
+        ctx.fillRect(0, 0, canvas.width, 150);
 
-        // Wavy sand dunes - upper layer
-        ctx.fillStyle = '#F4A460';
+        // Sun
+        ctx.fillStyle = '#FFD700';
         ctx.beginPath();
-        ctx.moveTo(0, canvas.height * 0.4);
-        for (let x = 0; x < canvas.width; x += 20) {
-          const y = canvas.height * 0.4 + Math.sin(x * 0.01) * 40 + 60;
-          ctx.lineTo(x, y);
-        }
-        ctx.lineTo(canvas.width, canvas.height);
-        ctx.lineTo(0, canvas.height);
+        ctx.arc(200, 60, 40, 0, Math.PI * 2);
         ctx.fill();
 
-        // Wavy sand dunes - lower layer
+        // Sand ground
         ctx.fillStyle = '#D2691E';
-        ctx.beginPath();
-        ctx.moveTo(0, canvas.height * 0.6);
-        for (let x = 0; x < canvas.width; x += 20) {
-          const y = canvas.height * 0.6 + Math.sin(x * 0.015 + 2) * 30 + 40;
-          ctx.lineTo(x, y);
+        ctx.fillRect(0, 150, canvas.width, canvas.height - 150);
+
+        // Racing lanes
+        ctx.strokeStyle = 'rgba(139, 69, 19, 0.3)';
+        ctx.lineWidth = 2;
+        for (let i = 0; i < 10; i++) {
+          ctx.beginPath();
+          ctx.moveTo(0, i * 50);
+          ctx.lineTo(canvas.width, i * 50);
+          ctx.stroke();
         }
-        ctx.lineTo(canvas.width, canvas.height);
-        ctx.lineTo(0, canvas.height);
-        ctx.fill();
 
         // Distance markers
-        ctx.fillStyle = 'rgba(255,255,255,0.3)';
-        ctx.font = 'bold 16px Courier';
-        for (let i = 0; i <= this.raceLength; i += 500) {
-          ctx.fillRect(i, 0, 2, canvas.height);
-          ctx.fillStyle = '#fff';
-          ctx.fillText(`${(i/600).toFixed(1)}km`, i + 5, 30);
-          ctx.fillStyle = 'rgba(255,255,255,0.3)';
+        const scale = canvas.width / this.raceLength;
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+        ctx.font = '14px Courier';
+        for (let i = 0; i <= 10; i++) {
+          const x = (i * 1000) * scale;
+          ctx.fillRect(x, 0, 2, canvas.height);
+          ctx.fillStyle = '#FFD700';
+          ctx.fillText(`${i}km`, x + 5, 170);
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
         }
-
-        // Draw obstacles
-        this.obstacles.forEach(obs => {
-          if (obs.type === 'cactus') {
-            ctx.fillStyle = '#228B22';
-            ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
-            ctx.fillRect(obs.x - 10, obs.y + 10, 10, 15);
-            ctx.fillRect(obs.x + obs.width, obs.y + 10, 10, 15);
-          } else {
-            ctx.fillStyle = '#808080';
-            ctx.beginPath();
-            ctx.arc(obs.x + obs.width/2, obs.y + obs.height/2, obs.width/2, 0, Math.PI * 2);
-            ctx.fill();
-          }
-        });
 
         // Finish line
         ctx.fillStyle = '#000';
-        ctx.fillRect(this.raceLength, 0, 100, canvas.height);
-
-        for (let i = 0; i < 12; i++) {
+        const finishX = canvas.width - 50;
+        ctx.fillRect(finishX, 0, 50, canvas.height);
+        for (let i = 0; i < 10; i++) {
           for (let j = 0; j < 2; j++) {
             if ((i + j) % 2 === 0) {
               ctx.fillStyle = '#fff';
-              ctx.fillRect(this.raceLength + (j * 50), i * 60, 50, 60);
+              ctx.fillRect(finishX + (j * 25), i * 50, 25, 50);
             }
           }
         }
@@ -276,92 +297,123 @@
 
       drawCamel(camel) {
         const ctx = this.ctx;
+        const scale = this.canvas.width / this.raceLength;
+        const x = camel.distance * scale;
+        const y = camel.y;
 
+        // Camel body
         ctx.fillStyle = camel.color;
-        ctx.fillRect(camel.x, camel.y, 50, 35);
-        ctx.fillRect(camel.x + 40, camel.y - 18, 18, 28);
+        ctx.fillRect(x, y, 40, 30);
+        ctx.fillRect(x + 32, y - 12, 14, 20);
 
+        // Humps
         ctx.beginPath();
-        ctx.arc(camel.x + 18, camel.y + 5, 13, Math.PI, 0);
+        ctx.arc(x + 15, y + 3, 10, Math.PI, 0);
         ctx.fill();
         ctx.beginPath();
-        ctx.arc(camel.x + 35, camel.y + 5, 10, Math.PI, 0);
+        ctx.arc(x + 28, y + 3, 8, Math.PI, 0);
         ctx.fill();
 
-        ctx.fillRect(camel.x + 10, camel.y + 35, 5, 18);
-        ctx.fillRect(camel.x + 22, camel.y + 35, 5, 18);
-        ctx.fillRect(camel.x + 35, camel.y + 35, 5, 18);
-        ctx.fillRect(camel.x + 47, camel.y + 35, 5, 18);
+        // Legs
+        ctx.fillRect(x + 8, y + 30, 4, 12);
+        ctx.fillRect(x + 18, y + 30, 4, 12);
+        ctx.fillRect(x + 28, y + 30, 4, 12);
+        ctx.fillRect(x + 38, y + 30, 4, 12);
 
-        ctx.font = '28px Arial';
-        ctx.fillText(camel.jockey, camel.x + 20, camel.y + 18);
+        // Jockey
+        ctx.font = '20px Arial';
+        ctx.fillText(camel.jockey, x + 15, y + 18);
 
+        // Name tag
         ctx.fillStyle = '#000';
-        ctx.font = 'bold 11px Courier';
-        ctx.fillText(camel.name, camel.x, camel.y - 25);
+        ctx.font = 'bold 10px Courier';
+        ctx.fillText(camel.name, x - 5, y - 5);
+      },
+
+      updateMinimap() {
+        const minimap = document.getElementById('minimap');
+
+        // Clear existing dots
+        minimap.querySelectorAll('.camel-dot').forEach(dot => dot.remove());
+
+        // Add camel dots
+        this.camels.forEach(camel => {
+          const dot = document.createElement('div');
+          dot.className = 'camel-dot';
+          dot.style.backgroundColor = camel.color;
+          dot.style.left = ((camel.distance / this.raceLength) * 100) + '%';
+          dot.title = camel.name;
+          minimap.appendChild(dot);
+        });
+      },
+
+      updateLeaderboard() {
+        const sorted = [...this.camels].sort((a, b) => b.distance - a.distance);
+        const div = document.getElementById('leaderboard');
+
+        div.innerHTML = sorted.map((camel, i) => {
+          const progress = ((camel.distance / this.raceLength) * 100).toFixed(1);
+          const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}.`;
+
+          return `
+            <div class="leader-item" style="border-left-color: ${camel.color};">
+              <div>
+                <span style="font-size: 1.3em; margin-right: 10px;">${medal}</span>
+                <strong style="color: #FFD700;">${camel.jockey} ${camel.name}</strong>
+              </div>
+              <div style="color: #32CD32; font-weight: bold;">${progress}%</div>
+            </div>
+          `;
+        }).join('');
       },
 
       startRace() {
         this.raceInProgress = true;
-        document.getElementById('progressBar').style.display = 'block';
+        document.getElementById('raceStatus').textContent = '🏁 RACE IN PROGRESS!';
         this.animate();
       },
 
       animate() {
         if (!this.raceInProgress) return;
 
-        this.drawTrack();
+        // Redraw scene
+        this.drawScene();
 
         let raceFinished = false;
-        let leadDistance = 0;
 
+        // Update and draw camels
         this.camels.forEach(camel => {
-          // Speed variation
+          // Speed calculation
           camel.speed = camel.baseSpeed + (Math.random() - 0.5) * 1.5;
 
-          // Stamina system
-          camel.stamina -= 0.08;
+          // Stamina
+          camel.stamina -= 0.05;
           if (camel.stamina < 70) camel.speed *= 0.97;
           if (camel.stamina < 40) camel.speed *= 0.93;
           if (camel.stamina < 20) camel.speed *= 0.88;
 
-          // Random speed bursts
-          if (Math.random() > 0.985) camel.speed *= 1.6;
-
-          // Obstacle collision
-          this.obstacles.forEach(obs => {
-            if (Math.abs(camel.x - obs.x) < 40 && Math.abs(camel.y - obs.y) < 40) {
-              camel.speed *= 0.7;
-            }
-          });
-
-          // Vertical bobbing
-          camel.y += (Math.random() - 0.5) * 2;
-          camel.y = Math.max(200, Math.min(550, camel.y));
+          // Random bursts
+          if (Math.random() > 0.985) camel.speed *= 1.8;
 
           // Move forward
           camel.distance += camel.speed;
-          camel.x = camel.distance;
 
+          // Small vertical wobble
+          camel.y = 50 + (camel.lane * 50) + Math.sin(camel.distance * 0.1) * 3;
+
+          // Draw camel
           this.drawCamel(camel);
 
-          if (camel.distance > leadDistance) leadDistance = camel.distance;
-
-          // Check for finish
-          if (camel.x >= this.raceLength && !this.winner) {
+          // Check finish
+          if (camel.distance >= this.raceLength && !this.winner) {
             this.winner = camel;
             raceFinished = true;
           }
         });
 
-        // Update progress bar
-        const progress = Math.min(100, (leadDistance / this.raceLength) * 100);
-        document.getElementById('progressFill').style.width = progress + '%';
-        document.getElementById('progressFill').textContent = Math.floor(progress) + '%';
-
-        // Auto-scroll to follow leader
-        const scrollPos = Math.max(0, leadDistance - 300);
-        this.container.scrollLeft = scrollPos;
+        // Update UI
+        this.updateMinimap();
+        this.updateLeaderboard();
 
         if (raceFinished) {
           this.finishRace();
@@ -373,23 +425,20 @@
       finishRace() {
         this.raceInProgress = false;
 
-        document.getElementById('raceStatus').style.display = 'block';
         document.getElementById('raceStatus').innerHTML = `
-          🏆 <span style="color: #FFD700;">${this.winner.name}</span> WINS THE 10KM RACE! 🏆<br>
-          <span style="font-size: 0.8em;">Jockey: ${this.winner.jockey}</span>
+          🏆 <span style="color: #FFD700; font-size: 1.3em;">${this.winner.name}</span> WINS! 🏆<br>
+          <span style="font-size: 0.9em;">Jockey: ${this.winner.jockey} | Time: ${(this.raceLength / this.winner.speed).toFixed(1)}s</span>
         `;
 
         document.getElementById('resetBtn').style.display = 'block';
-
-        setTimeout(() => {
-          document.getElementById('progressBar').style.display = 'none';
-        }, 2000);
       }
     };
 
     function startRace() {
       document.querySelector('.village').style.display = 'none';
       document.querySelector('.title').style.display = 'none';
+      document.getElementById('raceView').style.display = 'block';
+
       RaceEngine.init();
       setTimeout(() => RaceEngine.startRace(), 1000);
     }
