@@ -56,7 +56,6 @@
     }
     button:hover { transform: scale(1.05); }
 
-    /* Race View */
     .race-view {
       display: none;
       margin: 20px 0;
@@ -77,7 +76,6 @@
       display: block;
     }
 
-    /* Minimap */
     .minimap-container {
       width: 100%;
       height: 100px;
@@ -117,7 +115,6 @@
       background: #FFD700;
     }
 
-    /* Leaderboard */
     .leaderboard {
       background: rgba(0,0,0,0.7);
       border: 3px solid #FFD700;
@@ -135,6 +132,16 @@
       background: rgba(139, 69, 19, 0.4);
       border-radius: 8px;
       border-left: 4px solid;
+    }
+
+    .race-conditions {
+      background: rgba(0,0,0,0.7);
+      border: 2px solid #FFD700;
+      border-radius: 10px;
+      padding: 15px;
+      margin: 15px 0;
+      color: #FFD700;
+      font-size: 0.9em;
     }
 
     @keyframes fadeIn {
@@ -172,12 +179,12 @@
     <div class="race-view" id="raceView">
       <h2 style="color: #FFD700; font-size: 2em; margin-bottom: 20px;">🏁 10KM EPIC RACE 🏁</h2>
 
-      <!-- Main Track View -->
+      <div class="race-conditions" id="raceConditions"></div>
+
       <div class="main-track">
         <canvas id="raceCanvas" width="1400" height="500"></canvas>
       </div>
 
-      <!-- Minimap -->
       <div class="minimap-container">
         <h3 style="color: #FFD700; margin-bottom: 10px;">📍 RACE PROGRESS</h3>
         <div class="minimap" id="minimap">
@@ -185,7 +192,6 @@
         </div>
       </div>
 
-      <!-- Live Leaderboard -->
       <div class="leaderboard">
         <h3 style="color: #FFD700; font-size: 1.5em; margin-bottom: 15px;">🏆 LIVE STANDINGS</h3>
         <div id="leaderboard"></div>
@@ -197,16 +203,17 @@
   </div>
 
   <script>
+    // ALL CAMELS SAME BASE SPEED!
     const CAMELS = [
-      { id: 0, name: 'Desert Storm', baseSpeed: 3.5, color: '#8B4513', jockey: '👳' },
-      { id: 1, name: 'Sand Runner', baseSpeed: 3.2, color: '#D2691E', jockey: '🧔' },
-      { id: 2, name: 'Golden Wind', baseSpeed: 3.8, color: '#DAA520', jockey: '👨' },
-      { id: 3, name: 'Oasis King', baseSpeed: 3.3, color: '#CD853F', jockey: '🧑' },
-      { id: 4, name: 'Dune Dancer', baseSpeed: 3.6, color: '#DEB887', jockey: '👴' },
-      { id: 5, name: 'Mirage Master', baseSpeed: 3.9, color: '#F4A460', jockey: '🧓' },
-      { id: 6, name: 'Swift Sands', baseSpeed: 3.4, color: '#BC8F8F', jockey: '👲' },
-      { id: 7, name: 'Thunder Hoof', baseSpeed: 3.1, color: '#A0522D', jockey: '🧕' },
-      { id: 8, name: 'Lightning Bolt', baseSpeed: 4.0, color: '#D2B48C', jockey: '👱' }
+      { id: 0, name: 'Desert Storm', color: '#8B4513', jockey: '👳' },
+      { id: 1, name: 'Sand Runner', color: '#D2691E', jockey: '🧔' },
+      { id: 2, name: 'Golden Wind', color: '#DAA520', jockey: '👨' },
+      { id: 3, name: 'Oasis King', color: '#CD853F', jockey: '🧑' },
+      { id: 4, name: 'Dune Dancer', color: '#DEB887', jockey: '👴' },
+      { id: 5, name: 'Mirage Master', color: '#F4A460', jockey: '🧓' },
+      { id: 6, name: 'Swift Sands', color: '#BC8F8F', jockey: '👲' },
+      { id: 7, name: 'Thunder Hoof', color: '#A0522D', jockey: '🧕' },
+      { id: 8, name: 'Lightning Bolt', color: '#D2B48C', jockey: '👱' }
     ];
 
     const RaceEngine = {
@@ -216,30 +223,83 @@
       raceInProgress: false,
       winner: null,
       raceLength: 10000,
-      viewportX: 0,
+      weather: null,
+      terrain: null,
 
       init() {
         this.canvas = document.getElementById('raceCanvas');
         this.ctx = this.canvas.getContext('2d');
 
+        // Random race conditions
+        this.weather = this.getRandomWeather();
+        this.terrain = this.getRandomTerrain();
+
+        // Show conditions
+        document.getElementById('raceConditions').innerHTML = `
+          🌡️ Weather: <strong>${this.weather.name}</strong> |
+          🏜️ Terrain: <strong>${this.terrain.name}</strong>
+        `;
+
+        // Initialize camels with SAME base speed but different random factors
         this.camels = CAMELS.map((c, i) => ({
           ...c,
           x: 0,
           y: 50 + (i * 50),
-          speed: c.baseSpeed,
+
+          // BASE SPEED - ALL SAME!
+          baseSpeed: 3.5,
+
+          // RANDOM FACTORS FOR THIS RACE
+          todaysForm: 0.85 + Math.random() * 0.3, // 0.85 - 1.15 (how good they feel today)
+          maxStamina: 80 + Math.random() * 40, // 80-120 (some have better endurance)
+          staminaDrain: 0.04 + Math.random() * 0.03, // 0.04-0.07 (how fast they tire)
+          recoveryRate: 0.02 + Math.random() * 0.03, // 0.02-0.05 (how fast they recover)
+          consistency: 0.7 + Math.random() * 0.6, // 0.7-1.3 (consistent vs volatile)
+          burstChance: 0.01 + Math.random() * 0.02, // 0.01-0.03 (chance of speed burst)
+          stumbleChance: 0.005 + Math.random() * 0.01, // 0.005-0.015 (bad luck)
+          weatherPreference: Math.random(), // how much they like this weather
+          terrainPreference: Math.random(), // how much they like this terrain
+          startingReaction: 0.9 + Math.random() * 0.2, // 0.9-1.1 (start speed)
+
+          // Current state
           stamina: 100,
+          speed: 3.5,
           distance: 0,
-          lane: i
+          lane: i,
+          isStumbling: false,
+          stumbleTimer: 0,
+          burstTimer: 0
         }));
 
         this.drawScene();
+      },
+
+      getRandomWeather() {
+        const weathers = [
+          { name: 'Clear Skies ☀️', multiplier: 1.0 },
+          { name: 'Windy 💨', multiplier: 0.95 },
+          { name: 'Hot Day 🔥', multiplier: 0.92 },
+          { name: 'Cool Morning 🌤️', multiplier: 1.05 },
+          { name: 'Sandstorm 🌪️', multiplier: 0.85 }
+        ];
+        return weathers[Math.floor(Math.random() * weathers.length)];
+      },
+
+      getRandomTerrain() {
+        const terrains = [
+          { name: 'Soft Sand 🏖️', multiplier: 0.95 },
+          { name: 'Hard Packed 🪨', multiplier: 1.05 },
+          { name: 'Mixed Dunes 🏜️', multiplier: 1.0 },
+          { name: 'Rocky Path ⛰️', multiplier: 0.9 },
+          { name: 'Smooth Track 🛤️', multiplier: 1.08 }
+        ];
+        return terrains[Math.floor(Math.random() * terrains.length)];
       },
 
       drawScene() {
         const ctx = this.ctx;
         const canvas = this.canvas;
 
-        // CLEAR CANVAS - NO STREAKS!
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         // Sky
@@ -301,42 +361,52 @@
         const x = camel.distance * scale;
         const y = camel.y;
 
+        // Stumble effect
+        const wobble = camel.isStumbling ? Math.sin(Date.now() * 0.1) * 5 : 0;
+
         // Camel body
         ctx.fillStyle = camel.color;
-        ctx.fillRect(x, y, 40, 30);
-        ctx.fillRect(x + 32, y - 12, 14, 20);
+        ctx.fillRect(x, y + wobble, 40, 30);
+        ctx.fillRect(x + 32, y - 12 + wobble, 14, 20);
 
         // Humps
         ctx.beginPath();
-        ctx.arc(x + 15, y + 3, 10, Math.PI, 0);
+        ctx.arc(x + 15, y + 3 + wobble, 10, Math.PI, 0);
         ctx.fill();
         ctx.beginPath();
-        ctx.arc(x + 28, y + 3, 8, Math.PI, 0);
+        ctx.arc(x + 28, y + 3 + wobble, 8, Math.PI, 0);
         ctx.fill();
 
         // Legs
-        ctx.fillRect(x + 8, y + 30, 4, 12);
-        ctx.fillRect(x + 18, y + 30, 4, 12);
-        ctx.fillRect(x + 28, y + 30, 4, 12);
-        ctx.fillRect(x + 38, y + 30, 4, 12);
+        ctx.fillRect(x + 8, y + 30 + wobble, 4, 12);
+        ctx.fillRect(x + 18, y + 30 + wobble, 4, 12);
+        ctx.fillRect(x + 28, y + 30 + wobble, 4, 12);
+        ctx.fillRect(x + 38, y + 30 + wobble, 4, 12);
 
         // Jockey
         ctx.font = '20px Arial';
-        ctx.fillText(camel.jockey, x + 15, y + 18);
+        ctx.fillText(camel.jockey, x + 15, y + 18 + wobble);
 
-        // Name tag
+        // Name and status
         ctx.fillStyle = '#000';
         ctx.font = 'bold 10px Courier';
         ctx.fillText(camel.name, x - 5, y - 5);
+
+        // Status indicators
+        if (camel.burstTimer > 0) {
+          ctx.fillStyle = '#FFD700';
+          ctx.fillText('⚡BURST!', x - 5, y - 15);
+        }
+        if (camel.isStumbling) {
+          ctx.fillStyle = '#FF0000';
+          ctx.fillText('💫STUMBLE', x - 5, y - 15);
+        }
       },
 
       updateMinimap() {
         const minimap = document.getElementById('minimap');
-
-        // Clear existing dots
         minimap.querySelectorAll('.camel-dot').forEach(dot => dot.remove());
 
-        // Add camel dots
         this.camels.forEach(camel => {
           const dot = document.createElement('div');
           dot.className = 'camel-dot';
@@ -355,11 +425,17 @@
           const progress = ((camel.distance / this.raceLength) * 100).toFixed(1);
           const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}.`;
 
+          let status = '';
+          if (camel.burstTimer > 0) status = '⚡';
+          if (camel.isStumbling) status = '💫';
+          if (camel.stamina < 30) status = '😓';
+
           return `
             <div class="leader-item" style="border-left-color: ${camel.color};">
               <div>
                 <span style="font-size: 1.3em; margin-right: 10px;">${medal}</span>
                 <strong style="color: #FFD700;">${camel.jockey} ${camel.name}</strong>
+                <span style="margin-left: 10px;">${status}</span>
               </div>
               <div style="color: #32CD32; font-weight: bold;">${progress}%</div>
             </div>
@@ -376,42 +452,87 @@
       animate() {
         if (!this.raceInProgress) return;
 
-        // Redraw scene
         this.drawScene();
 
         let raceFinished = false;
 
-        // Update and draw camels
         this.camels.forEach(camel => {
-          // Speed calculation
-          camel.speed = camel.baseSpeed + (Math.random() - 0.5) * 1.5;
+          // Calculate speed with ALL factors
+          let speedMultiplier = 1.0;
 
-          // Stamina
-          camel.stamina -= 0.05;
-          if (camel.stamina < 70) camel.speed *= 0.97;
-          if (camel.stamina < 40) camel.speed *= 0.93;
-          if (camel.stamina < 20) camel.speed *= 0.88;
+          // Today's form (biggest factor)
+          speedMultiplier *= camel.todaysForm;
 
-          // Random bursts
-          if (Math.random() > 0.985) camel.speed *= 1.8;
+          // Starting reaction (first 1000m)
+          if (camel.distance < 1000) {
+            speedMultiplier *= camel.startingReaction;
+          }
+
+          // Weather effect
+          const weatherFit = 0.8 + (camel.weatherPreference * 0.4);
+          speedMultiplier *= (weatherFit * this.weather.multiplier);
+
+          // Terrain effect
+          const terrainFit = 0.8 + (camel.terrainPreference * 0.4);
+          speedMultiplier *= (terrainFit * this.terrain.multiplier);
+
+          // Stamina effect (gets worse as stamina drops)
+          const staminaFactor = Math.max(0.6, camel.stamina / 100);
+          speedMultiplier *= staminaFactor;
+
+          // Random variation (consistency factor)
+          const randomness = (Math.random() - 0.5) * (2 - camel.consistency);
+          speedMultiplier *= (1 + randomness * 0.15);
+
+          // Speed burst!
+          if (Math.random() < camel.burstChance && camel.burstTimer === 0) {
+            camel.burstTimer = 60; // 60 frames of burst
+          }
+          if (camel.burstTimer > 0) {
+            speedMultiplier *= 1.5;
+            camel.burstTimer--;
+          }
+
+          // Stumble!
+          if (Math.random() < camel.stumbleChance && !camel.isStumbling) {
+            camel.isStumbling = true;
+            camel.stumbleTimer = 40; // 40 frames of stumble
+          }
+          if (camel.isStumbling) {
+            speedMultiplier *= 0.3;
+            camel.stumbleTimer--;
+            if (camel.stumbleTimer <= 0) {
+              camel.isStumbling = false;
+            }
+          }
+
+          // Apply speed
+          camel.speed = camel.baseSpeed * speedMultiplier;
+
+          // Stamina drain
+          camel.stamina -= camel.staminaDrain;
+
+          // Stamina recovery (if high stamina)
+          if (camel.stamina < camel.maxStamina) {
+            camel.stamina += camel.recoveryRate;
+          }
+
+          camel.stamina = Math.max(0, Math.min(camel.maxStamina, camel.stamina));
 
           // Move forward
           camel.distance += camel.speed;
 
-          // Small vertical wobble
+          // Wobble
           camel.y = 50 + (camel.lane * 50) + Math.sin(camel.distance * 0.1) * 3;
 
-          // Draw camel
           this.drawCamel(camel);
 
-          // Check finish
           if (camel.distance >= this.raceLength && !this.winner) {
             this.winner = camel;
             raceFinished = true;
           }
         });
 
-        // Update UI
         this.updateMinimap();
         this.updateLeaderboard();
 
@@ -427,7 +548,11 @@
 
         document.getElementById('raceStatus').innerHTML = `
           🏆 <span style="color: #FFD700; font-size: 1.3em;">${this.winner.name}</span> WINS! 🏆<br>
-          <span style="font-size: 0.9em;">Jockey: ${this.winner.jockey} | Time: ${(this.raceLength / this.winner.speed).toFixed(1)}s</span>
+          <span style="font-size: 0.9em;">Jockey: ${this.winner.jockey}</span><br>
+          <span style="font-size: 0.8em; color: #aaa;">
+            Form: ${(this.winner.todaysForm * 100).toFixed(0)}% |
+            Final Stamina: ${this.winner.stamina.toFixed(0)}%
+          </span>
         `;
 
         document.getElementById('resetBtn').style.display = 'block';
