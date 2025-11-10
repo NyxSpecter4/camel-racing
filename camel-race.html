@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Camel Racing Betting Game</title>
+  <style>
+    body { background:#222; color:#fff; font-family:'Courier New', monospace; text-align:center; }
+    canvas { background:#eee; display:block; margin:20px auto; border:3px solid #333; }
+    .hud { margin:20px; }
+    button { margin:5px; padding:10px 20px; font-weight:bold; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <h1>🐪 Camel Racing</h1>
+  <div class="hud">
+    <p>Choose your camel and place a bet!</p>
+    <button onclick="placeBet(0)">Bet on Camel 1</button>
+    <button onclick="placeBet(1)">Bet on Camel 2</button>
+    <button onclick="placeBet(2)">Bet on Camel 3</button>
+    <p id="status">No bet placed.</p>
+  </div>
+  <canvas id="raceCanvas" width="800" height="400"></canvas>
+
+  <script>
+    const canvas = document.getElementById('raceCanvas');
+    const ctx = canvas.getContext('2d');
+    const camels = [
+      {x:0,y:50,color:'brown'},
+      {x:0,y:150,color:'orange'},
+      {x:0,y:250,color:'gold'}
+    ];
+    let betCamel = null;
+    let raceRunning = false;
+
+    function placeBet(index){
+      if(raceRunning) return;
+      betCamel = index;
+      document.getElementById('status').textContent = `Bet placed on Camel ${index+1}. Click canvas to start race!`;
+    }
+
+    canvas.addEventListener('click', startRace);
+
+    function startRace(){
+      if(betCamel===null || raceRunning) return;
+      raceRunning = true;
+      requestAnimationFrame(raceLoop);
+    }
+
+    function raceLoop(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      let winner = null;
+      camels.forEach((c,i)=>{
+        c.x += Math.random()*5; // random speed
+        ctx.fillStyle = c.color;
+        ctx.fillRect(c.x,c.y,40,30);
+        ctx.fillText(`Camel ${i+1}`,c.x, c.y-10);
+        if(c.x+40 >= canvas.width){ winner=i; }
+      });
+      if(winner!==null){
+        raceRunning=false;
+        if(winner===betCamel){
+          document.getElementById('status').textContent = `🎉 Camel ${winner+1} wins! You won your bet!`;
+        } else {
+          document.getElementById('status').textContent = `❌ Camel ${winner+1} wins. You lost your bet.`;
+        }
+        return;
+      }
+      requestAnimationFrame(raceLoop);
+    }
+  </script>
+</body>
+</html>
