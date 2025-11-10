@@ -3,14 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🏜️ Dune Rush - Casino Racing</title>
+  <title>🏜️ Dune Rush - Enhanced Racing</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: 'Courier New', monospace;
-      background: linear-gradient(to bottom, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
       min-height: 100vh;
       color: #fff;
+      overflow-x: hidden;
     }
 
     .container { max-width: 1400px; margin: 0 auto; padding: 20px; text-align: center; }
@@ -20,8 +21,10 @@
       top: 0;
       left: 0;
       right: 0;
-      background: rgba(0,0,0,0.9);
-      border-bottom: 3px solid #FFD700;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(15px);
+      border-bottom: 3px solid rgba(255, 215, 0, 0.5);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
       padding: 15px;
       text-align: center;
       z-index: 1000;
@@ -31,24 +34,37 @@
       color: #FFD700;
       font-size: 2em;
       font-weight: bold;
-      text-shadow: 0 0 10px #FFD700;
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+      animation: goldPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes goldPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
     }
 
     .betting-screen {
       max-width: 600px;
       margin: 100px auto;
-      background: rgba(0,0,0,0.9);
-      border: 4px solid #FFD700;
-      border-radius: 20px;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(20px);
+      border: 2px solid rgba(255, 215, 0, 0.3);
+      border-radius: 30px;
       padding: 40px;
-      box-shadow: 0 0 50px rgba(255,215,0,0.3);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.7);
+      animation: slideUp 0.5s ease-out;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .betting-screen h1 {
       color: #FFD700;
       font-size: 2.5em;
       margin-bottom: 30px;
-      text-shadow: 0 0 20px #FF8C00;
+      text-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
     }
 
     .camel-grid {
@@ -59,23 +75,26 @@
     }
 
     .camel-option {
-      background: rgba(139,69,19,0.5);
-      border: 3px solid #654321;
-      border-radius: 15px;
+      background: linear-gradient(135deg, rgba(139,69,19,0.6), rgba(101,67,33,0.4));
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 215, 0, 0.2);
+      border-radius: 20px;
       padding: 20px;
       cursor: pointer;
-      transition: all 0.3s;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
     .camel-option:hover {
       border-color: #FFD700;
-      transform: scale(1.05);
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
     }
 
     .camel-option.selected {
       border-color: #FFD700;
-      background: rgba(255,215,0,0.3);
-      box-shadow: 0 0 20px rgba(255,215,0,0.5);
+      background: linear-gradient(135deg, rgba(255,215,0,0.3), rgba(255,140,0,0.2));
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+      transform: scale(1.05);
     }
 
     .camel-option h3 {
@@ -85,10 +104,12 @@
     }
 
     .bet-controls {
-      background: rgba(0,0,0,0.5);
-      border-radius: 15px;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
       padding: 25px;
       margin: 30px 0;
+      border: 1px solid rgba(255, 215, 0, 0.2);
     }
 
     .bet-controls h3 {
@@ -101,13 +122,20 @@
       width: 100%;
       padding: 15px;
       font-size: 1.5em;
-      border: 3px solid #FFD700;
-      border-radius: 10px;
-      background: rgba(0,0,0,0.7);
+      border: 2px solid rgba(255, 215, 0, 0.5);
+      border-radius: 15px;
+      background: rgba(0, 0, 0, 0.7);
       color: #FFD700;
       text-align: center;
-      font-family: 'Courier New', monospace;
+      font-family: 'Segoe UI', sans-serif;
       margin-bottom: 15px;
+      transition: all 0.3s;
+    }
+
+    .bet-amount:focus {
+      outline: none;
+      border-color: #FFD700;
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
     }
 
     .bet-buttons {
@@ -118,20 +146,21 @@
     }
 
     .bet-btn {
-      background: linear-gradient(135deg, #8B4513, #654321);
+      background: linear-gradient(135deg, rgba(139,69,19,0.8), rgba(101,67,33,0.6));
       color: #FFD700;
-      border: 2px solid #654321;
+      border: 2px solid rgba(255, 215, 0, 0.3);
       padding: 12px;
       font-size: 1.1em;
       font-weight: bold;
-      border-radius: 8px;
+      border-radius: 12px;
       cursor: pointer;
-      font-family: 'Courier New', monospace;
+      transition: all 0.3s;
     }
 
     .bet-btn:hover {
       border-color: #FFD700;
-      transform: scale(1.05);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
     }
 
     button {
@@ -141,23 +170,24 @@
       padding: 20px 50px;
       font-size: 1.5em;
       font-weight: bold;
-      border-radius: 15px;
+      border-radius: 20px;
       cursor: pointer;
-      font-family: 'Courier New', monospace;
       width: 100%;
       margin-top: 20px;
       transition: all 0.3s;
+      box-shadow: 0 5px 25px rgba(255, 215, 0, 0.4);
     }
 
     button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 5px 25px rgba(255,215,0,0.5);
+      transform: translateY(-5px);
+      box-shadow: 0 10px 40px rgba(255, 215, 0, 0.6);
     }
 
     .payout-info {
       background: rgba(139,69,19,0.3);
-      border: 2px solid #654321;
-      border-radius: 10px;
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 215, 0, 0.2);
+      border-radius: 15px;
       padding: 20px;
       margin: 20px 0;
       text-align: left;
@@ -173,64 +203,207 @@
       display: flex;
       justify-content: space-between;
       padding: 8px 0;
-      border-bottom: 1px solid rgba(255,215,0,0.2);
+      border-bottom: 1px solid rgba(255, 215, 0, 0.2);
     }
 
+    /* RACE VIEW - ENHANCED! */
     .race-view {
       display: none;
-      margin-top: 100px;
-    }
-
-    .race-info {
-      background: rgba(0,0,0,0.9);
-      border: 3px solid #FFD700;
-      border-radius: 15px;
-      padding: 20px;
-      margin-bottom: 20px;
-    }
-
-    .race-canvas-container {
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 100%;
-      height: 500px;
-      border: 4px solid #FF8C00;
-      border-radius: 15px;
-      background: #000;
-      position: relative;
+      height: 100%;
+      background: linear-gradient(to bottom, #87CEEB 0%, #F4A460 100%);
+      z-index: 10;
       overflow: hidden;
     }
 
-    canvas {
+    .race-background {
       position: absolute;
       top: 0;
       left: 0;
+      width: 100%;
+      height: 100%;
     }
 
-    .race-stats {
-      background: rgba(0,0,0,0.9);
-      border: 3px solid #FFD700;
-      border-radius: 15px;
-      padding: 20px;
-      margin-top: 20px;
+    .sky-layer {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 40%;
+      background: linear-gradient(to bottom, #87CEEB, #F4A460);
+      animation: skyFloat 60s linear infinite;
+    }
+
+    .mountains-layer {
+      position: absolute;
+      bottom: 40%;
+      width: 100%;
+      height: 200px;
+      background: repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 150px,
+        rgba(139, 115, 85, 0.6) 150px,
+        rgba(139, 115, 85, 0.6) 300px
+      );
+      animation: parallaxSlow 20s linear infinite;
+    }
+
+    .ground-layer {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 60%;
+      background: linear-gradient(to bottom, #F4A460, #DEB887, #D2691E);
+    }
+
+    @keyframes parallaxSlow {
+      from { background-position: 0 0; }
+      to { background-position: -600px 0; }
+    }
+
+    .race-track {
+      position: absolute;
+      bottom: 10%;
+      left: 0;
+      width: 100%;
+      height: 60%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      padding: 20px 0;
+    }
+
+    .lane {
+      position: relative;
+      height: 18%;
+      border-bottom: 2px dashed rgba(255, 215, 0, 0.3);
+    }
+
+    .camel-racer {
+      position: absolute;
+      left: 5%;
+      bottom: 10px;
+      font-size: 4em;
+      transition: left 0.1s linear;
+      animation: camelBounce 0.5s ease-in-out infinite;
+      filter: drop-shadow(5px 5px 10px rgba(0,0,0,0.5));
+    }
+
+    @keyframes camelBounce {
+      0%, 100% { transform: translateY(0) rotate(-2deg); }
+      50% { transform: translateY(-8px) rotate(2deg); }
+    }
+
+    .camel-racer.player {
+      animation: camelBounce 0.5s ease-in-out infinite, playerGlow 1.5s ease-in-out infinite;
+      font-size: 4.5em;
+    }
+
+    @keyframes playerGlow {
+      0%, 100% { filter: drop-shadow(0 0 10px #FFD700) drop-shadow(5px 5px 10px rgba(0,0,0,0.5)); }
+      50% { filter: drop-shadow(0 0 25px #FFD700) drop-shadow(5px 5px 10px rgba(0,0,0,0.5)); }
+    }
+
+    .dust-trail {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      background: radial-gradient(circle, rgba(210, 180, 140, 0.6), transparent);
+      border-radius: 50%;
+      animation: dustFade 1s ease-out forwards;
+    }
+
+    @keyframes dustFade {
+      from { opacity: 1; transform: scale(0.5); }
+      to { opacity: 0; transform: scale(2); }
+    }
+
+    .finish-line {
+      position: absolute;
+      right: 5%;
+      top: 0;
+      width: 80px;
+      height: 100%;
+      background: repeating-linear-gradient(
+        0deg,
+        #000 0px,
+        #000 40px,
+        #fff 40px,
+        #fff 80px
+      );
+      box-shadow: 0 0 30px rgba(0,0,0,0.5);
+      animation: finishShimmer 2s ease-in-out infinite;
+    }
+
+    @keyframes finishShimmer {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.8; }
+    }
+
+    .race-hud {
+      position: absolute;
+      top: 80px;
+      left: 20px;
+      right: 20px;
+      display: flex;
+      justify-content: space-between;
+      z-index: 100;
+    }
+
+    .hud-panel {
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(15px);
+      border: 2px solid rgba(255, 215, 0, 0.4);
+      border-radius: 20px;
+      padding: 20px 30px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+
+    .hud-stat {
+      color: #FFD700;
+      font-size: 1.4em;
+      margin: 8px 0;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.8);
     }
 
     .race-result {
-      display: none;
-      background: rgba(0,0,0,0.95);
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(20px);
       border: 4px solid #FFD700;
-      border-radius: 20px;
-      padding: 40px;
-      margin: 30px auto;
-      max-width: 600px;
+      border-radius: 30px;
+      padding: 60px;
+      display: none;
+      z-index: 200;
       text-align: center;
+      box-shadow: 0 10px 60px rgba(255, 215, 0, 0.5);
+      animation: resultPopIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes resultPopIn {
+      0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+      100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
     }
 
     .race-result h2 {
-      font-size: 2.5em;
+      font-size: 3.5em;
       margin-bottom: 20px;
+      animation: resultPulse 1s ease-in-out infinite;
     }
 
-    .race-result.win h2 { color: #32CD32; }
-    .race-result.lose h2 { color: #FF6347; }
+    @keyframes resultPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .race-result.win h2 { color: #32CD32; text-shadow: 0 0 30px #32CD32; }
+    .race-result.lose h2 { color: #FF6347; text-shadow: 0 0 30px #FF6347; }
   </style>
 </head>
 <body>
@@ -240,7 +413,7 @@
 
   <div class="container">
     <div id="bettingScreen" class="betting-screen">
-      <h1>🎰 PLACE YOUR BET</h1>
+      <h1>🏜️ DUNE RUSH</h1>
 
       <p style="color: #FF8C00; font-size: 1.2em; margin-bottom: 20px;">
         Pick a camel and bet to race!
@@ -284,40 +457,38 @@
         🏁 START RACE (30 SECONDS)
       </button>
     </div>
+  </div>
 
-    <div id="raceView" class="race-view">
-      <div class="race-info">
-        <h2 style="color: #FFD700; font-size: 2em;">
-          YOUR BET: <span id="displayBet">50</span> GOLD on <span id="displayCamel">???</span>
-        </h2>
+  <!-- ENHANCED RACE VIEW -->
+  <div id="raceView" class="race-view">
+    <div class="race-background">
+      <div class="sky-layer"></div>
+      <div class="mountains-layer"></div>
+      <div class="ground-layer"></div>
+    </div>
+
+    <div class="race-track" id="raceTrack">
+      <!-- Lanes will be added by JS -->
+    </div>
+
+    <div class="finish-line"></div>
+
+    <div class="race-hud">
+      <div class="hud-panel">
+        <div class="hud-stat">🏁 Position: <strong id="position">-</strong>/5</div>
+        <div class="hud-stat">📏 Progress: <strong id="progress">0%</strong></div>
       </div>
-
-      <div class="race-canvas-container" id="canvasContainer">
-        <canvas id="raceCanvas"></canvas>
-      </div>
-
-      <div class="race-stats">
-        <div style="display: flex; justify-content: space-around; font-size: 1.3em;">
-          <div>
-            Position: <strong style="color: #FFD700;" id="position">-</strong>
-          </div>
-          <div>
-            Distance: <strong style="color: #32CD32;" id="distance">0.0km</strong> / 5km
-          </div>
-          <div>
-            Progress: <strong style="color: #FF8C00;" id="progress">0%</strong>
-          </div>
-        </div>
-      </div>
-
-      <div id="raceResult" class="race-result">
-        <h2 id="resultText"></h2>
-        <p id="resultDetail" style="font-size: 1.3em; margin: 20px 0;"></p>
-        <button onclick="playAgain()" style="font-size: 1.4em; padding: 25px 60px;">
-          🎰 BET AGAIN
-        </button>
+      <div class="hud-panel">
+        <div class="hud-stat">💰 Bet: <strong id="displayBet">50</strong> Gold</div>
+        <div class="hud-stat">🐪 <strong id="displayCamel">???</strong></div>
       </div>
     </div>
+  </div>
+
+  <div id="raceResult" class="race-result">
+    <h2 id="resultText"></h2>
+    <p id="resultDetail" style="font-size: 1.8em; margin: 30px 0; color: #FFD700;"></p>
+    <button onclick="playAgain()">🎰 BET AGAIN</button>
   </div>
 
   <script>
@@ -328,11 +499,11 @@
     };
 
     const CAMELS = [
-      { id: 0, name: 'Desert Storm', color: '#8B4513', jockey: '👳' },
-      { id: 1, name: 'Sand Runner', color: '#D2691E', jockey: '🧔' },
-      { id: 2, name: 'Golden Wind', color: '#DAA520', jockey: '👨' },
-      { id: 3, name: 'Oasis King', color: '#CD853F', jockey: '🧑' },
-      { id: 4, name: 'Dune Dancer', color: '#DEB887', jockey: '👴' }
+      { id: 0, name: 'Desert Storm', jockey: '🐪' },
+      { id: 1, name: 'Sand Runner', jockey: '🐫' },
+      { id: 2, name: 'Golden Wind', jockey: '🐪' },
+      { id: 3, name: 'Oasis King', jockey: '🐫' },
+      { id: 4, name: 'Dune Dancer', jockey: '🐪' }
     ];
 
     function init() {
@@ -344,7 +515,7 @@
       const grid = document.getElementById('camelGrid');
       grid.innerHTML = CAMELS.map(camel => `
         <div class="camel-option" onclick="selectCamel(${camel.id})">
-          <div style="font-size: 3em;">${camel.jockey}</div>
+          <div style="font-size: 4em;">${camel.jockey}</div>
           <h3>${camel.name}</h3>
           <div style="color: #32CD32; font-size: 1.1em; margin-top: 5px;">
             Odds: ${(3 + Math.random() * 5).toFixed(1)}:1
@@ -406,134 +577,90 @@
       });
     }
 
+    // ENHANCED RACE ENGINE WITH CSS ANIMATIONS!
     const RaceEngine = {
-      canvas: null,
-      ctx: null,
-      container: null,
       camels: [],
-      myCamel: null,
       running: false,
-      raceLength: 5000,
-      cameraX: 0,
+      raceLength: 85, // percentage
 
       init() {
-        this.container = document.getElementById('canvasContainer');
-        this.canvas = document.getElementById('raceCanvas');
+        this.setupLanes();
+        this.startRace();
+      },
 
-        this.canvas.width = this.raceLength + 500;
-        this.canvas.height = 500;
-        this.ctx = this.canvas.getContext('2d');
+      setupLanes() {
+        const track = document.getElementById('raceTrack');
+        track.innerHTML = '';
 
-        this.camels = CAMELS.map((c, i) => ({
-          ...c,
-          x: 50,
-          y: 100 + (i * 70),
-          distance: 0,
-          speed: 4 + Math.random() * 3,
-          baseSpeed: 4 + Math.random() * 3,
-          isMe: i === GameState.selectedCamel
-        }));
+        this.camels = CAMELS.map((camel, i) => {
+          const lane = document.createElement('div');
+          lane.className = 'lane';
 
-        this.myCamel = this.camels[GameState.selectedCamel];
+          const camelEl = document.createElement('div');
+          camelEl.className = 'camel-racer' + (i === GameState.selectedCamel ? ' player' : '');
+          camelEl.textContent = camel.jockey;
+          camelEl.style.left = '5%';
+
+          lane.appendChild(camelEl);
+          track.appendChild(lane);
+
+          return {
+            ...camel,
+            element: camelEl,
+            position: 5,
+            speed: 0.3 + Math.random() * 0.4,
+            baseSpeed: 0.3 + Math.random() * 0.4,
+            isMe: i === GameState.selectedCamel
+          };
+        });
+
         this.running = true;
-
-        setTimeout(() => this.animate(), 500);
       },
 
-      drawScene() {
-        const ctx = this.ctx;
-        const canvas = this.canvas;
-
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        // Sky
-        const skyGrad = ctx.createLinearGradient(0, 0, 0, canvas.height * 0.4);
-        skyGrad.addColorStop(0, '#87CEEB');
-        skyGrad.addColorStop(1, '#F4A460');
-        ctx.fillStyle = skyGrad;
-        ctx.fillRect(0, 0, canvas.width, canvas.height * 0.4);
-
-        // Ground
-        ctx.fillStyle = '#D2691E';
-        ctx.fillRect(0, canvas.height * 0.4, canvas.width, canvas.height * 0.6);
-
-        // Finish line
-        const finishX = canvas.width - 100;
-        ctx.fillStyle = '#000';
-        ctx.fillRect(finishX, 0, 100, canvas.height);
-        for (let i = 0; i < 10; i++) {
-          if (i % 2 === 0) {
-            ctx.fillStyle = '#fff';
-            ctx.fillRect(finishX, i * 50, 100, 50);
-          }
-        }
+      startRace() {
+        this.animate();
       },
 
-      drawCamel(c) {
-        const ctx = this.ctx;
-        const x = 50 + (c.distance / this.raceLength) * (this.canvas.width - 200);
-        const y = c.y;
+      createDust(camel) {
+        const dust = document.createElement('div');
+        dust.className = 'dust-trail';
+        dust.style.left = camel.element.style.left;
+        dust.style.bottom = '10px';
+        camel.element.parentElement.appendChild(dust);
 
-        // Simple camel
-        ctx.fillStyle = c.color;
-        ctx.fillRect(x, y, 60, 40);
-        ctx.fillRect(x + 50, y - 15, 18, 25);
-
-        ctx.beginPath();
-        ctx.arc(x + 20, y + 5, 15, Math.PI, 0);
-        ctx.fill();
-
-        ctx.fillRect(x + 12, y + 40, 6, 20);
-        ctx.fillRect(x + 28, y + 40, 6, 20);
-        ctx.fillRect(x + 44, y + 40, 6, 20);
-
-        ctx.font = '30px Arial';
-        ctx.fillText(c.jockey, x + 20, y + 28);
-
-        if (c.isMe) {
-          ctx.strokeStyle = '#FFD700';
-          ctx.lineWidth = 5;
-          ctx.strokeRect(x - 5, c.y - 25, 70, 90);
-        }
-
-        ctx.fillStyle = '#FFF';
-        ctx.font = 'bold 12px Courier';
-        ctx.fillText(c.name, x, y - 5);
+        setTimeout(() => dust.remove(), 1000);
       },
 
       animate() {
         if (!this.running) return;
 
-        this.drawScene();
-
         let winner = null;
 
-        this.camels.forEach(c => {
-          c.speed = c.baseSpeed + (Math.random() - 0.5) * 2;
-          c.distance += c.speed;
+        this.camels.forEach(camel => {
+          // Speed variation
+          camel.speed = camel.baseSpeed + (Math.random() - 0.5) * 0.2;
+          camel.position += camel.speed;
 
-          this.drawCamel(c);
+          camel.element.style.left = `${camel.position}%`;
 
-          if (c.distance >= this.raceLength && !winner) {
-            winner = c;
+          // Create dust occasionally
+          if (Math.random() < 0.1) {
+            this.createDust(camel);
+          }
+
+          // Check winner
+          if (camel.position >= this.raceLength && !winner) {
+            winner = camel;
           }
         });
 
-        // Camera follows
-        this.cameraX = Math.max(0, Math.min(
-          this.canvas.width - this.container.clientWidth,
-          this.myCamel.distance - (this.container.clientWidth / 3)
-        ));
-        this.canvas.style.transform = `translateX(-${this.cameraX}px)`;
-
-        const sorted = [...this.camels].sort((a, b) => b.distance - a.distance);
+        // Update HUD
+        const sorted = [...this.camels].sort((a, b) => b.position - a.position);
         const pos = sorted.findIndex(c => c.isMe) + 1;
-        const km = (this.myCamel.distance / 1000).toFixed(2);
-        const pct = Math.min(100, ((this.myCamel.distance / this.raceLength) * 100)).toFixed(0);
+        const progress = Math.min(100, (sorted[sorted.findIndex(c => c.isMe)].position / this.raceLength * 100)).toFixed(0);
 
-        document.getElementById('position').textContent = `${pos}/5`;
-        document.getElementById('distance').textContent = `${km}km`;
-        document.getElementById('progress').textContent = `${pct}%`;
+        document.getElementById('position').textContent = pos;
+        document.getElementById('progress').textContent = `${progress}%`;
 
         if (winner) {
           this.finishRace(winner);
@@ -545,7 +672,7 @@
       finishRace(winner) {
         this.running = false;
 
-        const sorted = [...this.camels].sort((a, b) => b.distance - a.distance);
+        const sorted = [...this.camels].sort((a, b) => b.position - a.position);
         const myPos = sorted.findIndex(c => c.isMe) + 1;
 
         let winnings = 0;
@@ -576,11 +703,13 @@
         GameState.gold += winnings;
         updateGoldDisplay();
 
-        const resultDiv = document.getElementById('raceResult');
-        resultDiv.className = `race-result ${resultClass}`;
-        document.getElementById('resultText').textContent = resultMsg;
-        document.getElementById('resultDetail').textContent = detailMsg;
-        resultDiv.style.display = 'block';
+        setTimeout(() => {
+          const resultDiv = document.getElementById('raceResult');
+          resultDiv.className = `race-result ${resultClass}`;
+          document.getElementById('resultText').textContent = resultMsg;
+          document.getElementById('resultDetail').textContent = detailMsg;
+          resultDiv.style.display = 'block';
+        }, 1000);
       }
     };
 
