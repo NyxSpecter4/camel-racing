@@ -15,7 +15,7 @@
 
     .container { max-width: 1400px; margin: 0 auto; padding: 20px; text-align: center; }
 
-    /* Gold Display */
+    /* Gold Bar */
     .gold-bar {
       position: fixed;
       top: 0;
@@ -162,6 +162,11 @@
       transform: none;
     }
 
+    .back-btn {
+      background: linear-gradient(135deg, #666, #444);
+      color: #fff;
+    }
+
     .payout-info {
       background: rgba(139,69,19,0.3);
       border: 2px solid #654321;
@@ -184,11 +189,62 @@
       border-bottom: 1px solid rgba(255,215,0,0.2);
     }
 
-    /* Race screens will be added in next steps */
+    /* Race View */
     .race-view {
       display: none;
-      margin-top: 80px;
+      margin-top: 100px;
     }
+
+    .race-info {
+      background: rgba(0,0,0,0.9);
+      border: 3px solid #FFD700;
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .race-canvas {
+      width: 100%;
+      height: 500px;
+      border: 4px solid #FF8C00;
+      border-radius: 15px;
+      background: #D2691E;
+      position: relative;
+      overflow: hidden;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .race-stats {
+      background: rgba(0,0,0,0.9);
+      border: 3px solid #FFD700;
+      border-radius: 15px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+
+    .race-result {
+      display: none;
+      background: rgba(0,0,0,0.95);
+      border: 4px solid #FFD700;
+      border-radius: 20px;
+      padding: 40px;
+      margin: 30px auto;
+      max-width: 600px;
+      text-align: center;
+    }
+
+    .race-result h2 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
+    }
+
+    .race-result.win h2 { color: #32CD32; }
+    .race-result.lose h2 { color: #FF6347; }
   </style>
 </head>
 <body>
@@ -206,9 +262,7 @@
         Pick a camel and bet to race!
       </p>
 
-      <div class="camel-grid" id="camelGrid">
-        <!-- Filled by JS -->
-      </div>
+      <div class="camel-grid" id="camelGrid"></div>
 
       <div class="bet-controls">
         <h3>💰 BET AMOUNT</h3>
@@ -242,15 +296,41 @@
         </div>
       </div>
 
-      <button onclick="startRace()" id="raceBtn">
+      <button onclick="startRace()">
         🏁 START RACE (90 SECONDS)
       </button>
     </div>
 
-    <!-- Race View (Will add in Step 2) -->
+    <!-- Race View -->
     <div id="raceView" class="race-view">
-      <h2 style="color: #FFD700;">RACE WILL GO HERE IN NEXT STEP!</h2>
-      <button onclick="returnToBetting()">← Back to Betting</button>
+      <div class="race-info">
+        <h2 style="color: #FFD700; font-size: 2em;">
+          YOUR BET: <span id="displayBet">50</span> GOLD on <span id="displayCamel">???</span>
+        </h2>
+      </div>
+
+      <div class="race-canvas">
+        <canvas id="raceCanvas"></canvas>
+      </div>
+
+      <div class="race-stats">
+        <div style="display: flex; justify-content: space-around; font-size: 1.3em;">
+          <div>
+            Position: <strong style="color: #FFD700;" id="position">-</strong>
+          </div>
+          <div>
+            Progress: <strong style="color: #32CD32;" id="progress">0%</strong>
+          </div>
+        </div>
+      </div>
+
+      <div id="raceResult" class="race-result">
+        <h2 id="resultText"></h2>
+        <p id="resultDetail" style="font-size: 1.3em; margin: 20px 0;"></p>
+        <button onclick="playAgain()" style="font-size: 1.4em; padding: 25px 60px;">
+          🎰 BET AGAIN
+        </button>
+      </div>
     </div>
   </div>
 
@@ -264,11 +344,11 @@
 
     // CAMELS
     const CAMELS = [
-      { id: 0, name: 'Desert Storm', color: '#8B4513', jockey: '👳', odds: '5:1' },
-      { id: 1, name: 'Sand Runner', color: '#D2691E', jockey: '🧔', odds: '7:1' },
-      { id: 2, name: 'Golden Wind', color: '#DAA520', jockey: '👨', odds: '4:1' },
-      { id: 3, name: 'Oasis King', color: '#CD853F', jockey: '🧑', odds: '6:1' },
-      { id: 4, name: 'Dune Dancer', color: '#DEB887', jockey: '👴', odds: '8:1' }
+      { id: 0, name: 'Desert Storm', color: '#8B4513', jockey: '👳' },
+      { id: 1, name: 'Sand Runner', color: '#D2691E', jockey: '🧔' },
+      { id: 2, name: 'Golden Wind', color: '#DAA520', jockey: '👨' },
+      { id: 3, name: 'Oasis King', color: '#CD853F', jockey: '🧑' },
+      { id: 4, name: 'Dune Dancer', color: '#DEB887', jockey: '👴' }
     ];
 
     // Initialize
@@ -284,7 +364,7 @@
           <div style="font-size: 3em;">${camel.jockey}</div>
           <h3>${camel.name}</h3>
           <div style="color: #32CD32; font-size: 1.1em; margin-top: 5px;">
-            Odds: ${camel.odds}
+            Odds: ${(3 + Math.random() * 5).toFixed(1)}:1
           </div>
         </div>
       `).join('');
@@ -292,13 +372,9 @@
 
     function selectCamel(id) {
       GameState.selectedCamel = id;
-
-      // Update UI
       document.querySelectorAll('.camel-option').forEach((el, i) => {
         el.classList.toggle('selected', i === id);
       });
-
-      console.log('Selected:', CAMELS[id].name);
     }
 
     function setBet(amount) {
@@ -311,28 +387,16 @@
     }
 
     function startRace() {
-      // Get bet amount
       const betInput = document.getElementById('betInput');
       GameState.betAmount = parseInt(betInput.value) || 50;
 
-      // Validation
       if (GameState.selectedCamel === null) {
         alert('🐪 Pick a camel first!');
         return;
       }
 
-      if (GameState.betAmount < 10) {
-        alert('❌ Minimum bet is 10 gold!');
-        return;
-      }
-
-      if (GameState.betAmount > GameState.gold) {
-        alert('❌ Not enough gold!');
-        return;
-      }
-
-      if (GameState.betAmount > 500) {
-        alert('❌ Maximum bet is 500 gold!');
+      if (GameState.betAmount < 10 || GameState.betAmount > GameState.gold || GameState.betAmount > 500) {
+        alert('❌ Invalid bet amount!');
         return;
       }
 
@@ -340,19 +404,20 @@
       GameState.gold -= GameState.betAmount;
       updateGoldDisplay();
 
-      // Show race (will implement in next step)
-      alert(`✅ Bet placed! ${GameState.betAmount} gold on ${CAMELS[GameState.selectedCamel].name}\n\n(Race will be added in next step!)`);
+      // Update display
+      document.getElementById('displayBet').textContent = GameState.betAmount;
+      document.getElementById('displayCamel').textContent = CAMELS[GameState.selectedCamel].name;
 
-      // For now, just show race view
+      // Show race
       document.getElementById('bettingScreen').style.display = 'none';
       document.getElementById('raceView').style.display = 'block';
+
+      // Start race engine
+      RaceEngine.init();
     }
 
-    function returnToBetting() {
-      // Refund for testing
-      GameState.gold += GameState.betAmount;
-      updateGoldDisplay();
-
+    function playAgain() {
+      document.getElementById('raceResult').style.display = 'none';
       document.getElementById('raceView').style.display = 'none';
       document.getElementById('bettingScreen').style.display = 'block';
 
@@ -362,6 +427,175 @@
         el.classList.remove('selected');
       });
     }
+
+    // RACE ENGINE
+    const RaceEngine = {
+      canvas: null,
+      ctx: null,
+      camels: [],
+      myCamel: null,
+      running: false,
+      raceLength: 1200,
+
+      init() {
+        this.canvas = document.getElementById('raceCanvas');
+        this.canvas.width = 1400;
+        this.canvas.height = 500;
+        this.ctx = this.canvas.getContext('2d');
+
+        // Create camels with random speeds
+        this.camels = CAMELS.map((c, i) => ({
+          ...c,
+          x: 50,
+          y: 80 + (i * 85),
+          distance: 0,
+          speed: 2 + Math.random() * 2,
+          baseSpeed: 2 + Math.random() * 2,
+          isMe: i === GameState.selectedCamel
+        }));
+
+        this.myCamel = this.camels[GameState.selectedCamel];
+        this.running = true;
+
+        setTimeout(() => this.animate(), 500);
+      },
+
+      animate() {
+        if (!this.running) return;
+
+        const ctx = this.ctx;
+        const canvas = this.canvas;
+
+        // Clear
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Ground
+        ctx.fillStyle = '#D2691E';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Finish line
+        const finishX = canvas.width - 100;
+        ctx.fillStyle = '#000';
+        ctx.fillRect(finishX, 0, 100, canvas.height);
+        for (let i = 0; i < 10; i++) {
+          if (i % 2 === 0) {
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(finishX, i * 50, 100, 50);
+          }
+        }
+
+        let winner = null;
+
+        // Draw camels
+        this.camels.forEach(c => {
+          // Random speed variation
+          c.speed = c.baseSpeed + (Math.random() - 0.5) * 1.5;
+          c.distance += c.speed;
+
+          const x = 50 + (c.distance / this.raceLength) * (canvas.width - 200);
+
+          // Draw camel
+          ctx.fillStyle = c.color;
+          ctx.fillRect(x, c.y, 60, 40);
+          ctx.fillRect(x + 50, c.y - 15, 18, 25);
+
+          // Humps
+          ctx.beginPath();
+          ctx.arc(x + 20, c.y + 5, 15, Math.PI, 0);
+          ctx.fill();
+          ctx.beginPath();
+          ctx.arc(x + 40, c.y + 5, 12, Math.PI, 0);
+          ctx.fill();
+
+          // Legs
+          ctx.fillRect(x + 12, c.y + 40, 6, 20);
+          ctx.fillRect(x + 28, c.y + 40, 6, 20);
+          ctx.fillRect(x + 44, c.y + 40, 6, 20);
+
+          // Jockey
+          ctx.font = '30px Arial';
+          ctx.fillText(c.jockey, x + 20, c.y + 28);
+
+          // Highlight player's camel
+          if (c.isMe) {
+            ctx.strokeStyle = '#FFD700';
+            ctx.lineWidth = 5;
+            ctx.strokeRect(x - 5, c.y - 25, 70, 90);
+
+            ctx.fillStyle = '#FFD700';
+            ctx.font = 'bold 16px Courier';
+            ctx.fillText('YOU', x + 15, c.y - 30);
+          }
+
+          // Name
+          ctx.fillStyle = '#FFF';
+          ctx.font = 'bold 12px Courier';
+          ctx.fillText(c.name, x, c.y - 5);
+
+          // Check finish
+          if (c.distance >= this.raceLength && !winner) {
+            winner = c;
+          }
+        });
+
+        // Update stats
+        const sorted = [...this.camels].sort((a, b) => b.distance - a.distance);
+        const pos = sorted.findIndex(c => c.isMe) + 1;
+        const pct = Math.min(100, ((this.myCamel.distance / this.raceLength) * 100)).toFixed(0);
+
+        document.getElementById('position').textContent = `${pos}/5`;
+        document.getElementById('progress').textContent = `${pct}%`;
+
+        if (winner) {
+          this.finishRace(winner);
+        } else {
+          requestAnimationFrame(() => this.animate());
+        }
+      },
+
+      finishRace(winner) {
+        this.running = false;
+
+        const sorted = [...this.camels].sort((a, b) => b.distance - a.distance);
+        const myPos = sorted.findIndex(c => c.isMe) + 1;
+
+        let winnings = 0;
+        let resultClass = 'lose';
+        let resultMsg = '';
+        let detailMsg = '';
+
+        if (myPos === 1) {
+          winnings = GameState.betAmount * 10;
+          resultClass = 'win';
+          resultMsg = '🏆 YOU WON! 🏆';
+          detailMsg = `+${winnings} GOLD (10x payout!)`;
+        } else if (myPos === 2) {
+          winnings = GameState.betAmount * 3;
+          resultClass = 'win';
+          resultMsg = '🥈 2ND PLACE!';
+          detailMsg = `+${winnings} GOLD (3x payout!)`;
+        } else if (myPos === 3) {
+          winnings = Math.floor(GameState.betAmount * 1.5);
+          resultClass = 'win';
+          resultMsg = '🥉 3RD PLACE!';
+          detailMsg = `+${winnings} GOLD (1.5x payout)`;
+        } else {
+          resultMsg = `${myPos}TH PLACE`;
+          detailMsg = `Lost ${GameState.betAmount} gold 😔`;
+        }
+
+        // Add winnings
+        GameState.gold += winnings;
+        updateGoldDisplay();
+
+        // Show result
+        const resultDiv = document.getElementById('raceResult');
+        resultDiv.className = `race-result ${resultClass}`;
+        document.getElementById('resultText').textContent = resultMsg;
+        document.getElementById('resultDetail').textContent = detailMsg;
+        resultDiv.style.display = 'block';
+      }
+    };
 
     // Start game
     init();
