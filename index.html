@@ -3,6 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#000000">
   <title>🏜️ Dune Rush - Premium Racing</title>
   <style>
     * {
@@ -16,9 +20,15 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: linear-gradient(to bottom, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
       min-height: 100vh;
+      height: 100vh;
       color: #fff;
-      overflow-x: hidden;
-      position: relative;
+      overflow: hidden;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      left: 0;
+      overscroll-behavior: none;
+      -webkit-overflow-scrolling: touch;
     }
 
     @keyframes twinkle {
@@ -113,10 +123,6 @@
       50% { text-shadow: 0 0 30px #FF0000, 0 0 60px #FFD700; }
     }
 
-    @keyframes shine {
-      to { background-position: 200% center; }
-    }
-
     @keyframes slotPulse {
       0%, 100% { box-shadow: 0 0 30px #FFD700, 0 0 50px #FF0000; }
       50% { box-shadow: 0 0 50px #FFD700, 0 0 80px #FF0000; }
@@ -181,22 +187,6 @@
       }
     }
 
-    .camel-option::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: linear-gradient(45deg, transparent, rgba(255,215,0,0.1), transparent);
-      transform: rotate(45deg);
-      transition: all 0.5s;
-    }
-
-    .camel-option:hover::before {
-      left: 100%;
-    }
-
     .camel-option:hover, .camel-option:active {
       border-color: #FFD700;
       transform: translateY(-5px) scale(1.03);
@@ -204,11 +194,11 @@
     }
 
     .camel-option.selected {
-      border-color: #FFD700;
-      background: linear-gradient(180deg, #4a0000 0%, #1a0000 50%, #4a0000 100%);
-      box-shadow: 0 0 40px #FFD700, 0 0 60px #FF0000, inset 0 0 30px rgba(255,215,0,0.3);
+      border-color: #FF0000;
+      background: linear-gradient(180deg, #FFD700 0%, #FF8C00 50%, #FFD700 100%);
+      box-shadow: 0 0 30px #FFD700, 0 0 50px #FF0000, inset 0 0 30px rgba(255,255,255,0.3);
       transform: scale(1.05);
-      animation: slotPulse 1.5s ease-in-out infinite;
+      animation: slotPulse 0.5s ease-in-out infinite;
     }
 
     .camel-option h3 {
@@ -279,7 +269,6 @@
     .bet-amount:focus {
       outline: none;
       border-color: #FFD700;
-      box-shadow: 0 0 20px rgba(255, 215, 0, 0.5), inset 0 2px 8px rgba(0,0,0,0.5);
     }
 
     .bet-buttons {
@@ -306,7 +295,6 @@
     .bet-btn:hover, .bet-btn:active {
       border-color: #FFD700;
       transform: translateY(-3px);
-      box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
     }
 
     button {
@@ -329,24 +317,6 @@
       text-transform: uppercase;
       letter-spacing: 2px;
       animation: buttonGlow 2s ease-in-out infinite;
-    }
-
-    button::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 0;
-      height: 0;
-      background: rgba(255, 255, 255, 0.3);
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
-      transition: width 0.6s, height 0.6s;
-    }
-
-    button:hover::before, button:active::before {
-      width: 400px;
-      height: 400px;
     }
 
     button:hover, button:active {
@@ -380,12 +350,6 @@
       padding: 2px 0;
       border-bottom: 1px solid rgba(255,215,0,0.3);
       font-size: 0.6em;
-      transition: all 0.3s;
-    }
-
-    .payout-item:hover {
-      padding-left: 10px;
-      border-left: 3px solid #FFD700;
     }
 
     .race-view {
@@ -410,7 +374,7 @@
       border-radius: 18px;
       padding: 15px;
       z-index: 110;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 30px rgba(255,215,0,0.3);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
     }
 
     .race-info h2 {
@@ -489,7 +453,6 @@
       border-radius: 18px;
       padding: 15px;
       z-index: 110;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 30px rgba(255,215,0,0.3);
     }
 
     .race-stats > div {
@@ -498,10 +461,6 @@
       font-size: clamp(1em, 3.5vw, 1.3em);
       flex-wrap: wrap;
       gap: 15px;
-    }
-
-    .race-stats strong {
-      text-shadow: 0 0 10px currentColor;
     }
 
     .race-result {
@@ -555,58 +514,6 @@
       color: #FF6347;
       text-shadow: 0 0 30px #FF6347, 0 0 50px #FF6347;
     }
-
-    @media (max-width: 768px) {
-      .betting-screen {
-        margin: 60px 10px 20px;
-        padding: 20px;
-      }
-
-      .camel-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .bet-buttons {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
-      }
-
-      .race-info {
-        top: 50px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .gold-bar {
-        padding: 8px;
-      }
-
-      .camel-option {
-        padding: 10px;
-        min-height: 120px;
-      }
-
-      .race-info h2 {
-        font-size: 0.9em;
-      }
-    }
-
-    @media (max-height: 500px) and (orientation: landscape) {
-      .betting-screen {
-        margin: 10px;
-        max-height: 90vh;
-        overflow-y: auto;
-      }
-
-      .race-info {
-        padding: 8px;
-        font-size: 0.8em;
-      }
-
-      .race-stats {
-        padding: 8px;
-      }
-    }
   </style>
 </head>
 <body>
@@ -649,7 +556,7 @@
           <span style="color: #FFD700; font-weight: bold;">1.5x</span>
         </div>
         <div class="payout-item">
-          <span>4-5:</span>
+          <span>4-6:</span>
           <span style="color: #FF6347;">Lose</span>
         </div>
       </div>
@@ -703,15 +610,14 @@
       { id: 1, name: 'Sand Runner', color: '#D2691E', jockey: '🧔' },
       { id: 2, name: 'Golden Wind', color: '#DAA520', jockey: '👨' },
       { id: 3, name: 'Oasis King', color: '#CD853F', jockey: '🧑' },
-      { id: 4, name: 'Dune Dancer', color: '#DEB887', jockey: '👴' }
+      { id: 4, name: 'Dune Dancer', color: '#DEB887', jockey: '👴' },
+      { id: 5, name: 'Sahara Swift', color: '#F4A460', jockey: '👲' }
     ];
 
-    // SAVE GOLD FUNCTIONS (NEW!)
     function saveGold() {
       try {
         localStorage.setItem('duneRushGold', GameState.gold.toString());
       } catch (e) {
-        // If save fails, game still works fine
         console.log('Could not save gold');
       }
     }
@@ -723,13 +629,12 @@
           GameState.gold = parseInt(savedGold) || 1000;
         }
       } catch (e) {
-        // If load fails, start with 1000 (default)
         console.log('Could not load gold');
       }
     }
 
     function init() {
-      loadGold(); // Load saved gold on startup
+      loadGold();
       loadCamels();
       updateGoldDisplay();
     }
@@ -764,7 +669,7 @@
 
     function updateGoldDisplay() {
       document.getElementById('goldAmount').textContent = GameState.gold;
-      saveGold(); // Save gold whenever it changes
+      saveGold();
     }
 
     function startRace() {
@@ -827,7 +732,7 @@
         this.camels = CAMELS.map((c, i) => ({
           ...c,
           x: 50,
-          y: 80 + (i * 80),
+          y: 65 + (i * 70),
           distance: 0,
           speed: 4 + Math.random() * 4,
           baseSpeed: 4 + Math.random() * 4,
@@ -865,7 +770,6 @@
       },
 
       createDust(x, y) {
-        // Reduced to 1 particle for better performance
         this.dustParticles.push({
           x: x + Math.random() * 15 - 7,
           y: y + 50 + Math.random() * 10,
@@ -1098,29 +1002,29 @@
         ctx.strokeStyle = 'rgba(139, 69, 19, 0.4)';
         ctx.lineWidth = 2;
         ctx.setLineDash([20, 15]);
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 6; i++) {
           ctx.beginPath();
-          ctx.moveTo(0, 80 + i * 80);
-          ctx.lineTo(1400, 80 + i * 80);
+          ctx.moveTo(0, 65 + i * 70);
+          ctx.lineTo(1400, 65 + i * 70);
           ctx.stroke();
         }
         ctx.setLineDash([]);
 
-        const finishX = 1280;
+        const finishX = 1200;
         for (let i = 0; i < 12; i++) {
           for (let j = 0; j < 3; j++) {
             ctx.fillStyle = (i + j) % 2 === 0 ? '#000' : '#fff';
-            ctx.fillRect(finishX + j * 40, i * 40, 40, 40);
+            ctx.fillRect(finishX + j * 60, i * 60, 60, 60);
           }
         }
 
         ctx.save();
-        ctx.translate(finishX + 60, 250);
+        ctx.translate(finishX + 90, 250);
         ctx.rotate(-Math.PI / 2);
         ctx.fillStyle = '#FFD700';
         ctx.strokeStyle = '#000';
-        ctx.lineWidth = 4;
-        ctx.font = 'bold 36px Arial';
+        ctx.lineWidth = 5;
+        ctx.font = 'bold 48px Arial';
         ctx.strokeText('FINISH', 0, 0);
         ctx.fillText('FINISH', 0, 0);
         ctx.restore();
@@ -1150,15 +1054,25 @@
           }
         });
 
-        // Check for overtakes and commentary
         const sorted = [...this.camels].sort((a, b) => b.distance - a.distance);
         sorted.forEach((c, index) => {
           if (c.lastPosition !== index && this.commentaryTimer - this.lastCommentary > 60) {
             if (index < c.lastPosition && index <= 2) {
               if (c.isMe) {
-                this.showCommentary("YOU'RE CHARGING AHEAD! 🔥");
+                const phrases = [
+                  "YOU'RE CHARGING AHEAD! 🔥",
+                  "INCREDIBLE MOVE! 💨",
+                  "WHAT A SURGE! ⚡",
+                  "UNSTOPPABLE! 🚀"
+                ];
+                this.showCommentary(phrases[Math.floor(Math.random() * phrases.length)]);
               } else if (index === 0) {
-                this.showCommentary(c.name.toUpperCase() + " TAKES THE LEAD!");
+                const phrases = [
+                  c.name.toUpperCase() + " TAKES THE LEAD!",
+                  c.name.toUpperCase() + " SURGES AHEAD!",
+                  c.name.toUpperCase() + " IS ON FIRE! 🔥"
+                ];
+                this.showCommentary(phrases[Math.floor(Math.random() * phrases.length)]);
               }
               this.createFlash();
               this.lastCommentary = this.commentaryTimer;
@@ -1167,30 +1081,92 @@
           c.lastPosition = index;
         });
 
-        // Mid-race commentary
         const progress = this.myCamel.distance / this.raceLength;
-        if (progress > 0.5 && progress < 0.52 && this.commentaryTimer - this.lastCommentary > 60) {
+        if (progress > 0.25 && progress < 0.27 && this.commentaryTimer - this.lastCommentary > 60) {
           const myPos = sorted.findIndex(c => c.isMe) + 1;
           if (myPos === 1) {
-            this.showCommentary("YOU'RE IN THE LEAD! 🏆");
-          } else if (myPos === 5) {
-            this.showCommentary("LAST PLACE! COME ON! 😰");
-          } else {
-            this.showCommentary("HALFWAY THERE! 💨");
+            const phrases = [
+              "EARLY LEAD! 🚀",
+              "SETTING THE PACE! ⚡",
+              "STRONG START! 💪"
+            ];
+            this.showCommentary(phrases[Math.floor(Math.random() * phrases.length)]);
+          } else if (myPos <= 3) {
+            const phrases = [
+              "GOOD POSITION! 👍",
+              "STAYING CLOSE! 🔥",
+              "IN THE HUNT! 🎯"
+            ];
+            this.showCommentary(phrases[Math.floor(Math.random() * phrases.length)]);
           }
           this.lastCommentary = this.commentaryTimer;
         }
 
-        // Final stretch commentary
+        if (progress > 0.5 && progress < 0.52 && this.commentaryTimer - this.lastCommentary > 60) {
+          const myPos = sorted.findIndex(c => c.isMe) + 1;
+          if (myPos === 1) {
+            const phrases = [
+              "YOU'RE IN THE LEAD! 🏆",
+              "DOMINATING THE RACE! 👑",
+              "INCREDIBLE PERFORMANCE! ⭐"
+            ];
+            this.showCommentary(phrases[Math.floor(Math.random() * phrases.length)]);
+          } else if (myPos === 6) {
+            const phrases = [
+              "LAST PLACE! COME ON! 😰",
+              "YOU'RE FALLING BEHIND! 😱",
+              "NEED A MIRACLE HERE! 🙏"
+            ];
+            this.showCommentary(phrases[Math.floor(Math.random() * phrases.length)]);
+          } else if (myPos === 2) {
+            const phrases = [
+              "NECK AND NECK! 🔥",
+              "SO CLOSE TO THE LEAD! 💨",
+              "PUSHING HARD! ⚡"
+            ];
+            this.showCommentary(phrases[Math.floor(Math.random() * phrases.length)]);
+          } else {
+            const phrases = [
+              "HALFWAY THERE! 💨",
+              "MIDDLE OF THE PACK! 🐪",
+              "STILL IN THIS! 💪"
+            ];
+            this.showCommentary(phrases[Math.floor(Math.random() * phrases.length)]);
+          }
+          this.lastCommentary = this.commentaryTimer;
+        }
+
         if (progress > 0.85 && progress < 0.87 && this.commentaryTimer - this.lastCommentary > 60) {
-          this.showCommentary("FINAL STRETCH! 🏁");
+          const myPos = sorted.findIndex(c => c.isMe) + 1;
+          if (myPos === 1) {
+            const phrases = [
+              "VICTORY IS YOURS! 👑",
+              "DON'T LET UP NOW! 🔥",
+              "FINISH STRONG! 💪"
+            ];
+            this.showCommentary(phrases[Math.floor(Math.random() * phrases.length)]);
+          } else if (myPos <= 3) {
+            const phrases = [
+              "FINAL STRETCH! 🏁",
+              "PHOTO FINISH! 📸",
+              "IT'S ANYONE'S RACE! ⚡"
+            ];
+            this.showCommentary(phrases[Math.floor(Math.random() * phrases.length)]);
+          } else {
+            const phrases = [
+              "LAST CHANCE! 😱",
+              "NEED A MIRACLE! 🙏",
+              "GIVE IT EVERYTHING! 💨"
+            ];
+            this.showCommentary(phrases[Math.floor(Math.random() * phrases.length)]);
+          }
           this.lastCommentary = this.commentaryTimer;
         }
 
         const pos = sorted.findIndex(c => c.isMe) + 1;
         const pct = Math.min(100, ((this.myCamel.distance / this.raceLength) * 100)).toFixed(0);
 
-        document.getElementById('position').textContent = `${pos}/5`;
+        document.getElementById('position').textContent = `${pos}/6`;
         document.getElementById('progress').textContent = `${pct}%`;
 
         if (winner) {
