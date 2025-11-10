@@ -2,913 +2,180 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>🏜️ DUNE RUSH - Mobile MMORPG</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🏜️ Desert Tribe - Camel Racing</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Courier New', monospace;
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      background: linear-gradient(to bottom, #f4a460 0%, #daa520 50%, #d2691e 100%);
       min-height: 100vh;
-      color: #fff;
       overflow-x: hidden;
-      touch-action: pan-y;
     }
-
-    .container {
-      max-width: 100%;
-      margin: 0 auto;
-      padding: 10px;
-    }
-
-    /* Mobile-First Header */
-    .header {
-      background: linear-gradient(135deg, rgba(255, 140, 0, 0.2), rgba(255, 69, 0, 0.2));
-      border: 2px solid #FF8C00;
-      border-radius: 10px;
-      padding: 15px;
-      margin-bottom: 15px;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-    }
-
-    .title h1 {
-      color: #FFD700;
-      font-size: 2em;
-      text-shadow: 0 0 15px #FF8C00;
-      text-align: center;
-    }
-
-    .player-stats {
-      background: rgba(0,0,0,0.6);
-      padding: 12px;
-      border-radius: 8px;
-      border: 2px solid #FFD700;
-      text-align: center;
-    }
-
-    .gold {
-      color: #FFD700;
-      font-size: 1.8em;
-      font-weight: bold;
-      text-shadow: 0 0 10px #FFD700;
-    }
-
-    /* Mobile Login */
-    .login-screen {
-      max-width: 100%;
-      margin: 20px;
-      background: rgba(0, 0, 0, 0.9);
-      border: 3px solid #FF8C00;
-      border-radius: 15px;
-      padding: 30px 20px;
-      text-align: center;
-    }
-
-    .login-screen h1 {
-      color: #FFD700;
-      font-size: 2.5em;
-      margin-bottom: 15px;
-      text-shadow: 0 0 20px #FF8C00;
-    }
-
-    .login-screen input {
-      width: 100%;
-      padding: 18px;
-      font-size: 1.3em;
-      border: 3px solid #FF8C00;
-      border-radius: 10px;
-      margin: 15px 0;
-      font-family: 'Courier New', monospace;
-      background: rgba(0,0,0,0.7);
+    .container { max-width: 1400px; margin: 0 auto; padding: 20px; text-align: center; }
+    .title {
       color: #fff;
+      text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+      margin: 40px 0;
+      animation: fadeIn 1s ease-in;
     }
-
-    /* Mobile World Map */
-    .world-map {
-      display: flex;
-      flex-direction: column;
+    .title h1 { font-size: 3em; letter-spacing: 3px; }
+    .title p { font-size: 1.2em; color: #ffe4b5; margin-top: 10px; }
+    .village {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 20px;
       margin: 20px 0;
     }
-
-    .region {
-      background: linear-gradient(135deg, rgba(139, 69, 19, 0.5), rgba(101, 67, 33, 0.5));
+    .tent {
+      background: rgba(139, 69, 19, 0.6);
       border: 3px solid #654321;
       border-radius: 15px;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
+      padding: 30px;
       cursor: pointer;
       transition: all 0.3s;
-      min-height: auto;
-    }
-
-    .region:active {
-      transform: scale(0.98);
-    }
-
-    .region.locked {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .region.locked::after {
-      content: '🔒';
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      font-size: 2em;
-    }
-
-    .region-info h2 {
-      color: #FFD700;
-      font-size: 1.8em;
-      margin-bottom: 8px;
-    }
-
-    .region-stats {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .stat {
-      background: rgba(0,0,0,0.5);
-      padding: 10px;
-      border-radius: 8px;
-      font-size: 1em;
-    }
-
-    /* Mobile Lobby */
-    .lobby {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .lobby-main {
-      background: rgba(0,0,0,0.7);
-      border: 3px solid #FF8C00;
-      border-radius: 12px;
-      padding: 20px;
-    }
-
-    .lobby-players {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      margin: 20px 0;
-    }
-
-    .player-slot {
-      background: rgba(139, 69, 19, 0.4);
-      border: 2px solid #654321;
-      border-radius: 10px;
-      padding: 15px;
       text-align: center;
-      min-height: 100px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      font-size: 0.9em;
     }
-
-    .player-slot.filled {
-      border-color: #32CD32;
-      background: rgba(50, 205, 50, 0.2);
+    .tent:hover {
+      transform: translateY(-5px);
+      background: rgba(139, 69, 19, 0.9);
+      box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
     }
-
-    .player-slot.ready {
-      border-color: #FFD700;
-      animation: pulse 1s infinite;
-    }
-
-    /* Mobile Chat */
-    .chat {
-      background: rgba(0,0,0,0.7);
-      border: 3px solid #FF8C00;
-      border-radius: 12px;
-      padding: 15px;
-      display: flex;
-      flex-direction: column;
-      height: 400px;
-    }
-
-    .chat-messages {
-      flex: 1;
-      overflow-y: auto;
-      margin-bottom: 15px;
-      padding: 8px;
-    }
-
-    .chat-message {
-      background: rgba(139, 69, 19, 0.4);
-      padding: 8px;
-      margin: 5px 0;
-      border-radius: 8px;
-      border-left: 3px solid #FFD700;
-      font-size: 0.9em;
-      word-wrap: break-word;
-    }
-
-    .chat-input {
-      display: flex;
-      gap: 8px;
-    }
-
-    .chat-input input {
-      flex: 1;
-      padding: 12px;
-      border: 2px solid #654321;
-      border-radius: 8px;
-      background: rgba(0,0,0,0.6);
-      color: #fff;
-      font-family: 'Courier New', monospace;
-      font-size: 1em;
-    }
-
-    /* Mobile Canvas Container */
-    .race-container {
-      position: relative;
-      width: 100%;
-      height: 60vh;
-      overflow: hidden;
-      border: 3px solid #FF8C00;
-      border-radius: 12px;
-      background: #000;
-      margin: 15px 0;
-    }
-
-    canvas {
-      display: block;
-      position: absolute;
-      top: 0;
-      left: 0;
-      image-rendering: pixelated;
-    }
-
-    /* Position Tracker - Mobile */
-    .position-tracker {
-      background: rgba(0,0,0,0.9);
-      border: 2px solid #FFD700;
-      border-radius: 10px;
-      padding: 15px;
-      margin: 15px 0;
-      max-height: 300px;
-      overflow-y: auto;
-    }
-
-    .position-tracker h3 {
-      color: #FFD700;
-      text-align: center;
-      margin-bottom: 12px;
-      font-size: 1.2em;
-    }
-
-    .position-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px;
-      margin: 5px 0;
-      background: rgba(139, 69, 19, 0.4);
-      border-radius: 8px;
-      font-size: 0.95em;
-    }
-
-    .position-item.player {
-      border: 2px solid #32CD32;
-      background: rgba(50, 205, 50, 0.3);
-    }
-
-    /* Mobile Buttons */
+    .tent h2 { color: #FFD700; font-size: 1.8em; margin-bottom: 10px; }
+    .tent p { color: #FFF; font-size: 1em; }
     button {
-      background: linear-gradient(135deg, #FFD700, #FF8C00);
-      color: #000;
+      background: linear-gradient(45deg, #32CD32, #228B22);
+      color: white;
       border: none;
-      padding: 18px 25px;
+      padding: 15px 40px;
       font-size: 1.2em;
       font-weight: bold;
-      border-radius: 12px;
+      border-radius: 8px;
       cursor: pointer;
-      font-family: 'Courier New', monospace;
-      transition: all 0.2s;
-      width: 100%;
-      touch-action: manipulation;
+      margin: 10px;
     }
-
-    button:active {
-      transform: scale(0.95);
-    }
-
-    button:disabled {
-      background: #666;
-      cursor: not-allowed;
-    }
-
-    .back-button {
-      background: linear-gradient(135deg, #666, #444);
-      color: #fff;
-      margin-bottom: 15px;
-    }
-
-    .small-btn {
-      padding: 12px 20px;
-      font-size: 1em;
-      width: auto;
-      display: inline-block;
-    }
-
-    /* Race Result */
-    .race-result {
-      background: rgba(0,0,0,0.95);
-      border: 3px solid #FFD700;
-      border-radius: 15px;
-      padding: 25px;
-      margin: 20px 0;
-      text-align: center;
-    }
-
-    .race-result h2 {
-      color: #FFD700;
-      font-size: 2em;
-      margin-bottom: 15px;
-    }
-
-    /* Screen Management */
-    .game-screen {
-      display: none;
-    }
-
-    .game-screen.active {
+    button:hover { transform: scale(1.05); }
+    canvas {
+      background: #f0e68c;
+      border: 4px solid #654321;
+      border-radius: 10px;
       display: block;
+      margin: 20px auto;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
     }
-
-    /* Animations */
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.6; }
-    }
-
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateY(20px); }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
       to { opacity: 1; transform: translateY(0); }
     }
-
-    /* Desktop Adjustments */
-    @media (min-width: 768px) {
-      .container { padding: 20px; max-width: 1400px; }
-      .header { flex-direction: row; justify-content: space-between; }
-      .title h1 { font-size: 3em; text-align: left; }
-      .region { flex-direction: row; justify-content: space-between; }
-      .region-stats { flex-direction: row; gap: 20px; }
-      .lobby { grid-template-columns: 2fr 1fr; }
-      .lobby-players { grid-template-columns: repeat(4, 1fr); }
-      .race-container { height: 70vh; }
-    }
-
-    /* Scrollbar Styling */
-    ::-webkit-scrollbar { width: 8px; height: 8px; }
-    ::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); }
-    ::-webkit-scrollbar-thumb { background: #FF8C00; border-radius: 4px; }
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- LOGIN SCREEN -->
-    <div id="loginScreen" class="login-screen">
-      <h1>🏜️ DUNE RUSH</h1>
-      <p style="color: #FF8C00; font-size: 1.3em; margin: 15px 0;">Mobile Racing MMORPG</p>
-      <input type="text" id="playerName" placeholder="Enter racer name..." maxlength="20">
-      <button onclick="login()">🏁 START RACING</button>
+    <div class="title">
+      <h1>🏜️ DESERT TRIBE 🐪</h1>
+      <p>Welcome to the Ancient Camel Racing Grounds</p>
     </div>
 
-    <!-- MAIN GAME -->
-    <div id="mainGame" style="display: none;">
-      <!-- HEADER -->
-      <div class="header">
-        <div class="title">
-          <h1>🏜️ DUNE RUSH</h1>
-        </div>
-        <div class="player-stats">
-          <div style="color: #FFD700; font-size: 1.1em;">
-            <span id="playerNameDisplay"></span>
-          </div>
-          <div class="gold">💰 <span id="goldDisplay">1000</span>G</div>
-          <div style="color: #aaa; font-size: 0.85em; margin-top: 3px;">
-            Wins: <span id="winsDisplay">0</span>
-          </div>
-        </div>
+    <div class="village">
+      <div class="tent" onclick="startRace()">
+        <h2>Racing Arena</h2>
+        <p>Watch the camels race!</p>
       </div>
-
-      <!-- WORLD MAP SCREEN -->
-      <div id="screen-map" class="game-screen active">
-        <h2 style="color: #FFD700; font-size: 2em; text-align: center; margin-bottom: 25px;">
-          🗺️ SELECT REGION
-        </h2>
-
-        <div class="world-map">
-          <div class="region" onclick="enterRegion('bronze')">
-            <div class="region-info">
-              <h2>🏜️ BRONZE DUNES</h2>
-              <div class="region-stats">
-                <div class="stat">💰 100 Gold</div>
-                <div class="stat">🏁 10km Race</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="region locked" id="region-pyramid">
-            <div class="region-info">
-              <h2>🏛️ PYRAMID VALLEY</h2>
-              <div class="region-stats">
-                <div class="stat">💰 500 Gold</div>
-                <div class="stat">🏁 20km Race</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="region locked" id="region-sunset">
-            <div class="region-info">
-              <h2>🌅 SUNSET MESA</h2>
-              <div class="region-stats">
-                <div class="stat">💰 1000 Gold</div>
-                <div class="stat">🏁 35km Race</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="region locked" id="region-storm">
-            <div class="region-info">
-              <h2>⚡ STORM WASTES</h2>
-              <div class="region-stats">
-                <div class="stat">💰 2500 Gold</div>
-                <div class="stat">🏁 50km Race</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="region locked" id="region-kings">
-            <div class="region-info">
-              <h2>👑 KING'S OASIS</h2>
-              <div class="region-stats">
-                <div class="stat">💰 5000 Gold</div>
-                <div class="stat">🏁 100km Race</div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="tent">
+        <h2>Camel Stable</h2>
+        <p>Meet the camels</p>
       </div>
-
-      <!-- LOBBY SCREEN -->
-      <div id="screen-lobby" class="game-screen">
-        <button class="back-button" onclick="returnToMap()">← Back</button>
-        <h2 style="text-align: center; margin-bottom: 20px; font-size: 1.5em;">
-          🏁 <span id="lobbyRegion">LOBBY</span>
-        </h2>
-
-        <div class="lobby">
-          <div class="lobby-main">
-            <h3 style="color: #FFD700; font-size: 1.3em; margin-bottom: 15px; text-align: center;">
-              Players: <span id="playerCount">1</span>/8
-            </h3>
-
-            <div class="lobby-players" id="lobbyPlayers"></div>
-
-            <button id="readyBtn" onclick="toggleReady()" style="margin-top: 20px;">
-              ⏱️ READY UP
-            </button>
-          </div>
-
-          <div class="chat">
-            <h3 style="color: #FFD700; margin-bottom: 12px; text-align: center;">💬 CHAT</h3>
-            <div class="chat-messages" id="chatMessages">
-              <div class="chat-message">
-                <strong style="color: #FFD700;">System:</strong> Tap ready when you're set!
-              </div>
-            </div>
-            <div class="chat-input">
-              <input type="text" id="chatInput" placeholder="Message..." maxlength="80">
-              <button class="small-btn" onclick="sendChat()">📤</button>
-            </div>
-          </div>
-        </div>
+      <div class="tent">
+        <h2>Betting Tent</h2>
+        <p>Place your bets</p>
       </div>
-
-      <!-- RACE SCREEN -->
-      <div id="screen-race" class="game-screen">
-        <h2 style="text-align: center; margin-bottom: 15px; font-size: 1.5em;">
-          🏁 RACING
-        </h2>
-
-        <div class="position-tracker">
-          <h3>LIVE POSITIONS</h3>
-          <div id="positionList"></div>
-        </div>
-
-        <div class="race-container">
-          <canvas id="raceCanvas"></canvas>
-        </div>
-
-        <div id="raceResult" class="race-result" style="display: none;">
-          <h2>RACE COMPLETE!</h2>
-          <p id="resultText" style="font-size: 1.5em; margin: 20px 0; color: #32CD32;"></p>
-          <button onclick="returnToMap()">🗺️ BACK TO MAP</button>
-        </div>
+      <div class="tent">
+        <h2>Trader's Market</h2>
+        <p>Buy gear</p>
       </div>
     </div>
+
+    <canvas id="raceCanvas" width="1200" height="700" style="display: none;"></canvas>
+    <div id="raceStatus" style="color: #32CD32; font-size: 1.5em; margin: 20px 0; display: none;"></div>
+    <button onclick="location.reload()" style="display: none;" id="resetBtn">🔄 NEW RACE</button>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // SUPABASE
-    const SUPABASE_URL = "https://itxbzfwtutozegelbwwt.supabase.co";
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml0eGJ6Znd0dXRvemVnZWxid3d0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI3NDg2NDcsImV4cCI6MjA3ODMyNDY0N30._1Oy-uaTvFxusKiooj2Pta7rYp_EOkor9wnfWQfWe7I";
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    // GAME STATE
-    const GameState = {
-      playerName: null,
-      playerId: null,
-      gold: 1000,
-      wins: 0,
-      currentRegion: null,
-      currentLobbyId: null,
-      isReady: false
-    };
-
-    // CAMELS
     const CAMELS = [
-      { id: 0, name: 'Desert Storm', baseSpeed: 3.5, color: '#8B4513', jockey: '👳' },
-      { id: 1, name: 'Sand Runner', baseSpeed: 3.2, color: '#D2691E', jockey: '🧔' },
-      { id: 2, name: 'Golden Wind', baseSpeed: 3.8, color: '#DAA520', jockey: '👨' },
-      { id: 3, name: 'Oasis King', baseSpeed: 3.3, color: '#CD853F', jockey: '🧑' },
-      { id: 4, name: 'Dune Dancer', baseSpeed: 3.6, color: '#DEB887', jockey: '👴' },
-      { id: 5, name: 'Mirage Master', baseSpeed: 3.9, color: '#F4A460', jockey: '🧓' },
-      { id: 6, name: 'Swift Sands', baseSpeed: 3.4, color: '#BC8F8F', jockey: '👲' },
-      { id: 7, name: 'Thunder Hoof', baseSpeed: 3.1, color: '#A0522D', jockey: '🧕' },
-      { id: 8, name: 'Lightning Bolt', baseSpeed: 4.0, color: '#D2B48C', jockey: '👱' }
+      { id: 0, name: 'Desert Storm', baseSpeed: 2.8, color: '#8B4513', jockey: '👳' },
+      { id: 1, name: 'Sand Runner', baseSpeed: 2.5, color: '#D2691E', jockey: '🧔' },
+      { id: 2, name: 'Golden Wind', baseSpeed: 3.0, color: '#DAA520', jockey: '👨' },
+      { id: 3, name: 'Oasis King', baseSpeed: 2.6, color: '#CD853F', jockey: '🧑' },
+      { id: 4, name: 'Dune Dancer', baseSpeed: 2.9, color: '#DEB887', jockey: '👴' },
+      { id: 5, name: 'Mirage Master', baseSpeed: 3.1, color: '#F4A460', jockey: '🧓' },
+      { id: 6, name: 'Swift Sands', baseSpeed: 2.7, color: '#BC8F8F', jockey: '👲' },
+      { id: 7, name: 'Thunder Hoof', baseSpeed: 2.4, color: '#A0522D', jockey: '🧕' },
+      { id: 8, name: 'Lightning Bolt', baseSpeed: 3.2, color: '#D2B48C', jockey: '👱' }
     ];
 
-    // REGIONS - 10x longer races!
-    const REGIONS = {
-      bronze: { name: 'Bronze Dunes', buyin: 100, length: 10000, emoji: '🏜️' },
-      pyramid: { name: 'Pyramid Valley', buyin: 500, length: 20000, emoji: '🏛️' },
-      sunset: { name: 'Sunset Mesa', buyin: 1000, length: 35000, emoji: '🌅' },
-      storm: { name: 'Storm Wastes', buyin: 2500, length: 50000, emoji: '⚡' },
-      kings: { name: "King's Oasis", buyin: 5000, length: 100000, emoji: '👑' }
-    };
-
-    // LOGIN
-    async function login() {
-      const name = document.getElementById('playerName').value.trim();
-      if (!name) {
-        alert('Enter a racer name!');
-        return;
-      }
-
-      GameState.playerName = name;
-
-      let { data: player } = await supabase
-        .from('players')
-        .select('*')
-        .eq('name', name)
-        .single();
-
-      if (!player) {
-        const { data: newPlayer } = await supabase
-          .from('players')
-          .insert([{ name, gold: 1000 }])
-          .select()
-          .single();
-        player = newPlayer;
-      }
-
-      GameState.playerId = player.id;
-      GameState.gold = player.gold;
-      GameState.wins = player.total_wins || 0;
-
-      document.getElementById('loginScreen').style.display = 'none';
-      document.getElementById('mainGame').style.display = 'block';
-      updatePlayerDisplay();
-    }
-
-    // ENTER REGION
-    async function enterRegion(region) {
-      const config = REGIONS[region];
-
-      if (GameState.gold < config.buyin) {
-        alert(`Need ${config.buyin} gold!`);
-        return;
-      }
-
-      GameState.currentRegion = region;
-      GameState.gold -= config.buyin;
-
-      await supabase
-        .from('players')
-        .update({ gold: GameState.gold })
-        .eq('id', GameState.playerId);
-
-      updatePlayerDisplay();
-      await joinLobby(region);
-    }
-
-    // JOIN LOBBY
-    async function joinLobby(region) {
-      let { data: lobbies } = await supabase
-        .from('lobbies')
-        .select('*')
-        .eq('region', region)
-        .eq('status', 'waiting')
-        .lt('player_count', 8)
-        .limit(1);
-
-      let lobbyId;
-
-      if (lobbies && lobbies.length > 0) {
-        lobbyId = lobbies[0].id;
-      } else {
-        const { data: newLobby } = await supabase
-          .from('lobbies')
-          .insert([{ region, status: 'waiting', player_count: 0 }])
-          .select()
-          .single();
-        lobbyId = newLobby.id;
-      }
-
-      GameState.currentLobbyId = lobbyId;
-
-      await supabase
-        .from('lobby_players')
-        .insert([{
-          lobby_id: lobbyId,
-          player_id: GameState.playerId,
-          player_name: GameState.playerName,
-          ready: false
-        }]);
-
-      showScreen('lobby');
-      document.getElementById('lobbyRegion').textContent = REGIONS[region].name;
-
-      subscribeLobbyUpdates(lobbyId);
-      loadLobbyPlayers(lobbyId);
-    }
-
-    // SUBSCRIBE TO LOBBY
-    function subscribeLobbyUpdates(lobbyId) {
-      supabase.channel(`lobby:${lobbyId}`)
-        .on('postgres_changes', {
-          event: '*',
-          schema: 'public',
-          table: 'lobby_players',
-          filter: `lobby_id=eq.${lobbyId}`
-        }, () => {
-          loadLobbyPlayers(lobbyId);
-        })
-        .subscribe();
-    }
-
-    // LOAD LOBBY PLAYERS
-    async function loadLobbyPlayers(lobbyId) {
-      const { data: players } = await supabase
-        .from('lobby_players')
-        .select('*')
-        .eq('lobby_id', lobbyId);
-
-      const div = document.getElementById('lobbyPlayers');
-      const slots = [];
-
-      for (let i = 0; i < 8; i++) {
-        const player = players[i];
-        if (player) {
-          slots.push(`
-            <div class="player-slot filled ${player.ready ? 'ready' : ''}">
-              <div style="font-size: 1.8em;">${player.ready ? '✅' : '⏱️'}</div>
-              <strong style="color: #FFD700;">${player.player_name}</strong>
-            </div>
-          `);
-        } else {
-          slots.push(`<div class="player-slot"><div style="color: #666;">...</div></div>`);
-        }
-      }
-
-      div.innerHTML = slots.join('');
-      document.getElementById('playerCount').textContent = players.length;
-
-      if (players.length >= 2 && players.every(p => p.ready)) {
-        setTimeout(() => startRace(lobbyId), 2000);
-      }
-    }
-
-    // TOGGLE READY
-    async function toggleReady() {
-      GameState.isReady = !GameState.isReady;
-
-      await supabase
-        .from('lobby_players')
-        .update({ ready: GameState.isReady })
-        .eq('lobby_id', GameState.currentLobbyId)
-        .eq('player_id', GameState.playerId);
-
-      const btn = document.getElementById('readyBtn');
-      btn.textContent = GameState.isReady ? '✅ READY!' : '⏱️ READY UP';
-    }
-
-    // SEND CHAT
-    async function sendChat() {
-      const input = document.getElementById('chatInput');
-      const msg = input.value.trim();
-      if (!msg) return;
-
-      await supabase
-        .from('chat_messages')
-        .insert([{
-          lobby_id: GameState.currentLobbyId,
-          player_name: GameState.playerName,
-          message: msg
-        }]);
-
-      input.value = '';
-      loadChatMessages();
-    }
-
-    async function loadChatMessages() {
-      const { data } = await supabase
-        .from('chat_messages')
-        .select('*')
-        .eq('lobby_id', GameState.currentLobbyId)
-        .order('created_at', { ascending: true })
-        .limit(30);
-
-      if (data && data.length > 0) {
-        const div = document.getElementById('chatMessages');
-        div.innerHTML = data.map(m => `
-          <div class="chat-message">
-            <strong style="color: #FFD700;">${m.player_name}:</strong> ${m.message}
-          </div>
-        `).join('');
-        div.scrollTop = div.scrollHeight;
-      }
-    }
-
-    // START RACE
-    async function startRace(lobbyId) {
-      await supabase
-        .from('lobbies')
-        .update({ status: 'racing' })
-        .eq('id', lobbyId);
-
-      const { data: players } = await supabase
-        .from('lobby_players')
-        .select('*')
-        .eq('lobby_id', lobbyId);
-
-      const shuffledCamels = [...CAMELS].sort(() => Math.random() - 0.5);
-
-      for (let i = 0; i < players.length; i++) {
-        await supabase
-          .from('race_participants')
-          .insert([{
-            lobby_id: lobbyId,
-            player_id: players[i].player_id,
-            player_name: players[i].player_name,
-            camel_id: shuffledCamels[i].id,
-            camel_name: shuffledCamels[i].name,
-            position: 0
-          }]);
-      }
-
-      showScreen('race');
-      setTimeout(() => RaceEngine.init(lobbyId), 300);
-    }
-
-    // RACE ENGINE WITH SCROLLING CAMERA
     const RaceEngine = {
       canvas: null,
       ctx: null,
-      container: null,
-      lobbyId: null,
-      participants: [],
       camels: [],
       raceInProgress: false,
-      raceLength: 10000,
-      cameraX: 0,
-      viewportWidth: 800,
+      winner: null,
 
-      async init(lobbyId) {
-        this.lobbyId = lobbyId;
-        this.container = document.querySelector('.race-container');
+      init() {
         this.canvas = document.getElementById('raceCanvas');
+        this.canvas.style.display = 'block';
         this.ctx = this.canvas.getContext('2d');
-        this.raceLength = REGIONS[GameState.currentRegion].length;
 
-        // Set canvas size
-        this.viewportWidth = this.container.clientWidth;
-        this.canvas.width = this.raceLength + 1000;
-        this.canvas.height = 600;
+        this.camels = CAMELS.map(c => ({
+          ...c,
+          x: 50,
+          y: 250 + (Math.random() * 200),
+          speed: c.baseSpeed,
+          stamina: 100
+        }));
 
-        const { data } = await supabase
-          .from('race_participants')
-          .select('*')
-          .eq('lobby_id', lobbyId);
-
-        this.participants = data;
-
-        this.camels = data.map(p => {
-          const camel = CAMELS.find(c => c.id === p.camel_id);
-          return {
-            ...camel,
-            playerId: p.player_id,
-            playerName: p.player_name,
-            x: 100,
-            y: 200 + (Math.random() * 200),
-            speed: camel.baseSpeed,
-            stamina: 100,
-            distance: 0
-          };
-        });
-
-        await this.countdown();
-        this.startRace();
+        this.drawTrack();
       },
 
-      async countdown() {
-        for (let i = 3; i > 0; i--) {
-          this.drawFullTrack();
-          this.ctx.fillStyle = 'rgba(0,0,0,0.8)';
-          this.ctx.fillRect(this.cameraX, 0, this.viewportWidth, this.canvas.height);
-          this.ctx.fillStyle = '#FFD700';
-          this.ctx.font = 'bold 120px Courier';
-          this.ctx.textAlign = 'center';
-          this.ctx.fillText(i, this.cameraX + this.viewportWidth/2, 300);
-          this.updateView();
-          await new Promise(r => setTimeout(r, 1000));
-        }
-      },
-
-      drawFullTrack() {
+      drawTrack() {
         const ctx = this.ctx;
+        const canvas = this.canvas;
 
-        // Sky gradient
-        const gradient = ctx.createLinearGradient(0, 0, 0, 200);
+        const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height * 0.4);
         gradient.addColorStop(0, '#87CEEB');
         gradient.addColorStop(1, '#F4A460');
         ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, this.canvas.width, 200);
+        ctx.fillRect(0, 0, canvas.width, canvas.height * 0.4);
 
-        // Sand dunes
         ctx.fillStyle = '#F4A460';
         ctx.beginPath();
-        ctx.moveTo(0, 200);
-        for (let x = 0; x < this.canvas.width; x += 30) {
-          const y = 200 + Math.sin(x * 0.01) * 50 + 100;
+        ctx.moveTo(0, canvas.height * 0.4);
+        for (let x = 0; x < canvas.width; x += 20) {
+          const y = canvas.height * 0.4 + Math.sin(x * 0.02) * 30 + 50;
           ctx.lineTo(x, y);
         }
-        ctx.lineTo(this.canvas.width, this.canvas.height);
-        ctx.lineTo(0, this.canvas.height);
+        ctx.lineTo(canvas.width, canvas.height);
+        ctx.lineTo(0, canvas.height);
         ctx.fill();
 
-        // Darker layer
         ctx.fillStyle = '#D2691E';
         ctx.beginPath();
-        ctx.moveTo(0, 400);
-        for (let x = 0; x < this.canvas.width; x += 30) {
-          const y = 400 + Math.sin(x * 0.015 + 2) * 40 + 80;
+        ctx.moveTo(0, canvas.height * 0.6);
+        for (let x = 0; x < canvas.width; x += 20) {
+          const y = canvas.height * 0.6 + Math.sin(x * 0.03 + 2) * 25 + 30;
           ctx.lineTo(x, y);
         }
-        ctx.lineTo(this.canvas.width, this.canvas.height);
-        ctx.lineTo(0, this.canvas.height);
+        ctx.lineTo(canvas.width, canvas.height);
+        ctx.lineTo(0, canvas.height);
         ctx.fill();
 
-        // Draw distance markers
-        ctx.fillStyle = 'rgba(255,255,255,0.3)';
-        for (let i = 0; i < this.raceLength; i += 1000) {
-          ctx.fillRect(i, 0, 2, this.canvas.height);
-          ctx.fillStyle = '#fff';
-          ctx.font = '16px Courier';
-          ctx.fillText(`${i/1000}km`, i + 5, 30);
-          ctx.fillStyle = 'rgba(255,255,255,0.3)';
-        }
-
-        // Finish line
-        const finishX = this.raceLength;
         ctx.fillStyle = '#000';
-        ctx.fillRect(finishX, 0, 100, this.canvas.height);
-        for (let i = 0; i < 10; i++) {
+        ctx.fillRect(canvas.width - 80, 0, 80, canvas.height);
+
+        for (let i = 0; i < 12; i++) {
           for (let j = 0; j < 2; j++) {
             if ((i + j) % 2 === 0) {
               ctx.fillStyle = '#fff';
-              ctx.fillRect(finishX + (j * 50), i * 60, 50, 60);
+              ctx.fillRect(canvas.width - 80 + (j * 40), i * 60, 40, 60);
             }
           }
         }
@@ -918,194 +185,91 @@
         const ctx = this.ctx;
 
         ctx.fillStyle = camel.color;
-        ctx.fillRect(camel.x, camel.y, 60, 40);
-        ctx.fillRect(camel.x + 50, camel.y - 20, 20, 30);
+        ctx.fillRect(camel.x, camel.y, 50, 35);
+        ctx.fillRect(camel.x + 40, camel.y - 18, 18, 28);
 
         ctx.beginPath();
-        ctx.arc(camel.x + 20, camel.y + 5, 15, Math.PI, 0);
+        ctx.arc(camel.x + 18, camel.y + 5, 13, Math.PI, 0);
         ctx.fill();
         ctx.beginPath();
-        ctx.arc(camel.x + 40, camel.y + 5, 12, Math.PI, 0);
+        ctx.arc(camel.x + 35, camel.y + 5, 10, Math.PI, 0);
         ctx.fill();
 
-        ctx.fillRect(camel.x + 10, camel.y + 40, 6, 20);
-        ctx.fillRect(camel.x + 25, camel.y + 40, 6, 20);
-        ctx.fillRect(camel.x + 40, camel.y + 40, 6, 20);
-        ctx.fillRect(camel.x + 55, camel.y + 40, 6, 20);
+        ctx.fillRect(camel.x + 10, camel.y + 35, 5, 18);
+        ctx.fillRect(camel.x + 22, camel.y + 35, 5, 18);
+        ctx.fillRect(camel.x + 35, camel.y + 35, 5, 18);
+        ctx.fillRect(camel.x + 47, camel.y + 35, 5, 18);
 
-        ctx.font = '30px Arial';
-        ctx.fillText(camel.jockey, camel.x + 25, camel.y + 20);
+        ctx.font = '28px Arial';
+        ctx.fillText(camel.jockey, camel.x + 20, camel.y + 18);
 
-        ctx.fillStyle = camel.playerId === GameState.playerId ? '#32CD32' : '#000';
-        ctx.font = 'bold 12px Courier';
-        ctx.fillText(camel.playerName, camel.x, camel.y - 30);
-
-        if (camel.playerId === GameState.playerId) {
-          ctx.strokeStyle = '#32CD32';
-          ctx.lineWidth = 3;
-          ctx.strokeRect(camel.x - 5, camel.y - 35, 70, 100);
-        }
-      },
-
-      updateView() {
-        // Scroll container to follow camera
-        this.container.scrollLeft = this.cameraX;
+        ctx.fillStyle = '#000';
+        ctx.font = 'bold 11px Courier';
+        ctx.fillText(camel.name, camel.x, camel.y - 25);
       },
 
       startRace() {
         this.raceInProgress = true;
+        document.getElementById('raceStatus').style.display = 'block';
+        document.getElementById('raceStatus').textContent = '🏁 RACE IN PROGRESS!';
         this.animate();
       },
 
       animate() {
         if (!this.raceInProgress) return;
 
-        this.drawFullTrack();
+        this.drawTrack();
 
         let raceFinished = false;
-        let winner = null;
-        let leadX = 0;
 
         this.camels.forEach(camel => {
-          camel.speed = camel.baseSpeed + (Math.random() - 0.5) * 1.5;
+          camel.speed = camel.baseSpeed + (Math.random() - 0.5) * 1.0;
 
-          camel.stamina -= 0.05;
+          camel.stamina -= 0.12;
           if (camel.stamina < 70) camel.speed *= 0.97;
           if (camel.stamina < 40) camel.speed *= 0.93;
           if (camel.stamina < 20) camel.speed *= 0.88;
 
-          if (Math.random() > 0.985) camel.speed *= 1.8;
+          if (Math.random() > 0.98) camel.speed *= 1.4;
 
-          camel.distance += camel.speed;
-          camel.x = camel.distance;
+          camel.y += (Math.random() - 0.5) * 2;
+          camel.y = Math.max(200, Math.min(500, camel.y));
 
-          camel.y += (Math.random() - 0.5) * 3;
-          camel.y = Math.max(150, Math.min(550, camel.y));
+          camel.x += camel.speed;
 
           this.drawCamel(camel);
 
-          if (camel.x > leadX) leadX = camel.x;
-
-          if (camel.distance >= this.raceLength && !winner) {
-            winner = camel;
+          if (camel.x >= this.canvas.width - 150 && !this.winner) {
+            this.winner = camel;
             raceFinished = true;
           }
         });
 
-        // Camera follows leader
-        this.cameraX = Math.max(0, leadX - this.viewportWidth * 0.3);
-        this.updateView();
-
-        this.updatePositions();
-
         if (raceFinished) {
-          this.finishRace(winner);
+          this.finishRace();
         } else {
           requestAnimationFrame(() => this.animate());
         }
       },
 
-      updatePositions() {
-        const sorted = [...this.camels].sort((a, b) => b.distance - a.distance);
-        const div = document.getElementById('positionList');
-
-        div.innerHTML = sorted.map((camel, i) => {
-          const isPlayer = camel.playerId === GameState.playerId;
-          const progress = ((camel.distance / this.raceLength) * 100).toFixed(1);
-
-          return `
-            <div class="position-item ${isPlayer ? 'player' : ''}">
-              <div>
-                <span style="font-size: 1.2em; margin-right: 8px;">
-                  ${i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i+1}.`}
-                </span>
-                <strong>${camel.playerName}</strong>
-              </div>
-              <div style="color: #FFD700;">${progress}%</div>
-            </div>
-          `;
-        }).join('');
-      },
-
-      async finishRace(winner) {
+      finishRace() {
         this.raceInProgress = false;
 
-        const sorted = [...this.camels].sort((a, b) => b.distance - a.distance);
-        const buyin = REGIONS[GameState.currentRegion].buyin;
-        const prize = buyin * sorted.length;
+        document.getElementById('raceStatus').innerHTML = `
+          🏆 <span style="color: #FFD700;">${this.winner.name}</span> WINS! 🏆<br>
+          <span style="font-size: 0.8em;">Jockey: ${this.winner.jockey}</span>
+        `;
 
-        const payouts = [
-          Math.floor(prize * 0.6),
-          Math.floor(prize * 0.25),
-          Math.floor(prize * 0.15)
-        ];
-
-        for (let i = 0; i < Math.min(3, sorted.length); i++) {
-          const camel = sorted[i];
-          const updateData = {
-            gold: GameState.gold + payouts[i]
-          };
-          if (i === 0) updateData.total_wins = GameState.wins + 1;
-
-          await supabase
-            .from('players')
-            .update(updateData)
-            .eq('id', camel.playerId);
-
-          if (camel.playerId === GameState.playerId) {
-            GameState.gold += payouts[i];
-            if (i === 0) GameState.wins++;
-          }
-        }
-
-        await supabase
-          .from('lobbies')
-          .update({ status: 'finished' })
-          .eq('id', this.lobbyId);
-
-        const playerPosition = sorted.findIndex(c => c.playerId === GameState.playerId);
-        let resultMsg = '';
-
-        if (playerPosition === 0) {
-          resultMsg = `🏆 YOU WON! +${payouts[0]}G`;
-        } else if (playerPosition === 1) {
-          resultMsg = `🥈 2nd Place! +${payouts[1]}G`;
-        } else if (playerPosition === 2) {
-          resultMsg = `🥉 3rd Place! +${payouts[2]}G`;
-        } else {
-          resultMsg = `Position ${playerPosition + 1}`;
-        }
-
-        document.getElementById('resultText').textContent = resultMsg;
-        document.getElementById('raceResult').style.display = 'block';
-        updatePlayerDisplay();
+        document.getElementById('resetBtn').style.display = 'block';
       }
     };
 
-    // NAVIGATION
-    function showScreen(name) {
-      document.querySelectorAll('.game-screen').forEach(s => s.classList.remove('active'));
-      document.getElementById(`screen-${name}`).classList.add('active');
+    function startRace() {
+      document.querySelector('.village').style.display = 'none';
+      document.querySelector('.title').style.display = 'none';
+      RaceEngine.init();
+      setTimeout(() => RaceEngine.startRace(), 1000);
     }
-
-    function returnToMap() {
-      GameState.isReady = false;
-      GameState.currentLobbyId = null;
-      showScreen('map');
-    }
-
-    function updatePlayerDisplay() {
-      document.getElementById('playerNameDisplay').textContent = GameState.playerName;
-      document.getElementById('goldDisplay').textContent = GameState.gold;
-      document.getElementById('winsDisplay').textContent = GameState.wins;
-    }
-
-    // Auto-load chat in lobby
-    setInterval(() => {
-      if (GameState.currentLobbyId && document.getElementById('screen-lobby').classList.contains('active')) {
-        loadChatMessages();
-      }
-    }, 3000);
   </script>
 </body>
 </html>
