@@ -1221,6 +1221,21 @@
     };
 
     init();
+
+    // Add this at the very end of <script> section, before </script>
+    function requestFullscreen() {
+      const elem = document.documentElement;
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if (elem.webkitRequestFullscreen) {
+        elem.webkitRequestFullscreen();
+      }
+    }
+
+    // Auto-request fullscreen on first user interaction
+    document.addEventListener('click', function() {
+      requestFullscreen();
+    }, { once: true });
   </script>
 </body>
 </html>
