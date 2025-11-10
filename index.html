@@ -162,11 +162,6 @@
       transform: none;
     }
 
-    .back-btn {
-      background: linear-gradient(135deg, #666, #444);
-      color: #fff;
-    }
-
     .payout-info {
       background: rgba(139,69,19,0.3);
       border: 2px solid #654321;
@@ -205,7 +200,7 @@
 
     .race-canvas {
       width: 100%;
-      height: 600px;
+      height: 500px;
       border: 4px solid #FF8C00;
       border-radius: 15px;
       background: #000;
@@ -428,7 +423,7 @@
       });
     }
 
-    // RACE ENGINE - NOW WITH BEAUTIFUL GRAPHICS!
+    // RACE ENGINE - BETTER PROPORTIONS!
     const RaceEngine = {
       canvas: null,
       ctx: null,
@@ -440,14 +435,14 @@
       init() {
         this.canvas = document.getElementById('raceCanvas');
         this.canvas.width = 1400;
-        this.canvas.height = 600;
+        this.canvas.height = 500; // Better aspect ratio!
         this.ctx = this.canvas.getContext('2d');
 
-        // Create camels with random speeds
+        // Create camels with BETTER SPACING
         this.camels = CAMELS.map((c, i) => ({
           ...c,
           x: 50,
-          y: 150 + (i * 85),
+          y: 100 + (i * 70), // More space between camels
           distance: 0,
           speed: 2 + Math.random() * 2,
           baseSpeed: 2 + Math.random() * 2,
@@ -464,72 +459,71 @@
         const ctx = this.ctx;
         const canvas = this.canvas;
 
-        // Sky gradient
-        const skyGrad = ctx.createLinearGradient(0, 0, 0, canvas.height * 0.4);
+        // Sky gradient - BETTER PROPORTIONS
+        const skyGrad = ctx.createLinearGradient(0, 0, 0, canvas.height * 0.35);
         skyGrad.addColorStop(0, '#87CEEB');
         skyGrad.addColorStop(0.5, '#B0E0E6');
         skyGrad.addColorStop(1, '#F4A460');
         ctx.fillStyle = skyGrad;
-        ctx.fillRect(0, 0, canvas.width, canvas.height * 0.4);
+        ctx.fillRect(0, 0, canvas.width, canvas.height * 0.35);
 
-        // Sun with glow
+        // Sun - BETTER SIZE
         ctx.fillStyle = 'rgba(255, 215, 0, 0.3)';
         ctx.beginPath();
-        ctx.arc(200, 80, 70, 0, Math.PI * 2);
+        ctx.arc(150, 60, 50, 0, Math.PI * 2);
         ctx.fill();
 
         ctx.fillStyle = '#FFD700';
         ctx.beginPath();
-        ctx.arc(200, 80, 50, 0, Math.PI * 2);
+        ctx.arc(150, 60, 35, 0, Math.PI * 2);
         ctx.fill();
 
-        // Mountains in background
+        // Mountains - BETTER PROPORTIONS (wider, not tall)
         ctx.fillStyle = '#8B7355';
-        for (let i = 0; i < 5; i++) {
-          const x = i * 350;
+        for (let i = 0; i < 6; i++) {
+          const x = i * 280 - 50;
           ctx.beginPath();
-          ctx.moveTo(x, canvas.height * 0.4);
-          ctx.lineTo(x + 175, 60 + Math.sin(i) * 20);
-          ctx.lineTo(x + 350, canvas.height * 0.4);
+          ctx.moveTo(x, canvas.height * 0.35);
+          ctx.lineTo(x + 140, 40 + Math.sin(i) * 15); // Lower peaks
+          ctx.lineTo(x + 280, canvas.height * 0.35);
           ctx.closePath();
           ctx.fill();
 
           // Snow peaks
           ctx.fillStyle = '#FFF';
           ctx.beginPath();
-          ctx.moveTo(x + 140, 100);
-          ctx.lineTo(x + 175, 60 + Math.sin(i) * 20);
-          ctx.lineTo(x + 210, 100);
+          ctx.moveTo(x + 115, 70);
+          ctx.lineTo(x + 140, 40 + Math.sin(i) * 15);
+          ctx.lineTo(x + 165, 70);
           ctx.closePath();
           ctx.fill();
           ctx.fillStyle = '#8B7355';
         }
 
-        // Ground - multiple layers
+        // Ground layers - BETTER PROPORTIONS
         ctx.fillStyle = '#F4A460';
-        ctx.fillRect(0, canvas.height * 0.4, canvas.width, canvas.height * 0.6);
+        ctx.fillRect(0, canvas.height * 0.35, canvas.width, canvas.height * 0.65);
 
-        // Darker ground layer
         ctx.fillStyle = '#D2691E';
-        ctx.fillRect(0, canvas.height * 0.55, canvas.width, canvas.height * 0.45);
+        ctx.fillRect(0, canvas.height * 0.5, canvas.width, canvas.height * 0.5);
 
-        // Racing track
-        ctx.fillStyle = 'rgba(139, 69, 19, 0.3)';
-        ctx.fillRect(0, canvas.height * 0.25, canvas.width, canvas.height * 0.75);
+        // Racing track - not too tall
+        ctx.fillStyle = 'rgba(139, 69, 19, 0.25)';
+        ctx.fillRect(0, canvas.height * 0.15, canvas.width, canvas.height * 0.85);
 
-        // Palm trees at checkpoints
-        const checkpoints = [300, 600, 900, 1200];
+        // Palm trees - BETTER SIZE
+        const checkpoints = [250, 500, 750, 1000];
         checkpoints.forEach(x => {
           if (x < canvas.width - 100) {
             // Trunk
             ctx.fillStyle = '#8B4513';
-            ctx.fillRect(x - 8, canvas.height * 0.3, 16, 100);
+            ctx.fillRect(x - 6, canvas.height * 0.25, 12, 70);
 
             // Leaves
             ctx.fillStyle = '#228B22';
             for (let i = 0; i < 6; i++) {
               ctx.beginPath();
-              ctx.ellipse(x, canvas.height * 0.3 - 5, 35, 12, (Math.PI / 3) * i, 0, Math.PI * 2);
+              ctx.ellipse(x, canvas.height * 0.25 - 5, 28, 10, (Math.PI / 3) * i, 0, Math.PI * 2);
               ctx.fill();
             }
           }
@@ -539,7 +533,7 @@
         const finishX = canvas.width - 100;
         ctx.fillStyle = '#000';
         ctx.fillRect(finishX, 0, 100, canvas.height);
-        for (let i = 0; i < 12; i++) {
+        for (let i = 0; i < 10; i++) {
           if (i % 2 === 0) {
             ctx.fillStyle = '#fff';
             ctx.fillRect(finishX, i * 50, 100, 50);
@@ -548,7 +542,7 @@
 
         // FINISH text
         ctx.fillStyle = '#FFD700';
-        ctx.font = 'bold 40px Courier';
+        ctx.font = 'bold 35px Courier';
         ctx.save();
         ctx.translate(finishX + 50, canvas.height / 2);
         ctx.rotate(-Math.PI / 2);
@@ -564,64 +558,64 @@
         // Shadow
         ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
         ctx.beginPath();
-        ctx.ellipse(x + 50, y + 75, 55, 15, 0, 0, Math.PI * 2);
+        ctx.ellipse(x + 40, y + 55, 45, 12, 0, 0, Math.PI * 2);
         ctx.fill();
 
-        // BIGGER CAMEL!
+        // FATTER, ROUNDER CAMEL!
         ctx.fillStyle = c.color;
 
-        // Body
+        // Main body - WIDER!
         ctx.beginPath();
-        ctx.ellipse(x + 45, y + 35, 60, 30, 0, 0, Math.PI * 2);
+        ctx.ellipse(x + 35, y + 25, 50, 22, 0, 0, Math.PI * 2);
         ctx.fill();
 
-        // Neck
+        // Neck - THICKER
         ctx.beginPath();
-        ctx.ellipse(x + 85, y + 15, 20, 35, 0.3, 0, Math.PI * 2);
+        ctx.ellipse(x + 70, y + 12, 16, 28, 0.2, 0, Math.PI * 2);
         ctx.fill();
 
-        // Head
+        // Head - ROUNDER
         ctx.beginPath();
-        ctx.ellipse(x + 95, y, 15, 18, 0.2, 0, Math.PI * 2);
+        ctx.ellipse(x + 78, y, 13, 15, 0.1, 0, Math.PI * 2);
         ctx.fill();
 
-        // Humps
+        // Humps - ROUNDER
         ctx.beginPath();
-        ctx.arc(x + 30, y + 20, 22, Math.PI, 0);
+        ctx.arc(x + 25, y + 15, 18, Math.PI, 0);
         ctx.fill();
         ctx.beginPath();
-        ctx.arc(x + 60, y + 20, 18, Math.PI, 0);
+        ctx.arc(x + 50, y + 15, 15, Math.PI, 0);
         ctx.fill();
 
-        // Animated legs
-        const legMove = Math.sin(c.distance * 0.1) * 6;
-        ctx.fillRect(x + 20, y + 60, 8, 25 + legMove);
-        ctx.fillRect(x + 40, y + 60, 8, 25 - legMove);
-        ctx.fillRect(x + 60, y + 60, 8, 25 - legMove);
-        ctx.fillRect(x + 80, y + 60, 8, 25 + legMove);
+        // Legs - animated but not too long
+        const legMove = Math.sin(c.distance * 0.1) * 5;
+        ctx.fillRect(x + 15, y + 45, 7, 20 + legMove);
+        ctx.fillRect(x + 32, y + 45, 7, 20 - legMove);
+        ctx.fillRect(x + 50, y + 45, 7, 20 - legMove);
+        ctx.fillRect(x + 67, y + 45, 7, 20 + legMove);
 
-        // Jockey
-        ctx.font = '40px Arial';
-        ctx.fillText(c.jockey, x + 40, y + 40);
+        // Jockey - BIGGER
+        ctx.font = '35px Arial';
+        ctx.fillText(c.jockey, x + 32, y + 32);
 
         // Highlight player's camel
         if (c.isMe) {
           ctx.strokeStyle = '#FFD700';
-          ctx.lineWidth = 6;
-          ctx.strokeRect(x - 10, y - 30, 110, 120);
+          ctx.lineWidth = 5;
+          ctx.strokeRect(x - 8, y - 25, 95, 95);
 
           ctx.fillStyle = '#FFD700';
-          ctx.font = 'bold 18px Courier';
-          ctx.fillText('⭐ YOU ⭐', x + 20, y - 35);
+          ctx.font = 'bold 16px Courier';
+          ctx.fillText('⭐ YOU ⭐', x + 15, y - 30);
         }
 
         // Name
         ctx.fillStyle = '#FFF';
         ctx.strokeStyle = '#000';
         ctx.lineWidth = 3;
-        ctx.font = 'bold 14px Courier';
-        ctx.strokeText(c.name, x + 10, y - 10);
-        ctx.fillText(c.name, x + 10, y - 10);
+        ctx.font = 'bold 13px Courier';
+        ctx.strokeText(c.name, x + 5, y - 8);
+        ctx.fillText(c.name, x + 5, y - 8);
       },
 
       animate() {
