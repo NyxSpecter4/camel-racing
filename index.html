@@ -62,7 +62,7 @@
       background: rgba(0,0,0,0.85);
       backdrop-filter: blur(10px);
       border-bottom: 3px solid #FFD700;
-      padding: 12px;
+      padding: 8px;
       text-align: center;
       z-index: 1000;
       box-shadow: 0 4px 20px rgba(255, 215, 0, 0.3);
@@ -70,7 +70,7 @@
 
     .gold-amount {
       color: #FFD700;
-      font-size: clamp(1.2em, 4vw, 2em);
+      font-size: 1.1em;
       font-weight: bold;
       text-shadow: 0 0 10px #FFD700, 0 0 20px #FF8C00;
       animation: goldPulse 2s ease-in-out infinite;
@@ -83,16 +83,16 @@
 
     .betting-screen {
       max-width: 600px;
-      margin: 55px auto 5px;
+      margin: 52px auto 3px;
       background: linear-gradient(to bottom, #1a0000 0%, #000 50%, #1a0000 100%);
       backdrop-filter: blur(15px);
-      border: 8px ridge #FFD700;
-      border-radius: 20px;
-      padding: 10px;
+      border: 6px ridge #FFD700;
+      border-radius: 15px;
+      padding: 6px;
       box-shadow: 0 0 40px rgba(255,0,0,0.5), 0 0 80px rgba(255,215,0,0.3), inset 0 0 30px rgba(255,215,0,0.1);
       animation: slideUp 0.6s ease-out;
-      max-height: calc(100vh - 65px);
-      overflow-y: hidden;
+      max-height: calc(100vh - 58px);
+      overflow-y: auto;
     }
 
     @keyframes slideUp {
@@ -102,9 +102,9 @@
 
     .betting-screen h1 {
       color: #FFD700;
-      font-size: clamp(1.3em, 4.5vw, 1.7em);
-      margin-bottom: 5px;
-      text-shadow: 0 0 20px #FF0000, 0 0 40px #FFD700, 0 0 60px #FF8C00;
+      font-size: 1.1em;
+      margin-bottom: 2px;
+      text-shadow: 0 0 20px #FF0000, 0 0 40px #FFD700;
       animation: titleGlow 3s ease-in-out infinite;
     }
 
@@ -129,8 +129,8 @@
 
     .betting-screen p {
       color: #FFD700;
-      font-size: clamp(0.75em, 2.2vw, 0.85em);
-      margin-bottom: 5px;
+      font-size: 0.65em;
+      margin-bottom: 2px;
       text-shadow: 0 0 10px #FF0000;
       text-transform: uppercase;
       letter-spacing: 1px;
@@ -139,18 +139,18 @@
     .camel-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 3px;
-      margin: 4px 0;
+      gap: 2px;
+      margin: 2px 0;
     }
 
     .camel-option {
       background: linear-gradient(180deg, #2a0000 0%, #000 50%, #2a0000 100%);
       border: 2px ridge #FFD700;
-      border-radius: 6px;
-      padding: 3px;
+      border-radius: 5px;
+      padding: 2px;
       cursor: pointer;
       transition: all 0.2s;
-      min-height: 55px;
+      min-height: 38px;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -223,17 +223,17 @@
     .bet-controls {
       background: linear-gradient(to bottom, #1a0000, #000);
       backdrop-filter: blur(10px);
-      border-radius: 12px;
-      border: 4px ridge #FFD700;
-      padding: 8px;
-      margin: 8px 0;
+      border-radius: 8px;
+      border: 3px ridge #FFD700;
+      padding: 5px;
+      margin: 3px 0;
       box-shadow: inset 0 0 20px rgba(255,0,0,0.3);
     }
 
     .bet-controls h3 {
       color: #FFD700;
-      font-size: clamp(0.85em, 3vw, 1em);
-      margin-bottom: 6px;
+      font-size: 0.7em;
+      margin-bottom: 3px;
       text-shadow: 0 0 15px #FF0000;
       text-transform: uppercase;
       letter-spacing: 1px;
@@ -241,15 +241,15 @@
 
     .bet-amount {
       width: 100%;
-      padding: 8px;
-      font-size: clamp(1em, 3.2vw, 1.15em);
-      border: 3px ridge #FFD700;
-      border-radius: 8px;
+      padding: 5px;
+      font-size: 0.95em;
+      border: 2px ridge #FFD700;
+      border-radius: 6px;
       background: #000;
       color: #32CD32;
       text-align: center;
       font-family: 'Courier New', monospace;
-      margin-bottom: 6px;
+      margin-bottom: 3px;
       transition: all 0.1s;
       box-shadow: inset 0 0 20px rgba(0,255,0,0.3), 0 0 20px rgba(255,215,0,0.5);
       font-weight: bold;
@@ -285,18 +285,18 @@
     .bet-buttons {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 5px;
-      margin-top: 6px;
+      gap: 3px;
+      margin-top: 3px;
     }
 
     .bet-btn {
       background: linear-gradient(180deg, #8B0000, #000, #8B0000);
       color: #FFD700;
-      border: 3px ridge #FFD700;
-      padding: 8px 4px;
-      font-size: clamp(0.8em, 2.6vw, 0.95em);
+      border: 2px ridge #FFD700;
+      padding: 5px 3px;
+      font-size: 0.75em;
       font-weight: bold;
-      border-radius: 6px;
+      border-radius: 5px;
       cursor: pointer;
       font-family: 'Courier New', monospace;
       transition: all 0.3s;
@@ -312,15 +312,15 @@
     button {
       background: linear-gradient(180deg, #FFD700, #FF0000, #FFD700);
       color: #000;
-      border: 5px ridge #FFD700;
-      padding: 12px 25px;
-      font-size: clamp(1em, 3.2vw, 1.15em);
+      border: 3px ridge #FFD700;
+      padding: 8px 20px;
+      font-size: 0.9em;
       font-weight: bold;
-      border-radius: 10px;
+      border-radius: 8px;
       cursor: pointer;
       font-family: 'Impact', sans-serif;
       width: 100%;
-      margin-top: 10px;
+      margin-top: 5px;
       transition: all 0.3s;
       touch-action: manipulation;
       box-shadow: 0 0 30px #FF0000, 0 0 50px #FFD700, inset 0 0 20px rgba(255,255,255,0.3);
@@ -357,18 +357,18 @@
     .payout-info {
       background: linear-gradient(to bottom, #1a0000, #000);
       backdrop-filter: blur(10px);
-      border: 3px ridge #FFD700;
-      border-radius: 8px;
-      padding: 6px;
-      margin: 6px 0;
+      border: 2px ridge #FFD700;
+      border-radius: 6px;
+      padding: 4px;
+      margin: 3px 0;
       text-align: left;
       box-shadow: inset 0 0 20px rgba(255,0,0,0.3);
     }
 
     .payout-info h4 {
       color: #FFD700;
-      font-size: 0.75em;
-      margin-bottom: 3px;
+      font-size: 0.65em;
+      margin-bottom: 2px;
       text-shadow: 0 0 15px #FF0000;
       text-transform: uppercase;
       letter-spacing: 1px;
@@ -377,9 +377,9 @@
     .payout-item {
       display: flex;
       justify-content: space-between;
-      padding: 3px 0;
+      padding: 2px 0;
       border-bottom: 1px solid rgba(255,215,0,0.3);
-      font-size: 0.65em;
+      font-size: 0.6em;
       transition: all 0.3s;
     }
 
