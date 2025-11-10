@@ -2,265 +2,249 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>🏜️ Desert Tribe - Camel Racing</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🏜️ Dune Rush - Real Multiplayer</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Courier New', monospace;
-      background: linear-gradient(to bottom, #f4a460 0%, #daa520 50%, #d2691e 100%);
+      background: linear-gradient(to bottom, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
       min-height: 100vh;
+      color: #fff;
       overflow-x: hidden;
-      touch-action: pan-y;
     }
-    .container { max-width: 100%; margin: 0 auto; padding: 15px; }
+    .container { max-width: 1400px; margin: 0 auto; padding: 20px; text-align: center; }
 
     .title {
-      color: #fff;
-      text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
-      margin: 30px 0;
-      text-align: center;
-      animation: fadeIn 1s ease-in;
+      color: #FFD700;
+      text-shadow: 0 0 20px #FF8C00;
+      margin: 40px 0;
+      animation: fadeIn 1s;
     }
-    .title h1 { font-size: 2.5em; letter-spacing: 3px; }
-    .title p { font-size: 1.1em; color: #ffe4b5; margin-top: 10px; }
+    .title h1 { font-size: 3em; letter-spacing: 5px; }
 
     button {
-      background: linear-gradient(45deg, #32CD32, #228B22);
-      color: white;
+      background: linear-gradient(135deg, #FFD700, #FF8C00);
+      color: #000;
       border: none;
-      padding: 18px 30px;
-      font-size: 1.2em;
+      padding: 20px 40px;
+      font-size: 1.3em;
       font-weight: bold;
-      border-radius: 10px;
-      cursor: pointer;
-      margin: 10px 5px;
-      width: 100%;
-      max-width: 400px;
-      touch-action: manipulation;
-    }
-    button:active { transform: scale(0.95); }
-
-    /* Betting Screen */
-    .betting-screen {
-      display: none;
-      max-width: 500px;
-      margin: 0 auto;
-    }
-
-    .camel-select {
-      background: rgba(139, 69, 19, 0.6);
-      border: 3px solid #654321;
       border-radius: 12px;
-      padding: 20px;
-      margin: 15px 0;
+      cursor: pointer;
+      margin: 10px;
+      transition: all 0.3s;
+    }
+    button:hover { transform: scale(1.05); box-shadow: 0 5px 20px rgba(255,140,0,0.5); }
+
+    /* Region Selection */
+    .regions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin: 40px 0;
+    }
+
+    .region-card {
+      background: linear-gradient(135deg, rgba(139,69,19,0.5), rgba(101,67,33,0.5));
+      border: 3px solid #654321;
+      border-radius: 15px;
+      padding: 30px;
       cursor: pointer;
       transition: all 0.3s;
     }
 
-    .camel-select:active {
-      transform: scale(0.98);
+    .region-card:hover {
+      transform: translateY(-5px);
       border-color: #FFD700;
+      box-shadow: 0 10px 30px rgba(255,215,0,0.3);
     }
 
-    .camel-select.selected {
-      border-color: #FFD700;
-      background: rgba(255, 215, 0, 0.3);
-      box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-    }
+    .region-card h2 { color: #FFD700; font-size: 2em; margin-bottom: 15px; }
+    .region-card p { color: #FFF; font-size: 1.1em; margin: 8px 0; }
 
-    .camel-select h3 {
-      color: #FFD700;
-      font-size: 1.5em;
-      margin-bottom: 8px;
-    }
-
-    .bet-input {
+    /* Lobby */
+    .lobby {
+      background: rgba(0,0,0,0.8);
+      border: 3px solid #FFD700;
+      border-radius: 15px;
+      padding: 30px;
       margin: 20px 0;
-      padding: 15px;
-      background: rgba(0,0,0,0.5);
-      border-radius: 10px;
+      display: none;
     }
 
-    .bet-input input {
-      width: 100%;
-      padding: 15px;
-      font-size: 1.3em;
+    .players-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
+    }
+
+    .player-card {
+      background: rgba(139,69,19,0.4);
       border: 2px solid #654321;
-      border-radius: 8px;
-      background: rgba(0,0,0,0.3);
-      color: #FFD700;
-      font-family: 'Courier New', monospace;
+      border-radius: 10px;
+      padding: 15px;
       text-align: center;
+    }
+
+    .player-card.ready {
+      border-color: #32CD32;
+      box-shadow: 0 0 15px rgba(50,205,50,0.5);
     }
 
     /* Race View */
     .race-view {
       display: none;
+      position: relative;
     }
 
     .race-viewport {
       width: 100%;
-      height: 60vh;
-      border: 4px solid #654321;
-      border-radius: 10px;
-      overflow: hidden;
-      position: relative;
-      background: #000;
-      touch-action: none;
-    }
-
-    canvas {
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-
-    .your-camel-indicator {
-      position: absolute;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0,0,0,0.8);
-      color: #FFD700;
-      padding: 10px 20px;
-      border-radius: 20px;
-      border: 2px solid #FFD700;
-      font-size: 1.1em;
-      z-index: 10;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-    }
-
-    .race-info {
-      background: rgba(0,0,0,0.8);
-      border: 3px solid #FFD700;
-      border-radius: 10px;
-      padding: 15px;
-      margin: 15px 0;
-      color: #FFD700;
-    }
-
-    .progress-container {
-      background: rgba(0,0,0,0.6);
-      border-radius: 10px;
-      padding: 15px;
-      margin: 15px 0;
-    }
-
-    .progress-bar {
-      width: 100%;
-      height: 30px;
-      background: rgba(0,0,0,0.5);
-      border: 2px solid #FFD700;
+      height: 70vh;
+      border: 4px solid #FF8C00;
       border-radius: 15px;
       overflow: hidden;
       position: relative;
+      background: #000;
     }
 
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #32CD32, #FFD700);
-      width: 0%;
-      transition: width 0.3s;
-      position: relative;
-    }
+    canvas { position: absolute; top: 0; left: 0; }
 
-    .progress-fill::after {
-      content: '';
+    .ui-overlay {
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-      animation: shimmer 2s infinite;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      z-index: 10;
+      pointer-events: none;
     }
 
-    @keyframes shimmer {
-      0% { transform: translateX(-100%); }
-      100% { transform: translateX(100%); }
+    .player-tag {
+      background: rgba(0,0,0,0.8);
+      border: 2px solid #FFD700;
+      border-radius: 20px;
+      padding: 10px 20px;
+      display: inline-block;
+      font-size: 1.1em;
+      margin-bottom: 10px;
     }
 
-    .position-display {
+    .live-positions {
+      background: rgba(0,0,0,0.9);
+      border: 2px solid #FFD700;
+      border-radius: 10px;
+      padding: 15px;
+      margin: 15px 0;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .position-item {
       display: flex;
       justify-content: space-between;
-      margin-top: 10px;
-      font-size: 1.2em;
+      padding: 8px;
+      margin: 5px 0;
+      background: rgba(139,69,19,0.3);
+      border-radius: 5px;
     }
 
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(-20px); }
       to { opacity: 1; transform: translateY(0); }
     }
-
-    @media (min-width: 768px) {
-      .title h1 { font-size: 3em; }
-      .race-viewport { height: 70vh; }
-      button { width: auto; }
-    }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="title">
-      <h1>🏜️ DESERT TRIBE 🐪</h1>
-      <p>Epic Camel Racing</p>
+      <h1>🏜️ DUNE RUSH</h1>
+      <p style="font-size: 1.3em; color: #FF8C00;">Real Multiplayer Racing</p>
     </div>
 
-    <!-- Betting Screen -->
-    <div class="betting-screen" id="bettingScreen">
-      <h2 style="color: #FFD700; text-align: center; margin-bottom: 20px;">
-        🎰 PICK YOUR CAMEL 🎰
-      </h2>
-
-      <div id="camelList"></div>
-
-      <div class="bet-input">
-        <label style="color: #FFD700; display: block; margin-bottom: 10px; font-size: 1.1em;">
-          💰 Your Gold: 1000
-        </label>
-        <input type="number" id="betAmount" placeholder="Bet amount..." value="100" min="10" max="1000">
+    <!-- Region Selection -->
+    <div id="regionSelect" class="regions">
+      <div class="region-card" onclick="joinRegion('canyon')">
+        <h2>🏔️ CANYON RUN</h2>
+        <p>📏 5km race</p>
+        <p>🌄 Mountain valleys</p>
+        <p>⚡ Quick race</p>
+        <p style="color: #32CD32; margin-top: 10px;">👥 <span id="canyon-count">0</span> players</p>
       </div>
 
-      <button onclick="startRace()" id="raceBtn" style="background: linear-gradient(45deg, #FFD700, #FF8C00);">
-        🏁 START RACE
-      </button>
+      <div class="region-card" onclick="joinRegion('desert')">
+        <h2>🏜️ DESERT CROSSING</h2>
+        <p>📏 15km race</p>
+        <p>🌅 Epic dunes</p>
+        <p>⚡ Medium race</p>
+        <p style="color: #32CD32; margin-top: 10px;">👥 <span id="desert-count">0</span> players</p>
+      </div>
+
+      <div class="region-card" onclick="joinRegion('mountain')">
+        <h2>⛰️ MOUNTAIN PASS</h2>
+        <p>📏 30km race</p>
+        <p>🏔️ Tall peaks</p>
+        <p>⚡ Epic marathon</p>
+        <p style="color: #32CD32; margin-top: 10px;">👥 <span id="mountain-count">0</span> players</p>
+      </div>
+    </div>
+
+    <!-- Lobby -->
+    <div id="lobby" class="lobby">
+      <h2 style="color: #FFD700; font-size: 2em; margin-bottom: 20px;">
+        🏁 RACE LOBBY
+      </h2>
+      <p style="color: #FF8C00; font-size: 1.2em; margin-bottom: 20px;">
+        Waiting for players... (<span id="playerCount">0</span>/8)
+      </p>
+
+      <div class="players-grid" id="playersGrid"></div>
+
+      <button onclick="toggleReady()" id="readyBtn">⏱️ READY UP</button>
+      <button onclick="backToRegions()" style="background: linear-gradient(135deg, #666, #444);">← Back</button>
     </div>
 
     <!-- Race View -->
-    <div class="race-view" id="raceView">
-      <h2 style="color: #FFD700; text-align: center; margin-bottom: 15px;">
-        🏁 10KM EPIC RACE 🏁
-      </h2>
-
+    <div id="raceView" class="race-view">
       <div class="race-viewport" id="viewport">
         <canvas id="raceCanvas"></canvas>
-        <div class="your-camel-indicator" id="indicator"></div>
-      </div>
-
-      <div class="progress-container">
-        <div class="progress-bar">
-          <div class="progress-fill" id="progressFill"></div>
-        </div>
-        <div class="position-display">
-          <span style="color: #FFD700;">Position: <strong id="position">-</strong></span>
-          <span style="color: #32CD32;">Progress: <strong id="progress">0%</strong></span>
+        <div class="ui-overlay">
+          <div class="player-tag">
+            🎯 YOU: <span id="yourCamel"></span>
+          </div>
         </div>
       </div>
 
-      <div class="race-info" id="raceInfo"></div>
+      <div class="live-positions">
+        <h3 style="color: #FFD700; margin-bottom: 10px;">🏆 LIVE POSITIONS</h3>
+        <div id="positionsList"></div>
+      </div>
 
-      <div id="raceStatus" style="text-align: center; margin: 20px 0;"></div>
-      <button onclick="location.reload()" style="display: none;" id="resetBtn">🔄 NEW RACE</button>
+      <div id="raceResult" style="display: none; margin: 20px 0;">
+        <h2 id="resultText" style="color: #FFD700; font-size: 2em;"></h2>
+        <button onclick="location.reload()">🔄 NEW RACE</button>
+      </div>
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
+    // SUPABASE
+    const SUPABASE_URL = "https://itxbzfwtutozegelbwwt.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml0eGJ6Znd0dXRvemVnZWxid3d0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI3NDg2NDcsImV4cCI6MjA3ODMyNDY0N30._1Oy-uaTvFxusKiooj2Pta7rYp_EOkor9wnfWQfWe7I";
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // GAME STATE
+    const GameState = {
+      playerName: 'Player' + Math.floor(Math.random() * 10000),
+      currentRegion: null,
+      currentLobbyId: null,
+      isReady: false,
+      myCamel: null,
+      otherPlayers: []
+    };
+
+    // CAMELS - COMPLETELY RANDOM EACH RACE!
     const CAMELS = [
       { id: 0, name: 'Desert Storm', color: '#8B4513', jockey: '👳' },
       { id: 1, name: 'Sand Runner', color: '#D2691E', jockey: '🧔' },
@@ -273,77 +257,190 @@
       { id: 8, name: 'Lightning Bolt', color: '#D2B48C', jockey: '👱' }
     ];
 
-    let selectedCamel = null;
-    let betAmount = 100;
+    // REGIONS CONFIG
+    const REGIONS = {
+      canyon: { name: 'Canyon Run', length: 5000, emoji: '🏔️' },
+      desert: { name: 'Desert Crossing', length: 15000, emoji: '🏜️' },
+      mountain: { name: 'Mountain Pass', length: 30000, emoji: '⛰️' }
+    };
 
-    // Show betting screen
-    function showBettingScreen() {
-      document.querySelector('.title').style.display = 'block';
-      document.getElementById('bettingScreen').style.display = 'block';
+    // JOIN REGION
+    async function joinRegion(region) {
+      GameState.currentRegion = region;
 
-      const list = document.getElementById('camelList');
-      list.innerHTML = CAMELS.map(camel => `
-        <div class="camel-select" onclick="selectCamel(${camel.id})">
-          <h3>${camel.jockey} ${camel.name}</h3>
-          <div style="color: #FFF; margin-top: 5px;">Speed: ???  |  Form: ???</div>
+      // Find or create lobby
+      let { data: lobbies } = await supabase
+        .from('race_lobbies')
+        .select('*')
+        .eq('region', region)
+        .eq('status', 'waiting')
+        .limit(1);
+
+      let lobbyId;
+      if (lobbies && lobbies.length > 0) {
+        lobbyId = lobbies[0].id;
+      } else {
+        const { data: newLobby } = await supabase
+          .from('race_lobbies')
+          .insert([{
+            region,
+            race_length: REGIONS[region].length,
+            status: 'waiting'
+          }])
+          .select()
+          .single();
+        lobbyId = newLobby.id;
+      }
+
+      GameState.currentLobbyId = lobbyId;
+
+      // Assign random camel
+      const randomCamel = CAMELS[Math.floor(Math.random() * CAMELS.length)];
+      GameState.myCamel = randomCamel;
+
+      // Join lobby
+      await supabase
+        .from('race_participants')
+        .insert([{
+          lobby_id: lobbyId,
+          player_name: GameState.playerName,
+          camel_id: randomCamel.id,
+          camel_name: randomCamel.name
+        }]);
+
+      // Show lobby
+      document.getElementById('regionSelect').style.display = 'none';
+      document.getElementById('lobby').style.display = 'block';
+
+      subscribeLobby(lobbyId);
+      loadLobbyPlayers(lobbyId);
+    }
+
+    // SUBSCRIBE TO LOBBY UPDATES
+    function subscribeLobby(lobbyId) {
+      supabase.channel(`lobby:${lobbyId}`)
+        .on('postgres_changes', {
+          event: '*',
+          schema: 'public',
+          table: 'race_participants',
+          filter: `lobby_id=eq.${lobbyId}`
+        }, () => {
+          loadLobbyPlayers(lobbyId);
+        })
+        .subscribe();
+    }
+
+    // LOAD LOBBY PLAYERS
+    async function loadLobbyPlayers(lobbyId) {
+      const { data: players } = await supabase
+        .from('race_participants')
+        .select('*')
+        .eq('lobby_id', lobbyId);
+
+      document.getElementById('playerCount').textContent = players.length;
+
+      const grid = document.getElementById('playersGrid');
+      grid.innerHTML = players.map(p => `
+        <div class="player-card">
+          <div style="font-size: 2em;">${CAMELS[p.camel_id].jockey}</div>
+          <strong style="color: #FFD700;">${p.player_name}</strong>
+          <div style="color: #aaa; font-size: 0.9em;">${p.camel_name}</div>
         </div>
       `).join('');
+
+      // Check if ready to start
+      if (players.length >= 2 && players.every(p => p.ready)) {
+        setTimeout(() => startRace(lobbyId), 2000);
+      }
     }
 
-    function selectCamel(id) {
-      selectedCamel = id;
-      document.querySelectorAll('.camel-select').forEach((el, i) => {
-        el.classList.toggle('selected', i === id);
-      });
+    // TOGGLE READY
+    async function toggleReady() {
+      GameState.isReady = !GameState.isReady;
+
+      await supabase
+        .from('race_participants')
+        .update({ ready: GameState.isReady })
+        .eq('lobby_id', GameState.currentLobbyId)
+        .eq('player_name', GameState.playerName);
+
+      document.getElementById('readyBtn').textContent = GameState.isReady ? '✅ READY!' : '⏱️ READY UP';
     }
 
+    function backToRegions() {
+      location.reload();
+    }
+
+    // START RACE
+    async function startRace(lobbyId) {
+      await supabase
+        .from('race_lobbies')
+        .update({ status: 'racing' })
+        .eq('id', lobbyId);
+
+      const { data: players } = await supabase
+        .from('race_participants')
+        .select('*')
+        .eq('lobby_id', lobbyId);
+
+      GameState.otherPlayers = players;
+
+      document.getElementById('lobby').style.display = 'none';
+      document.getElementById('raceView').style.display = 'block';
+
+      document.getElementById('yourCamel').textContent =
+        `${GameState.myCamel.jockey} ${GameState.myCamel.name}`;
+
+      RaceEngine.init(lobbyId, players);
+    }
+
+    // RACE ENGINE
     const RaceEngine = {
       canvas: null,
       ctx: null,
       viewport: null,
+      lobbyId: null,
       camels: [],
-      playerCamel: null,
-      raceInProgress: false,
-      winner: null,
-      raceLength: 10000,
+      myCamel: null,
+      raceLength: 5000,
       cameraX: 0,
-      canvasWidth: 15000,
+      lastUpdate: 0,
+      running: false,
 
-      init() {
+      init(lobbyId, players) {
+        this.lobbyId = lobbyId;
+        this.raceLength = REGIONS[GameState.currentRegion].length;
         this.viewport = document.getElementById('viewport');
         this.canvas = document.getElementById('raceCanvas');
-        this.canvas.width = this.canvasWidth;
+        this.canvas.width = this.raceLength + 2000;
         this.canvas.height = this.viewport.clientHeight;
         this.ctx = this.canvas.getContext('2d');
 
-        // Initialize camels
-        this.camels = CAMELS.map((c, i) => ({
-          ...c,
-          x: 100,
-          y: (this.canvas.height / 2) - 200 + (i * 45),
-          baseSpeed: 3.5,
-          todaysForm: 0.85 + Math.random() * 0.3,
-          maxStamina: 80 + Math.random() * 40,
-          staminaDrain: 0.04 + Math.random() * 0.03,
-          consistency: 0.7 + Math.random() * 0.6,
-          burstChance: 0.01 + Math.random() * 0.02,
-          stumbleChance: 0.005 + Math.random() * 0.01,
-          stamina: 100,
-          speed: 3.5,
-          distance: 0,
-          isStumbling: false,
-          stumbleTimer: 0,
-          burstTimer: 0
-        }));
+        // Initialize camels with TRULY RANDOM stats each race
+        this.camels = players.map((p, i) => {
+          const camel = CAMELS[p.camel_id];
+          return {
+            ...camel,
+            playerName: p.player_name,
+            x: 100,
+            y: 100 + (i * 70),
+            distance: 0,
 
-        this.playerCamel = this.camels[selectedCamel];
+            // COMPLETELY RANDOM - NO BIAS!
+            speed: 3 + Math.random() * 2, // 3-5 random each frame
+            form: Math.random(), // 0-1 completely random
+            stamina: 100,
+            staminaDrain: 0.02 + Math.random() * 0.03,
+            burstChance: Math.random() * 0.02,
+            stumbleChance: Math.random() * 0.01,
+            isMe: p.player_name === GameState.playerName
+          };
+        });
 
-        // Update indicator
-        document.getElementById('indicator').innerHTML = `
-          🎯 YOUR CAMEL: ${this.playerCamel.jockey} ${this.playerCamel.name}
-        `;
-
-        this.drawScene();
+        this.myCamel = this.camels.find(c => c.isMe);
+        this.running = true;
+        this.lastUpdate = performance.now();
+        this.animate();
       },
 
       drawScene() {
@@ -352,136 +449,74 @@
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Sky with clouds
-        const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height * 0.4);
+        // Sky - gradient
+        const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height * 0.5);
         gradient.addColorStop(0, '#87CEEB');
-        gradient.addColorStop(0.5, '#B0D4F1');
+        gradient.addColorStop(0.5, '#B0E0E6');
         gradient.addColorStop(1, '#F4A460');
         ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, canvas.width, canvas.height * 0.4);
+        ctx.fillRect(0, 0, canvas.width, canvas.height * 0.5);
 
-        // Animated clouds
-        for (let i = 0; i < 20; i++) {
-          const cloudX = (i * 700) + (this.cameraX * 0.1);
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+        // Mountains in background
+        ctx.fillStyle = '#8B7355';
+        for (let i = 0; i < 10; i++) {
+          const x = i * 800;
           ctx.beginPath();
-          ctx.arc(cloudX % canvas.width, 80 + Math.sin(i) * 30, 40, 0, Math.PI * 2);
-          ctx.arc(cloudX % canvas.width + 30, 70 + Math.sin(i) * 30, 50, 0, Math.PI * 2);
-          ctx.arc(cloudX % canvas.width + 60, 80 + Math.sin(i) * 30, 40, 0, Math.PI * 2);
+          ctx.moveTo(x, canvas.height * 0.5);
+          ctx.lineTo(x + 400, 50);
+          ctx.lineTo(x + 800, canvas.height * 0.5);
+          ctx.closePath();
           ctx.fill();
         }
 
-        // Sun
-        ctx.fillStyle = '#FFD700';
-        ctx.beginPath();
-        ctx.arc(200, 100, 50, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = 'rgba(255, 215, 0, 0.3)';
-        ctx.beginPath();
-        ctx.arc(200, 100, 70, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Sand dunes - multiple layers with parallax
-        const duneOffset1 = this.cameraX * 0.2;
-        const duneOffset2 = this.cameraX * 0.4;
-        const duneOffset3 = this.cameraX * 0.6;
-
-        // Back layer
-        ctx.fillStyle = '#F4A460';
-        ctx.beginPath();
-        ctx.moveTo(0, canvas.height * 0.4);
-        for (let x = 0; x < canvas.width; x += 50) {
-          const y = canvas.height * 0.4 + Math.sin((x - duneOffset1) * 0.005) * 100 + 120;
-          ctx.lineTo(x, y);
-        }
-        ctx.lineTo(canvas.width, canvas.height);
-        ctx.lineTo(0, canvas.height);
-        ctx.fill();
-
-        // Middle layer
-        ctx.fillStyle = '#DEB887';
-        ctx.beginPath();
-        ctx.moveTo(0, canvas.height * 0.55);
-        for (let x = 0; x < canvas.width; x += 50) {
-          const y = canvas.height * 0.55 + Math.sin((x - duneOffset2) * 0.008) * 70 + 90;
-          ctx.lineTo(x, y);
-        }
-        ctx.lineTo(canvas.width, canvas.height);
-        ctx.lineTo(0, canvas.height);
-        ctx.fill();
-
-        // Front layer (racing surface)
-        ctx.fillStyle = '#D2691E';
-        ctx.beginPath();
-        ctx.moveTo(0, canvas.height * 0.7);
-        for (let x = 0; x < canvas.width; x += 50) {
-          const y = canvas.height * 0.7 + Math.sin((x - duneOffset3) * 0.01) * 30 + 50;
-          ctx.lineTo(x, y);
-        }
-        ctx.lineTo(canvas.width, canvas.height);
-        ctx.lineTo(0, canvas.height);
-        ctx.fill();
-
-        // Racing track
-        const trackY = canvas.height / 2 - 220;
-        ctx.fillStyle = 'rgba(139, 69, 19, 0.3)';
-        ctx.fillRect(0, trackY, canvas.width, 450);
-
-        // Lane lines
-        ctx.strokeStyle = 'rgba(210, 180, 140, 0.3)';
-        ctx.lineWidth = 2;
+        // Snow peaks
+        ctx.fillStyle = '#FFF';
         for (let i = 0; i < 10; i++) {
+          const x = i * 800;
           ctx.beginPath();
-          ctx.moveTo(0, trackY + (i * 45));
-          ctx.lineTo(canvas.width, trackY + (i * 45));
-          ctx.stroke();
+          ctx.moveTo(x + 300, 150);
+          ctx.lineTo(x + 400, 50);
+          ctx.lineTo(x + 500, 150);
+          ctx.closePath();
+          ctx.fill();
         }
 
-        // Distance markers with palm trees
+        // Ground - natural terrain
+        ctx.fillStyle = '#D2691E';
+        ctx.fillRect(0, canvas.height * 0.5, canvas.width, canvas.height * 0.5);
+
+        // Rocky ground texture
+        for (let i = 0; i < 100; i++) {
+          ctx.fillStyle = 'rgba(139, 69, 19, 0.3)';
+          ctx.beginPath();
+          ctx.arc(Math.random() * canvas.width,
+                  canvas.height * 0.5 + Math.random() * (canvas.height * 0.5),
+                  3 + Math.random() * 5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // Distance markers
         for (let i = 0; i <= this.raceLength; i += 1000) {
-          const markerX = 100 + i;
-
-          // Marker line
-          ctx.fillStyle = 'rgba(255, 215, 0, 0.5)';
-          ctx.fillRect(markerX, 0, 5, canvas.height);
-
-          // Palm tree
-          ctx.fillStyle = '#8B4513';
-          ctx.fillRect(markerX - 8, canvas.height * 0.3, 16, 120);
-          ctx.fillStyle = '#228B22';
-          for (let p = 0; p < 6; p++) {
-            ctx.beginPath();
-            ctx.ellipse(markerX, canvas.height * 0.3 - 10, 40, 15, (Math.PI / 3) * p, 0, Math.PI * 2);
-            ctx.fill();
-          }
-
-          // Distance text
+          const x = 100 + i;
+          ctx.fillStyle = 'rgba(255,215,0,0.5)';
+          ctx.fillRect(x, 0, 3, canvas.height);
           ctx.fillStyle = '#FFD700';
-          ctx.font = 'bold 24px Courier';
-          ctx.fillText(`${i/1000}km`, markerX - 30, 50);
+          ctx.font = 'bold 20px Courier';
+          ctx.fillText(`${(i/1000).toFixed(0)}km`, x + 10, 40);
         }
 
         // Finish line
         const finishX = 100 + this.raceLength;
         ctx.fillStyle = '#000';
-        ctx.fillRect(finishX, 0, 120, canvas.height);
+        ctx.fillRect(finishX, 0, 80, canvas.height);
         for (let i = 0; i < 20; i++) {
-          for (let j = 0; j < 3; j++) {
+          for (let j = 0; j < 2; j++) {
             if ((i + j) % 2 === 0) {
               ctx.fillStyle = '#fff';
-              ctx.fillRect(finishX + (j * 40), i * 50, 40, 50);
+              ctx.fillRect(finishX + (j * 40), i * (canvas.height/20), 40, canvas.height/20);
             }
           }
         }
-
-        // FINISH text
-        ctx.fillStyle = '#FFD700';
-        ctx.font = 'bold 60px Courier';
-        ctx.save();
-        ctx.translate(finishX + 60, canvas.height / 2);
-        ctx.rotate(-Math.PI / 2);
-        ctx.fillText('FINISH', 0, 0);
-        ctx.restore();
       },
 
       drawCamel(camel) {
@@ -489,213 +524,175 @@
         const x = 100 + camel.distance;
         const y = camel.y;
 
-        const wobble = camel.isStumbling ? Math.sin(Date.now() * 0.2) * 5 : Math.sin(camel.distance * 0.05) * 2;
-
         // Shadow
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+        ctx.fillStyle = 'rgba(0,0,0,0.3)';
         ctx.beginPath();
-        ctx.ellipse(x + 30, y + 50, 35, 10, 0, 0, Math.PI * 2);
+        ctx.ellipse(x + 40, y + 65, 45, 12, 0, 0, Math.PI * 2);
         ctx.fill();
 
-        // Camel body - bigger and more detailed
+        // Camel body - BIGGER AND SMOOTHER
         ctx.fillStyle = camel.color;
-        ctx.fillRect(x, y + wobble, 70, 45);
-        ctx.fillRect(x + 60, y - 15 + wobble, 20, 35);
-        ctx.fillRect(x + 70, y - 25 + wobble, 18, 18);
+
+        // Body
+        ctx.beginPath();
+        ctx.ellipse(x + 40, y + 30, 50, 25, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Neck
+        ctx.beginPath();
+        ctx.ellipse(x + 70, y + 10, 15, 30, 0.3, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Head
+        ctx.beginPath();
+        ctx.ellipse(x + 80, y - 5, 12, 15, 0.2, 0, Math.PI * 2);
+        ctx.fill();
 
         // Humps
         ctx.beginPath();
-        ctx.arc(x + 22, y + 5 + wobble, 18, Math.PI, 0);
+        ctx.arc(x + 30, y + 15, 18, Math.PI, 0);
         ctx.fill();
         ctx.beginPath();
-        ctx.arc(x + 48, y + 5 + wobble, 14, Math.PI, 0);
+        ctx.arc(x + 55, y + 15, 14, Math.PI, 0);
         ctx.fill();
 
-        // Legs with animation
-        const legBounce = Math.sin(camel.distance * 0.2) * 3;
-        ctx.fillRect(x + 12, y + 45 + wobble + legBounce, 7, 22);
-        ctx.fillRect(x + 30, y + 45 + wobble - legBounce, 7, 22);
-        ctx.fillRect(x + 48, y + 45 + wobble - legBounce, 7, 22);
-        ctx.fillRect(x + 66, y + 45 + wobble + legBounce, 7, 22);
+        // Legs - animated
+        const legMove = Math.sin(camel.distance * 0.1) * 5;
+        ctx.fillRect(x + 15, y + 50, 8, 25 + legMove);
+        ctx.fillRect(x + 35, y + 50, 8, 25 - legMove);
+        ctx.fillRect(x + 55, y + 50, 8, 25 - legMove);
+        ctx.fillRect(x + 75, y + 50, 8, 25 + legMove);
 
         // Jockey
-        ctx.font = '35px Arial';
-        ctx.fillText(camel.jockey, x + 25, y + 25 + wobble);
+        ctx.font = '40px Arial';
+        ctx.fillText(camel.jockey, x + 35, y + 35);
 
-        // Highlight player's camel
-        if (camel === this.playerCamel) {
+        // Player indicator
+        if (camel.isMe) {
           ctx.strokeStyle = '#FFD700';
-          ctx.lineWidth = 4;
-          ctx.strokeRect(x - 10, y - 35 + wobble, 90, 110);
-
+          ctx.lineWidth = 5;
+          ctx.strokeRect(x - 10, y - 30, 100, 110);
           ctx.fillStyle = '#FFD700';
           ctx.font = 'bold 16px Courier';
-          ctx.fillText('⭐ YOU ⭐', x + 5, y - 40);
+          ctx.fillText('⭐ YOU', x + 15, y - 35);
         }
 
-        // Name tag
-        ctx.fillStyle = '#000';
+        // Name
+        ctx.fillStyle = '#FFF';
         ctx.font = 'bold 14px Courier';
-        ctx.fillText(camel.name, x, y - 10);
-
-        // Status effects
-        if (camel.burstTimer > 0) {
-          ctx.fillStyle = '#FFD700';
-          ctx.font = 'bold 20px Courier';
-          ctx.fillText('⚡', x + 75, y - 5);
-        }
-        if (camel.isStumbling) {
-          ctx.fillStyle = '#FF0000';
-          ctx.font = 'bold 20px Courier';
-          ctx.fillText('💫', x + 75, y - 5);
-        }
-      },
-
-      updateCamera() {
-        // Center camera on player's camel
-        const targetX = this.playerCamel.distance - (this.viewport.clientWidth / 2) + 100;
-        this.cameraX = Math.max(0, Math.min(this.canvasWidth - this.viewport.clientWidth, targetX));
-        this.canvas.style.transform = `translateX(-${this.cameraX}px)`;
-      },
-
-      updateUI() {
-        const sorted = [...this.camels].sort((a, b) => b.distance - a.distance);
-        const position = sorted.findIndex(c => c === this.playerCamel) + 1;
-        const progress = ((this.playerCamel.distance / this.raceLength) * 100).toFixed(1);
-
-        document.getElementById('position').textContent = position + ' / 9';
-        document.getElementById('progress').textContent = progress + '%';
-        document.getElementById('progressFill').style.width = progress + '%';
-
-        let status = 'Running strong! 💪';
-        if (this.playerCamel.burstTimer > 0) status = 'SPEED BURST! ⚡⚡⚡';
-        if (this.playerCamel.isStumbling) status = 'Stumbled! 💫';
-        if (this.playerCamel.stamina < 30) status = 'Low stamina! 😓';
-
-        document.getElementById('raceInfo').innerHTML = `
-          <div style="font-size: 1.2em; margin-bottom: 8px;">${status}</div>
-          <div>Stamina: ${Math.floor(this.playerCamel.stamina)}% | Distance: ${(this.playerCamel.distance/1000).toFixed(2)}km</div>
-        `;
-      },
-
-      startRace() {
-        this.raceInProgress = true;
-        this.animate();
+        ctx.fillText(camel.playerName, x, y - 15);
       },
 
       animate() {
-        if (!this.raceInProgress) return;
+        if (!this.running) return;
+
+        const now = performance.now();
+        const delta = (now - this.lastUpdate) / 16.67; // Normalize to 60fps
+        this.lastUpdate = now;
 
         this.drawScene();
 
-        let raceFinished = false;
+        let winner = null;
 
         this.camels.forEach(camel => {
-          let speedMultiplier = camel.todaysForm;
+          // COMPLETELY RANDOM SPEED EACH FRAME!
+          const randomSpeed = 2 + Math.random() * 3; // 2-5 completely random
+          const formFactor = 0.8 + (Math.random() * 0.4); // 0.8-1.2 random
+          const staminaFactor = Math.max(0.7, camel.stamina / 100);
 
-          const staminaFactor = Math.max(0.6, camel.stamina / 100);
-          speedMultiplier *= staminaFactor;
+          camel.speed = randomSpeed * formFactor * staminaFactor * delta;
 
-          const randomness = (Math.random() - 0.5) * (2 - camel.consistency);
-          speedMultiplier *= (1 + randomness * 0.15);
+          // Random events
+          if (Math.random() < 0.01) camel.speed *= 1.8; // Burst
+          if (Math.random() < 0.005) camel.speed *= 0.3; // Stumble
 
-          if (Math.random() < camel.burstChance && camel.burstTimer === 0) {
-            camel.burstTimer = 60;
-          }
-          if (camel.burstTimer > 0) {
-            speedMultiplier *= 1.6;
-            camel.burstTimer--;
-          }
-
-          if (Math.random() < camel.stumbleChance && !camel.isStumbling) {
-            camel.isStumbling = true;
-            camel.stumbleTimer = 40;
-          }
-          if (camel.isStumbling) {
-            speedMultiplier *= 0.3;
-            camel.stumbleTimer--;
-            if (camel.stumbleTimer <= 0) {
-              camel.isStumbling = false;
-            }
-          }
-
-          camel.speed = camel.baseSpeed * speedMultiplier;
           camel.stamina -= camel.staminaDrain;
-          camel.stamina = Math.max(0, Math.min(100, camel.stamina));
+          camel.stamina = Math.max(10, camel.stamina);
 
           camel.distance += camel.speed;
 
           this.drawCamel(camel);
 
-          if (camel.distance >= this.raceLength && !this.winner) {
-            this.winner = camel;
-            raceFinished = true;
+          if (camel.distance >= this.raceLength && !winner) {
+            winner = camel;
           }
         });
 
-        this.updateCamera();
-        this.updateUI();
+        // Camera follows player
+        this.cameraX = Math.max(0, this.myCamel.distance - (this.viewport.clientWidth / 3));
+        this.canvas.style.transform = `translateX(-${this.cameraX}px)`;
 
-        if (raceFinished) {
-          this.finishRace();
+        // Update positions
+        this.updatePositions();
+
+        if (winner) {
+          this.finishRace(winner);
         } else {
           requestAnimationFrame(() => this.animate());
         }
       },
 
-      finishRace() {
-        this.raceInProgress = false;
+      updatePositions() {
+        const sorted = [...this.camels].sort((a, b) => b.distance - a.distance);
+        const list = document.getElementById('positionsList');
+
+        list.innerHTML = sorted.map((c, i) => {
+          const progress = ((c.distance / this.raceLength) * 100).toFixed(1);
+          return `
+            <div class="position-item" style="${c.isMe ? 'border-left: 3px solid #FFD700;' : ''}">
+              <span>${i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i+1}.`} ${c.playerName}</span>
+              <span style="color: #32CD32;">${progress}%</span>
+            </div>
+          `;
+        }).join('');
+      },
+
+      finishRace(winner) {
+        this.running = false;
 
         const sorted = [...this.camels].sort((a, b) => b.distance - a.distance);
-        const playerPosition = sorted.findIndex(c => c === this.playerCamel) + 1;
+        const myPos = sorted.findIndex(c => c.isMe) + 1;
 
-        let resultMsg = '';
-        let winnings = 0;
-
-        if (playerPosition === 1) {
-          winnings = betAmount * 8;
-          resultMsg = `🏆 YOU WON! +${winnings} GOLD! 🏆`;
-        } else if (playerPosition === 2) {
-          winnings = betAmount * 3;
-          resultMsg = `🥈 2nd Place! +${winnings} GOLD!`;
-        } else if (playerPosition === 3) {
-          winnings = betAmount * 1.5;
-          resultMsg = `🥉 3rd Place! +${Math.floor(winnings)} GOLD!`;
+        let msg = `🏆 ${winner.playerName} WINS!`;
+        if (winner.isMe) {
+          msg = '🏆 YOU WON! 🏆';
+        } else if (myPos === 2) {
+          msg = '🥈 2nd Place!';
+        } else if (myPos === 3) {
+          msg = '🥉 3rd Place!';
         } else {
-          resultMsg = `Position ${playerPosition}. Lost ${betAmount} gold 😔`;
+          msg = `Position ${myPos}/${this.camels.length}`;
         }
 
-        document.getElementById('raceStatus').innerHTML = `
-          <div style="color: #FFD700; font-size: 1.8em; margin-bottom: 15px;">
-            ${this.winner.name} WINS!
-          </div>
-          <div style="color: ${playerPosition <= 3 ? '#32CD32' : '#FF6347'}; font-size: 1.4em;">
-            ${resultMsg}
-          </div>
-        `;
-
-        document.getElementById('resetBtn').style.display = 'block';
+        document.getElementById('resultText').textContent = msg;
+        document.getElementById('raceResult').style.display = 'block';
       }
     };
 
-    function startRace() {
-      if (selectedCamel === null) {
-        alert('Pick a camel first!');
-        return;
+    // Update player counts
+    setInterval(async () => {
+      for (const region in REGIONS) {
+        const { data: lobbies } = await supabase
+          .from('race_lobbies')
+          .select('id')
+          .eq('region', region)
+          .eq('status', 'waiting');
+
+        let count = 0;
+        if (lobbies) {
+          for (const lobby of lobbies) {
+            const { data: players } = await supabase
+              .from('race_participants')
+              .select('id')
+              .eq('lobby_id', lobby.id);
+            count += players ? players.length : 0;
+          }
+        }
+
+        const el = document.getElementById(`${region}-count`);
+        if (el) el.textContent = count;
       }
-
-      betAmount = parseInt(document.getElementById('betAmount').value) || 100;
-
-      document.querySelector('.title').style.display = 'none';
-      document.getElementById('bettingScreen').style.display = 'none';
-      document.getElementById('raceView').style.display = 'block';
-
-      RaceEngine.init();
-      setTimeout(() => RaceEngine.startRace(), 1000);
-    }
-
-    // Show betting screen on load
-    showBettingScreen();
+    }, 3000);
   </script>
 </body>
 </html>
