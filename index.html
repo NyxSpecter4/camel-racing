@@ -138,44 +138,59 @@
 
     .camel-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(95px, 1fr));
-      gap: 6px;
-      margin: 8px 0;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 4px;
+      margin: 6px 0;
+    }
+
+    @media (max-width: 768px) {
+      .camel-grid {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 3px;
+      }
     }
 
     .camel-option {
       background: linear-gradient(180deg, #2a0000 0%, #000 50%, #2a0000 100%);
-      border: 4px ridge #FFD700;
-      border-radius: 10px;
-      padding: 8px;
+      border: 3px ridge #FFD700;
+      border-radius: 8px;
+      padding: 4px;
       cursor: pointer;
-      transition: all 0.3s;
-      min-height: 90px;
+      transition: all 0.2s;
+      min-height: 70px;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       position: relative;
       overflow: hidden;
-      box-shadow: inset 0 0 20px rgba(255,0,0,0.3), 0 0 15px rgba(0,0,0,0.8);
+      box-shadow: inset 0 0 15px rgba(255,0,0,0.3), 0 0 10px rgba(0,0,0,0.8);
+    }
+
+    @media (max-width: 768px) {
+      .camel-option {
+        min-height: 65px;
+        padding: 3px;
+        border: 2px ridge #FFD700;
+      }
     }
 
     .camel-option .camel-emoji {
-      animation: slotSpin 1s ease-out;
+      animation: slotSpin 0.6s ease-out;
       display: inline-block;
     }
 
     @keyframes slotSpin {
       0% {
-        transform: translateY(-200px) rotateX(720deg);
+        transform: translateY(-100px) scale(0.5);
         opacity: 0;
-        filter: blur(10px);
+        filter: blur(8px);
       }
       60% {
-        filter: blur(5px);
+        filter: blur(3px);
       }
       100% {
-        transform: translateY(0) rotateX(0deg);
+        transform: translateY(0) scale(1);
         opacity: 1;
         filter: blur(0);
       }
@@ -213,11 +228,18 @@
 
     .camel-option h3 {
       color: #FFD700;
-      font-size: clamp(0.7em, 3vw, 0.9em);
-      margin: 3px 0;
+      font-size: clamp(0.55em, 2.5vw, 0.75em);
+      margin: 2px 0;
       text-shadow: 0 0 10px #FF0000, 0 0 20px #FFD700;
       font-weight: bold;
-      line-height: 1.2;
+      line-height: 1.1;
+    }
+
+    @media (max-width: 768px) {
+      .camel-option h3 {
+        font-size: 0.55em;
+        margin: 1px 0;
+      }
     }
 
     .bet-controls {
@@ -250,10 +272,30 @@
       text-align: center;
       font-family: 'Courier New', monospace;
       margin-bottom: 6px;
-      transition: all 0.3s;
+      transition: all 0.1s;
       box-shadow: inset 0 0 20px rgba(0,255,0,0.3), 0 0 20px rgba(255,215,0,0.5);
       font-weight: bold;
       letter-spacing: 2px;
+    }
+
+    .bet-amount.slot-spin {
+      animation: numberSpin 0.3s ease-out;
+    }
+
+    @keyframes numberSpin {
+      0% {
+        transform: translateY(-30px);
+        opacity: 0;
+        filter: blur(5px);
+      }
+      50% {
+        filter: blur(2px);
+      }
+      100% {
+        transform: translateY(0);
+        opacity: 1;
+        filter: blur(0);
+      }
     }
 
     .bet-amount:focus {
@@ -409,43 +451,6 @@
       height: 100%;
       z-index: 100;
       background: linear-gradient(to bottom, #87CEEB 0%, #F4A460 60%, #DEB887 100%);
-    }
-
-    @keyframes cloudFloat {
-      0% { transform: translateX(-100%); }
-      100% { transform: translateX(100vw); }
-    }
-
-    .cloud {
-      position: absolute;
-      top: 10%;
-      width: 100px;
-      height: 40px;
-      background: rgba(255, 255, 255, 0.7);
-      border-radius: 50px;
-      animation: cloudFloat 30s linear infinite;
-    }
-
-    .cloud::before,
-    .cloud::after {
-      content: '';
-      position: absolute;
-      background: rgba(255, 255, 255, 0.7);
-      border-radius: 50%;
-    }
-
-    .cloud::before {
-      width: 50px;
-      height: 50px;
-      top: -25px;
-      left: 10px;
-    }
-
-    .cloud::after {
-      width: 60px;
-      height: 40px;
-      top: -15px;
-      right: 10px;
     }
 
     .race-info {
@@ -659,10 +664,6 @@
   </style>
 </head>
 <body>
-  <div class="cloud" style="animation-delay: 0s; top: 5%;"></div>
-  <div class="cloud" style="animation-delay: 10s; top: 15%;"></div>
-  <div class="cloud" style="animation-delay: 20s; top: 8%;"></div>
-
   <div class="gold-bar">
     <div class="gold-amount">💰 <span id="goldAmount">1000</span> GOLD</div>
   </div>
@@ -788,15 +789,25 @@
       loadGold(); // Load saved gold on startup
       loadCamels();
       updateGoldDisplay();
+
+      // Auto-open payouts on mobile so they are visible
+      if (window.innerWidth <= 768) {
+        setTimeout(() => {
+          const details = document.getElementById('payoutDetails');
+          if (details && !details.classList.contains('open')) {
+            togglePayouts();
+          }
+        }, 1000);
+      }
     }
 
     function loadCamels() {
       const grid = document.getElementById('camelGrid');
       grid.innerHTML = CAMELS.map((camel, index) => `
         <div class="camel-option" onclick="selectCamel(${camel.id})">
-          <div class="camel-emoji" style="font-size: 2.5em; animation-delay: ${index * 0.1}s;">🐪</div>
+          <div class="camel-emoji" style="font-size: 1.8em; animation-delay: ${index * 0.1}s;">🐪</div>
           <h3>${camel.name}</h3>
-          <div style="color: #32CD32; font-size: 0.85em; margin-top: 3px; text-shadow: 0 0 8px rgba(50, 205, 50, 0.6);">
+          <div style="color: #32CD32; font-size: 0.7em; margin-top: 2px; text-shadow: 0 0 8px rgba(50, 205, 50, 0.6);">
             ${(3 + Math.random() * 5).toFixed(1)}:1
           </div>
         </div>
@@ -812,7 +823,10 @@
 
     function setBet(amount) {
       GameState.betAmount = amount;
-      document.getElementById('betInput').value = amount;
+      const input = document.getElementById('betInput');
+      input.classList.add('slot-spin');
+      input.value = amount;
+      setTimeout(() => input.classList.remove('slot-spin'), 300);
     }
 
     function togglePayouts() {
@@ -930,16 +944,15 @@
       },
 
       createDust(x, y) {
-        for (let i = 0; i < 2; i++) {
-          this.dustParticles.push({
-            x: x + Math.random() * 15 - 7,
-            y: y + 50 + Math.random() * 10,
-            size: Math.random() * 4 + 2,
-            life: 1.0,
-            vx: -Math.random() * 1.5 - 0.5,
-            vy: Math.random() * 1.5 - 0.75
-          });
-        }
+        // Reduced to 1 particle for better performance
+        this.dustParticles.push({
+          x: x + Math.random() * 15 - 7,
+          y: y + 50 + Math.random() * 10,
+          size: Math.random() * 4 + 2,
+          life: 1.0,
+          vx: -Math.random() * 1.5 - 0.5,
+          vy: Math.random() * 1.5 - 0.75
+        });
       },
 
       updateDust() {
@@ -1205,7 +1218,7 @@
 
           const x = 50 + (c.distance / this.raceLength) * 1180;
 
-          if (Math.random() < 0.3) {
+          if (Math.random() < 0.15) {
             this.createDust(x, c.y);
           }
 
