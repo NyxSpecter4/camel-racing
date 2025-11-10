@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🏜️ Dune Rush - Real Multiplayer</title>
+  <title>🏜️ Dune Rush - Camel Racing</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -35,9 +35,8 @@
       margin: 10px;
       transition: all 0.3s;
     }
-    button:hover { transform: scale(1.05); box-shadow: 0 5px 20px rgba(255,140,0,0.5); }
+    button:hover { transform: scale(1.05); }
 
-    /* Region Selection */
     .regions {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -63,40 +62,8 @@
     .region-card h2 { color: #FFD700; font-size: 2em; margin-bottom: 15px; }
     .region-card p { color: #FFF; font-size: 1.1em; margin: 8px 0; }
 
-    /* Lobby */
-    .lobby {
-      background: rgba(0,0,0,0.8);
-      border: 3px solid #FFD700;
-      border-radius: 15px;
-      padding: 30px;
-      margin: 20px 0;
-      display: none;
-    }
-
-    .players-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 15px;
-      margin: 20px 0;
-    }
-
-    .player-card {
-      background: rgba(139,69,19,0.4);
-      border: 2px solid #654321;
-      border-radius: 10px;
-      padding: 15px;
-      text-align: center;
-    }
-
-    .player-card.ready {
-      border-color: #32CD32;
-      box-shadow: 0 0 15px rgba(50,205,50,0.5);
-    }
-
-    /* Race View */
     .race-view {
       display: none;
-      position: relative;
     }
 
     .race-viewport {
@@ -127,16 +94,40 @@
       padding: 10px 20px;
       display: inline-block;
       font-size: 1.1em;
-      margin-bottom: 10px;
     }
 
-    .live-positions {
-      background: rgba(0,0,0,0.9);
+    .progress-bar {
+      background: rgba(0,0,0,0.8);
       border: 2px solid #FFD700;
       border-radius: 10px;
       padding: 15px;
       margin: 15px 0;
-      max-height: 200px;
+    }
+
+    .progress-fill-container {
+      width: 100%;
+      height: 30px;
+      background: rgba(0,0,0,0.5);
+      border: 2px solid #FFD700;
+      border-radius: 15px;
+      overflow: hidden;
+      margin: 10px 0;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #32CD32, #FFD700);
+      width: 0%;
+      transition: width 0.1s;
+    }
+
+    .positions-list {
+      background: rgba(0,0,0,0.8);
+      border: 2px solid #FFD700;
+      border-radius: 10px;
+      padding: 15px;
+      margin: 15px 0;
+      max-height: 250px;
       overflow-y: auto;
     }
 
@@ -149,6 +140,11 @@
       border-radius: 5px;
     }
 
+    .position-item.me {
+      border: 2px solid #FFD700;
+      background: rgba(255,215,0,0.2);
+    }
+
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(-20px); }
       to { opacity: 1; transform: translateY(0); }
@@ -159,49 +155,31 @@
   <div class="container">
     <div class="title">
       <h1>🏜️ DUNE RUSH</h1>
-      <p style="font-size: 1.3em; color: #FF8C00;">Real Multiplayer Racing</p>
+      <p style="font-size: 1.3em; color: #FF8C00;">Epic Camel Racing</p>
     </div>
 
     <!-- Region Selection -->
     <div id="regionSelect" class="regions">
-      <div class="region-card" onclick="joinRegion('canyon')">
+      <div class="region-card" onclick="startRace('canyon')">
         <h2>🏔️ CANYON RUN</h2>
         <p>📏 5km race</p>
         <p>🌄 Mountain valleys</p>
-        <p>⚡ Quick race</p>
-        <p style="color: #32CD32; margin-top: 10px;">👥 <span id="canyon-count">0</span> players</p>
+        <p>⚡ Quick race (2 min)</p>
       </div>
 
-      <div class="region-card" onclick="joinRegion('desert')">
+      <div class="region-card" onclick="startRace('desert')">
         <h2>🏜️ DESERT CROSSING</h2>
         <p>📏 15km race</p>
         <p>🌅 Epic dunes</p>
-        <p>⚡ Medium race</p>
-        <p style="color: #32CD32; margin-top: 10px;">👥 <span id="desert-count">0</span> players</p>
+        <p>⚡ Medium race (5 min)</p>
       </div>
 
-      <div class="region-card" onclick="joinRegion('mountain')">
+      <div class="region-card" onclick="startRace('mountain')">
         <h2>⛰️ MOUNTAIN PASS</h2>
         <p>📏 30km race</p>
         <p>🏔️ Tall peaks</p>
-        <p>⚡ Epic marathon</p>
-        <p style="color: #32CD32; margin-top: 10px;">👥 <span id="mountain-count">0</span> players</p>
+        <p>⚡ Epic marathon (10 min)</p>
       </div>
-    </div>
-
-    <!-- Lobby -->
-    <div id="lobby" class="lobby">
-      <h2 style="color: #FFD700; font-size: 2em; margin-bottom: 20px;">
-        🏁 RACE LOBBY
-      </h2>
-      <p style="color: #FF8C00; font-size: 1.2em; margin-bottom: 20px;">
-        Waiting for players... (<span id="playerCount">0</span>/8)
-      </p>
-
-      <div class="players-grid" id="playersGrid"></div>
-
-      <button onclick="toggleReady()" id="readyBtn">⏱️ READY UP</button>
-      <button onclick="backToRegions()" style="background: linear-gradient(135deg, #666, #444);">← Back</button>
     </div>
 
     <!-- Race View -->
@@ -210,41 +188,35 @@
         <canvas id="raceCanvas"></canvas>
         <div class="ui-overlay">
           <div class="player-tag">
-            🎯 YOU: <span id="yourCamel"></span>
+            🎯 YOUR CAMEL: <span id="yourCamel"></span>
           </div>
         </div>
       </div>
 
-      <div class="live-positions">
+      <div class="progress-bar">
+        <div style="color: #FFD700; margin-bottom: 5px;">Race Progress</div>
+        <div class="progress-fill-container">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-top: 5px;">
+          <span style="color: #FFD700;">Position: <strong id="myPosition">-</strong></span>
+          <span style="color: #32CD32;"><strong id="distanceText">0.0km</strong> / <span id="totalDistance">5km</span></span>
+        </div>
+      </div>
+
+      <div class="positions-list">
         <h3 style="color: #FFD700; margin-bottom: 10px;">🏆 LIVE POSITIONS</h3>
         <div id="positionsList"></div>
       </div>
 
       <div id="raceResult" style="display: none; margin: 20px 0;">
-        <h2 id="resultText" style="color: #FFD700; font-size: 2em;"></h2>
-        <button onclick="location.reload()">🔄 NEW RACE</button>
+        <h2 id="resultText" style="color: #FFD700; font-size: 2.5em; margin-bottom: 20px;"></h2>
+        <button onclick="location.reload()" style="font-size: 1.5em; padding: 25px 50px;">🔄 NEW RACE</button>
       </div>
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    // SUPABASE
-    const SUPABASE_URL = "https://itxbzfwtutozegelbwwt.supabase.co";
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml0eGJ6Znd0dXRvemVnZWxid3d0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI3NDg2NDcsImV4cCI6MjA3ODMyNDY0N30._1Oy-uaTvFxusKiooj2Pta7rYp_EOkor9wnfWQfWe7I";
-    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    // GAME STATE
-    const GameState = {
-      playerName: 'Player' + Math.floor(Math.random() * 10000),
-      currentRegion: null,
-      currentLobbyId: null,
-      isReady: false,
-      myCamel: null,
-      otherPlayers: []
-    };
-
-    // CAMELS - COMPLETELY RANDOM EACH RACE!
     const CAMELS = [
       { id: 0, name: 'Desert Storm', color: '#8B4513', jockey: '👳' },
       { id: 1, name: 'Sand Runner', color: '#D2691E', jockey: '🧔' },
@@ -257,149 +229,34 @@
       { id: 8, name: 'Lightning Bolt', color: '#D2B48C', jockey: '👱' }
     ];
 
-    // REGIONS CONFIG
     const REGIONS = {
       canyon: { name: 'Canyon Run', length: 5000, emoji: '🏔️' },
       desert: { name: 'Desert Crossing', length: 15000, emoji: '🏜️' },
       mountain: { name: 'Mountain Pass', length: 30000, emoji: '⛰️' }
     };
 
-    // JOIN REGION
-    async function joinRegion(region) {
-      GameState.currentRegion = region;
+    let selectedRegion = null;
+    let myCamelId = null;
 
-      // Find or create lobby
-      let { data: lobbies } = await supabase
-        .from('race_lobbies')
-        .select('*')
-        .eq('region', region)
-        .eq('status', 'waiting')
-        .limit(1);
+    function startRace(region) {
+      selectedRegion = region;
+      myCamelId = Math.floor(Math.random() * CAMELS.length);
 
-      let lobbyId;
-      if (lobbies && lobbies.length > 0) {
-        lobbyId = lobbies[0].id;
-      } else {
-        const { data: newLobby } = await supabase
-          .from('race_lobbies')
-          .insert([{
-            region,
-            race_length: REGIONS[region].length,
-            status: 'waiting'
-          }])
-          .select()
-          .single();
-        lobbyId = newLobby.id;
-      }
-
-      GameState.currentLobbyId = lobbyId;
-
-      // Assign random camel
-      const randomCamel = CAMELS[Math.floor(Math.random() * CAMELS.length)];
-      GameState.myCamel = randomCamel;
-
-      // Join lobby
-      await supabase
-        .from('race_participants')
-        .insert([{
-          lobby_id: lobbyId,
-          player_name: GameState.playerName,
-          camel_id: randomCamel.id,
-          camel_name: randomCamel.name
-        }]);
-
-      // Show lobby
       document.getElementById('regionSelect').style.display = 'none';
-      document.getElementById('lobby').style.display = 'block';
-
-      subscribeLobby(lobbyId);
-      loadLobbyPlayers(lobbyId);
-    }
-
-    // SUBSCRIBE TO LOBBY UPDATES
-    function subscribeLobby(lobbyId) {
-      supabase.channel(`lobby:${lobbyId}`)
-        .on('postgres_changes', {
-          event: '*',
-          schema: 'public',
-          table: 'race_participants',
-          filter: `lobby_id=eq.${lobbyId}`
-        }, () => {
-          loadLobbyPlayers(lobbyId);
-        })
-        .subscribe();
-    }
-
-    // LOAD LOBBY PLAYERS
-    async function loadLobbyPlayers(lobbyId) {
-      const { data: players } = await supabase
-        .from('race_participants')
-        .select('*')
-        .eq('lobby_id', lobbyId);
-
-      document.getElementById('playerCount').textContent = players.length;
-
-      const grid = document.getElementById('playersGrid');
-      grid.innerHTML = players.map(p => `
-        <div class="player-card">
-          <div style="font-size: 2em;">${CAMELS[p.camel_id].jockey}</div>
-          <strong style="color: #FFD700;">${p.player_name}</strong>
-          <div style="color: #aaa; font-size: 0.9em;">${p.camel_name}</div>
-        </div>
-      `).join('');
-
-      // Check if ready to start
-      if (players.length >= 2 && players.every(p => p.ready)) {
-        setTimeout(() => startRace(lobbyId), 2000);
-      }
-    }
-
-    // TOGGLE READY
-    async function toggleReady() {
-      GameState.isReady = !GameState.isReady;
-
-      await supabase
-        .from('race_participants')
-        .update({ ready: GameState.isReady })
-        .eq('lobby_id', GameState.currentLobbyId)
-        .eq('player_name', GameState.playerName);
-
-      document.getElementById('readyBtn').textContent = GameState.isReady ? '✅ READY!' : '⏱️ READY UP';
-    }
-
-    function backToRegions() {
-      location.reload();
-    }
-
-    // START RACE
-    async function startRace(lobbyId) {
-      await supabase
-        .from('race_lobbies')
-        .update({ status: 'racing' })
-        .eq('id', lobbyId);
-
-      const { data: players } = await supabase
-        .from('race_participants')
-        .select('*')
-        .eq('lobby_id', lobbyId);
-
-      GameState.otherPlayers = players;
-
-      document.getElementById('lobby').style.display = 'none';
+      document.querySelector('.title').style.display = 'none';
       document.getElementById('raceView').style.display = 'block';
 
-      document.getElementById('yourCamel').textContent =
-        `${GameState.myCamel.jockey} ${GameState.myCamel.name}`;
+      const myCamel = CAMELS[myCamelId];
+      document.getElementById('yourCamel').textContent = `${myCamel.jockey} ${myCamel.name}`;
+      document.getElementById('totalDistance').textContent = `${REGIONS[region].length/1000}km`;
 
-      RaceEngine.init(lobbyId, players);
+      RaceEngine.init(region);
     }
 
-    // RACE ENGINE
     const RaceEngine = {
       canvas: null,
       ctx: null,
       viewport: null,
-      lobbyId: null,
       camels: [],
       myCamel: null,
       raceLength: 5000,
@@ -407,40 +264,38 @@
       lastUpdate: 0,
       running: false,
 
-      init(lobbyId, players) {
-        this.lobbyId = lobbyId;
-        this.raceLength = REGIONS[GameState.currentRegion].length;
+      init(region) {
+        this.raceLength = REGIONS[region].length;
         this.viewport = document.getElementById('viewport');
         this.canvas = document.getElementById('raceCanvas');
         this.canvas.width = this.raceLength + 2000;
         this.canvas.height = this.viewport.clientHeight;
         this.ctx = this.canvas.getContext('2d');
 
-        // Initialize camels with TRULY RANDOM stats each race
-        this.camels = players.map((p, i) => {
-          const camel = CAMELS[p.camel_id];
-          return {
-            ...camel,
-            playerName: p.player_name,
-            x: 100,
-            y: 100 + (i * 70),
-            distance: 0,
+        // ALL CAMELS GET COMPLETELY RANDOM STATS!
+        this.camels = CAMELS.map((c, i) => ({
+          ...c,
+          x: 100,
+          y: 80 + (i * 65),
+          distance: 0,
 
-            // COMPLETELY RANDOM - NO BIAS!
-            speed: 3 + Math.random() * 2, // 3-5 random each frame
-            form: Math.random(), // 0-1 completely random
-            stamina: 100,
-            staminaDrain: 0.02 + Math.random() * 0.03,
-            burstChance: Math.random() * 0.02,
-            stumbleChance: Math.random() * 0.01,
-            isMe: p.player_name === GameState.playerName
-          };
-        });
+          // TRULY RANDOM - NO PATTERNS!
+          baseSpeed: 2.5 + Math.random() * 1.5,
+          speedVariation: Math.random(),
+          stamina: 100,
+          maxStamina: 80 + Math.random() * 40,
+          staminaDrain: 0.015 + Math.random() * 0.02,
+          form: Math.random(),
+          consistency: Math.random(),
 
-        this.myCamel = this.camels.find(c => c.isMe);
+          isMe: i === myCamelId
+        }));
+
+        this.myCamel = this.camels[myCamelId];
         this.running = true;
         this.lastUpdate = performance.now();
-        this.animate();
+
+        setTimeout(() => this.animate(), 500);
       },
 
       drawScene() {
@@ -449,74 +304,83 @@
 
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Sky - gradient
-        const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height * 0.5);
+        // Sky
+        const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height * 0.45);
         gradient.addColorStop(0, '#87CEEB');
         gradient.addColorStop(0.5, '#B0E0E6');
         gradient.addColorStop(1, '#F4A460');
         ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, canvas.width, canvas.height * 0.5);
+        ctx.fillRect(0, 0, canvas.width, canvas.height * 0.45);
 
-        // Mountains in background
+        // Mountains
         ctx.fillStyle = '#8B7355';
-        for (let i = 0; i < 10; i++) {
-          const x = i * 800;
+        for (let i = 0; i < 15; i++) {
+          const x = i * 1000 - 200;
           ctx.beginPath();
-          ctx.moveTo(x, canvas.height * 0.5);
-          ctx.lineTo(x + 400, 50);
-          ctx.lineTo(x + 800, canvas.height * 0.5);
+          ctx.moveTo(x, canvas.height * 0.45);
+          ctx.lineTo(x + 500, 40 + Math.sin(i) * 30);
+          ctx.lineTo(x + 1000, canvas.height * 0.45);
           ctx.closePath();
           ctx.fill();
-        }
 
-        // Snow peaks
-        ctx.fillStyle = '#FFF';
-        for (let i = 0; i < 10; i++) {
-          const x = i * 800;
+          // Snow peaks
+          ctx.fillStyle = '#FFF';
           ctx.beginPath();
-          ctx.moveTo(x + 300, 150);
-          ctx.lineTo(x + 400, 50);
-          ctx.lineTo(x + 500, 150);
+          ctx.moveTo(x + 400, 140);
+          ctx.lineTo(x + 500, 40 + Math.sin(i) * 30);
+          ctx.lineTo(x + 600, 140);
           ctx.closePath();
           ctx.fill();
+          ctx.fillStyle = '#8B7355';
         }
 
-        // Ground - natural terrain
+        // Ground
         ctx.fillStyle = '#D2691E';
-        ctx.fillRect(0, canvas.height * 0.5, canvas.width, canvas.height * 0.5);
+        ctx.fillRect(0, canvas.height * 0.45, canvas.width, canvas.height * 0.55);
 
-        // Rocky ground texture
-        for (let i = 0; i < 100; i++) {
-          ctx.fillStyle = 'rgba(139, 69, 19, 0.3)';
+        // Terrain texture
+        for (let i = 0; i < 200; i++) {
+          ctx.fillStyle = `rgba(139, 69, 19, ${0.2 + Math.random() * 0.2})`;
           ctx.beginPath();
-          ctx.arc(Math.random() * canvas.width,
-                  canvas.height * 0.5 + Math.random() * (canvas.height * 0.5),
-                  3 + Math.random() * 5, 0, Math.PI * 2);
+          ctx.arc(
+            Math.random() * canvas.width,
+            canvas.height * 0.45 + Math.random() * (canvas.height * 0.55),
+            2 + Math.random() * 4,
+            0, Math.PI * 2
+          );
           ctx.fill();
         }
 
         // Distance markers
         for (let i = 0; i <= this.raceLength; i += 1000) {
           const x = 100 + i;
-          ctx.fillStyle = 'rgba(255,215,0,0.5)';
-          ctx.fillRect(x, 0, 3, canvas.height);
+          ctx.fillStyle = 'rgba(255,215,0,0.4)';
+          ctx.fillRect(x, 0, 4, canvas.height);
           ctx.fillStyle = '#FFD700';
-          ctx.font = 'bold 20px Courier';
+          ctx.font = 'bold 22px Courier';
           ctx.fillText(`${(i/1000).toFixed(0)}km`, x + 10, 40);
         }
 
         // Finish line
         const finishX = 100 + this.raceLength;
         ctx.fillStyle = '#000';
-        ctx.fillRect(finishX, 0, 80, canvas.height);
-        for (let i = 0; i < 20; i++) {
+        ctx.fillRect(finishX, 0, 100, canvas.height);
+        for (let i = 0; i < 25; i++) {
           for (let j = 0; j < 2; j++) {
             if ((i + j) % 2 === 0) {
               ctx.fillStyle = '#fff';
-              ctx.fillRect(finishX + (j * 40), i * (canvas.height/20), 40, canvas.height/20);
+              ctx.fillRect(finishX + (j * 50), i * (canvas.height/25), 50, canvas.height/25);
             }
           }
         }
+
+        ctx.fillStyle = '#FFD700';
+        ctx.font = 'bold 50px Courier';
+        ctx.save();
+        ctx.translate(finishX + 50, canvas.height / 2);
+        ctx.rotate(-Math.PI / 2);
+        ctx.fillText('FINISH', 0, 0);
+        ctx.restore();
       },
 
       drawCamel(camel) {
@@ -525,69 +389,73 @@
         const y = camel.y;
 
         // Shadow
-        ctx.fillStyle = 'rgba(0,0,0,0.3)';
+        ctx.fillStyle = 'rgba(0,0,0,0.25)';
         ctx.beginPath();
-        ctx.ellipse(x + 40, y + 65, 45, 12, 0, 0, Math.PI * 2);
+        ctx.ellipse(x + 45, y + 70, 50, 13, 0, 0, Math.PI * 2);
         ctx.fill();
 
-        // Camel body - BIGGER AND SMOOTHER
+        // Camel body
         ctx.fillStyle = camel.color;
 
-        // Body
+        // Main body
         ctx.beginPath();
-        ctx.ellipse(x + 40, y + 30, 50, 25, 0, 0, Math.PI * 2);
+        ctx.ellipse(x + 45, y + 32, 55, 28, 0, 0, Math.PI * 2);
         ctx.fill();
 
         // Neck
         ctx.beginPath();
-        ctx.ellipse(x + 70, y + 10, 15, 30, 0.3, 0, Math.PI * 2);
+        ctx.ellipse(x + 78, y + 12, 17, 33, 0.3, 0, Math.PI * 2);
         ctx.fill();
 
         // Head
         ctx.beginPath();
-        ctx.ellipse(x + 80, y - 5, 12, 15, 0.2, 0, Math.PI * 2);
+        ctx.ellipse(x + 88, y - 3, 14, 17, 0.2, 0, Math.PI * 2);
         ctx.fill();
 
         // Humps
         ctx.beginPath();
-        ctx.arc(x + 30, y + 15, 18, Math.PI, 0);
+        ctx.arc(x + 33, y + 17, 20, Math.PI, 0);
         ctx.fill();
         ctx.beginPath();
-        ctx.arc(x + 55, y + 15, 14, Math.PI, 0);
+        ctx.arc(x + 60, y + 17, 16, Math.PI, 0);
         ctx.fill();
 
-        // Legs - animated
-        const legMove = Math.sin(camel.distance * 0.1) * 5;
-        ctx.fillRect(x + 15, y + 50, 8, 25 + legMove);
-        ctx.fillRect(x + 35, y + 50, 8, 25 - legMove);
-        ctx.fillRect(x + 55, y + 50, 8, 25 - legMove);
-        ctx.fillRect(x + 75, y + 50, 8, 25 + legMove);
+        // Animated legs
+        const legMove = Math.sin(camel.distance * 0.08) * 6;
+        ctx.fillRect(x + 18, y + 55, 9, 28 + legMove);
+        ctx.fillRect(x + 40, y + 55, 9, 28 - legMove);
+        ctx.fillRect(x + 62, y + 55, 9, 28 - legMove);
+        ctx.fillRect(x + 84, y + 55, 9, 28 + legMove);
 
         // Jockey
-        ctx.font = '40px Arial';
-        ctx.fillText(camel.jockey, x + 35, y + 35);
+        ctx.font = '42px Arial';
+        ctx.fillText(camel.jockey, x + 38, y + 38);
 
-        // Player indicator
+        // Highlight player's camel
         if (camel.isMe) {
           ctx.strokeStyle = '#FFD700';
-          ctx.lineWidth = 5;
-          ctx.strokeRect(x - 10, y - 30, 100, 110);
+          ctx.lineWidth = 6;
+          ctx.strokeRect(x - 15, y - 35, 115, 125);
+
           ctx.fillStyle = '#FFD700';
-          ctx.font = 'bold 16px Courier';
-          ctx.fillText('⭐ YOU', x + 15, y - 35);
+          ctx.font = 'bold 18px Courier';
+          ctx.fillText('⭐ YOU ⭐', x + 15, y - 40);
         }
 
         // Name
         ctx.fillStyle = '#FFF';
-        ctx.font = 'bold 14px Courier';
-        ctx.fillText(camel.playerName, x, y - 15);
+        ctx.font = 'bold 15px Courier';
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 3;
+        ctx.strokeText(camel.name, x + 5, y - 15);
+        ctx.fillText(camel.name, x + 5, y - 15);
       },
 
       animate() {
         if (!this.running) return;
 
         const now = performance.now();
-        const delta = (now - this.lastUpdate) / 16.67; // Normalize to 60fps
+        const delta = Math.min((now - this.lastUpdate) / 16.67, 2); // Cap at 2x for lag
         this.lastUpdate = now;
 
         this.drawScene();
@@ -595,19 +463,20 @@
         let winner = null;
 
         this.camels.forEach(camel => {
-          // COMPLETELY RANDOM SPEED EACH FRAME!
-          const randomSpeed = 2 + Math.random() * 3; // 2-5 completely random
-          const formFactor = 0.8 + (Math.random() * 0.4); // 0.8-1.2 random
-          const staminaFactor = Math.max(0.7, camel.stamina / 100);
+          // COMPLETELY RANDOM SPEED CALCULATION!
+          const randomFactor = 0.7 + Math.random() * 0.6; // 0.7-1.3
+          const formFactor = 0.85 + (camel.form * 0.3); // 0.85-1.15
+          const staminaFactor = Math.max(0.65, camel.stamina / 100);
+          const consistencyFactor = 0.9 + (camel.consistency * 0.2); // 0.9-1.1
 
-          camel.speed = randomSpeed * formFactor * staminaFactor * delta;
+          camel.speed = camel.baseSpeed * randomFactor * formFactor * staminaFactor * consistencyFactor * delta;
 
           // Random events
-          if (Math.random() < 0.01) camel.speed *= 1.8; // Burst
-          if (Math.random() < 0.005) camel.speed *= 0.3; // Stumble
+          if (Math.random() < 0.008) camel.speed *= 1.9; // Burst!
+          if (Math.random() < 0.004) camel.speed *= 0.4; // Stumble!
 
           camel.stamina -= camel.staminaDrain;
-          camel.stamina = Math.max(10, camel.stamina);
+          camel.stamina = Math.max(15, Math.min(camel.maxStamina, camel.stamina));
 
           camel.distance += camel.speed;
 
@@ -619,11 +488,14 @@
         });
 
         // Camera follows player
-        this.cameraX = Math.max(0, this.myCamel.distance - (this.viewport.clientWidth / 3));
+        this.cameraX = Math.max(0, Math.min(
+          this.canvas.width - this.viewport.clientWidth,
+          this.myCamel.distance - (this.viewport.clientWidth / 3)
+        ));
         this.canvas.style.transform = `translateX(-${this.cameraX}px)`;
 
-        // Update positions
-        this.updatePositions();
+        // Update UI
+        this.updateUI();
 
         if (winner) {
           this.finishRace(winner);
@@ -632,16 +504,24 @@
         }
       },
 
-      updatePositions() {
+      updateUI() {
         const sorted = [...this.camels].sort((a, b) => b.distance - a.distance);
-        const list = document.getElementById('positionsList');
+        const myPos = sorted.findIndex(c => c.isMe) + 1;
+        const progress = ((this.myCamel.distance / this.raceLength) * 100);
 
+        document.getElementById('myPosition').textContent = `${myPos} / 9`;
+        document.getElementById('progressFill').style.width = `${Math.min(100, progress)}%`;
+        document.getElementById('distanceText').textContent = `${(this.myCamel.distance/1000).toFixed(2)}km`;
+
+        const list = document.getElementById('positionsList');
         list.innerHTML = sorted.map((c, i) => {
-          const progress = ((c.distance / this.raceLength) * 100).toFixed(1);
+          const pct = ((c.distance / this.raceLength) * 100).toFixed(1);
+          const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i+1}.`;
+
           return `
-            <div class="position-item" style="${c.isMe ? 'border-left: 3px solid #FFD700;' : ''}">
-              <span>${i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i+1}.`} ${c.playerName}</span>
-              <span style="color: #32CD32;">${progress}%</span>
+            <div class="position-item ${c.isMe ? 'me' : ''}">
+              <span><strong>${medal}</strong> ${c.jockey} ${c.name}</span>
+              <span style="color: #32CD32;">${pct}%</span>
             </div>
           `;
         }).join('');
@@ -653,46 +533,21 @@
         const sorted = [...this.camels].sort((a, b) => b.distance - a.distance);
         const myPos = sorted.findIndex(c => c.isMe) + 1;
 
-        let msg = `🏆 ${winner.playerName} WINS!`;
+        let msg = '';
         if (winner.isMe) {
           msg = '🏆 YOU WON! 🏆';
         } else if (myPos === 2) {
-          msg = '🥈 2nd Place!';
+          msg = '🥈 2nd PLACE! 🥈';
         } else if (myPos === 3) {
-          msg = '🥉 3rd Place!';
+          msg = '🥉 3rd PLACE! 🥉';
         } else {
-          msg = `Position ${myPos}/${this.camels.length}`;
+          msg = `POSITION ${myPos} / 9`;
         }
 
         document.getElementById('resultText').textContent = msg;
         document.getElementById('raceResult').style.display = 'block';
       }
     };
-
-    // Update player counts
-    setInterval(async () => {
-      for (const region in REGIONS) {
-        const { data: lobbies } = await supabase
-          .from('race_lobbies')
-          .select('id')
-          .eq('region', region)
-          .eq('status', 'waiting');
-
-        let count = 0;
-        if (lobbies) {
-          for (const lobby of lobbies) {
-            const { data: players } = await supabase
-              .from('race_participants')
-              .select('id')
-              .eq('lobby_id', lobby.id);
-            count += players ? players.length : 0;
-          }
-        }
-
-        const el = document.getElementById(`${region}-count`);
-        if (el) el.textContent = count;
-      }
-    }, 3000);
   </script>
 </body>
 </html>
