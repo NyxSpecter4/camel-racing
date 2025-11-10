@@ -535,9 +535,7 @@
 
   <div class="gold-bar">
     <div class="gold-amount">
-      💰 <span id="goldAmount">1000</span> GOLD |
-      🏆 <span id="winsCount">0</span>W
-      😔 <span id="lossCount">0</span>L
+      💰 <span id="goldAmount">1000</span> GOLD
     </div>
   </div>
 
@@ -620,9 +618,7 @@
     const GameState = {
       gold: 1000,
       selectedCamel: null,
-      betAmount: 50,
-      wins: 0,
-      losses: 0
+      betAmount: 50
     };
 
     const CAMELS = [
@@ -665,8 +661,6 @@
 
     function updateGoldDisplay() {
       document.getElementById('goldAmount').textContent = GameState.gold;
-      document.getElementById('winsCount').textContent = GameState.wins;
-      document.getElementById('lossCount').textContent = GameState.losses;
     }
 
     function startRace() {
@@ -1051,23 +1045,19 @@
           resultClass = 'win';
           resultMsg = '🏆 YOU WON! 🏆';
           detailMsg = `+${winnings} GOLD (10x payout!)`;
-          GameState.wins++;
         } else if (myPos === 2) {
           winnings = GameState.betAmount * 3;
           resultClass = 'win';
           resultMsg = '🥈 2ND PLACE!';
           detailMsg = `+${winnings} GOLD (3x payout!)`;
-          GameState.wins++;
         } else if (myPos === 3) {
           winnings = Math.floor(GameState.betAmount * 1.5);
           resultClass = 'win';
           resultMsg = '🥉 3RD PLACE!';
           detailMsg = `+${winnings} GOLD (1.5x payout)`;
-          GameState.wins++;
         } else {
           resultMsg = `${myPos}TH PLACE`;
           detailMsg = `Lost ${GameState.betAmount} gold 😔`;
-          GameState.losses++;
         }
 
         GameState.gold += winnings;
