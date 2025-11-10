@@ -3,41 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#000000">
   <title>🏜️ Dune Rush - Premium Racing</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
+    * { 
+      margin: 0; 
+      padding: 0; 
       box-sizing: border-box;
       -webkit-tap-highlight-color: transparent;
     }
-
+    
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: linear-gradient(to bottom, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
       min-height: 100vh;
-      height: 100vh;
       color: #fff;
-      overflow: hidden;
-      position: fixed;
-      width: 100%;
-      top: 0;
-      left: 0;
-      overscroll-behavior: none;
-      -webkit-overflow-scrolling: touch;
-      -webkit-user-select: none;
-      user-select: none;
+      overflow-x: hidden;
+      position: relative;
     }
-
+    
     @keyframes twinkle {
       0%, 100% { opacity: 0.3; }
       50% { opacity: 1; }
     }
-
+    
     body::before {
       content: '';
       position: fixed;
@@ -45,7 +33,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background-image:
+      background-image: 
         radial-gradient(2px 2px at 20% 30%, white, transparent),
         radial-gradient(2px 2px at 60% 70%, white, transparent),
         radial-gradient(1px 1px at 50% 50%, white, transparent),
@@ -56,16 +44,16 @@
       pointer-events: none;
       opacity: 0.4;
     }
-
-    .container {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 10px;
+    
+    .container { 
+      max-width: 1400px; 
+      margin: 0 auto; 
+      padding: 0;
       text-align: center;
       position: relative;
       z-index: 1;
     }
-
+    
     .gold-bar {
       position: fixed;
       top: 0;
@@ -73,13 +61,13 @@
       right: 0;
       background: rgba(0,0,0,0.85);
       backdrop-filter: blur(10px);
-      border-bottom: 2px solid #FFD700;
+      border-bottom: 3px solid #FFD700;
       padding: 4px;
       text-align: center;
       z-index: 1000;
       box-shadow: 0 4px 20px rgba(255, 215, 0, 0.3);
     }
-
+    
     .gold-amount {
       color: #FFD700;
       font-size: 1.1em;
@@ -87,78 +75,78 @@
       text-shadow: 0 0 10px #FFD700, 0 0 20px #FF8C00;
       animation: goldPulse 2s ease-in-out infinite;
     }
-
+    
     @keyframes goldPulse {
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.05); }
     }
-
+    
     .betting-screen {
       max-width: 100%;
-      margin: 40px 0 0 0;
+      margin: 26px 2px 0 2px;
       background: linear-gradient(to bottom, #1a0000 0%, #000 50%, #1a0000 100%);
       backdrop-filter: blur(15px);
-      border: 6px ridge #FFD700;
-      border-radius: 0;
+      border: 4px ridge #FFD700;
+      border-radius: 12px;
       padding: 4px;
       box-shadow: 0 0 40px rgba(255,0,0,0.5), 0 0 80px rgba(255,215,0,0.3), inset 0 0 30px rgba(255,215,0,0.1);
       animation: slideUp 0.6s ease-out;
-      max-height: calc(100vh - 40px);
+      height: calc(100vh - 26px);
       overflow-y: auto;
     }
-
+    
     @keyframes slideUp {
       from { opacity: 0; transform: translateY(30px); }
       to { opacity: 1; transform: translateY(0); }
     }
-
+    
     .betting-screen h1 {
       color: #FFD700;
-      font-size: 1.1em;
-      margin-bottom: 2px;
+      font-size: 1.8em;
+      margin-bottom: 5px;
       text-shadow: 0 0 20px #FF0000, 0 0 40px #FFD700;
       animation: titleGlow 3s ease-in-out infinite;
     }
-
+    
     @keyframes titleGlow {
       0%, 100% { text-shadow: 0 0 20px #FF0000, 0 0 40px #FFD700; }
       50% { text-shadow: 0 0 30px #FF0000, 0 0 60px #FFD700; }
     }
-
+    
     @keyframes slotPulse {
       0%, 100% { box-shadow: 0 0 30px #FFD700, 0 0 50px #FF0000; }
       50% { box-shadow: 0 0 50px #FFD700, 0 0 80px #FF0000; }
     }
-
+    
     @keyframes buttonGlow {
       0%, 100% { box-shadow: 0 0 30px #FF0000, 0 0 50px #FFD700; }
       50% { box-shadow: 0 0 50px #FF0000, 0 0 80px #FFD700; }
     }
-
+    
     .betting-screen p {
       color: #FFD700;
-      font-size: 0.65em;
-      margin-bottom: 2px;
+      font-size: 1em;
+      margin-bottom: 8px;
       text-shadow: 0 0 10px #FF0000;
       text-transform: uppercase;
       letter-spacing: 1px;
     }
-
+    
     .camel-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 2px;
-      margin: 2px 0;
+      gap: 8px;
+      margin: 10px 0;
     }
-
+    
     .camel-option {
       background: linear-gradient(180deg, #2a0000 0%, #000 50%, #2a0000 100%);
       border: 2px ridge #FFD700;
       border-radius: 5px;
-      padding: 2px;
+      padding: 10px;
       cursor: pointer;
       transition: all 0.2s;
-      min-height: 38px;
+      min-height: 70px;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -167,14 +155,14 @@
       overflow: hidden;
       box-shadow: inset 0 0 10px rgba(255,0,0,0.3);
     }
-
+    
     .camel-option .camel-emoji {
       animation: slotSpin 0.6s ease-out;
       display: inline-block;
     }
-
+    
     @keyframes slotSpin {
-      0% {
+      0% { 
         transform: translateY(-100px) scale(0.5);
         opacity: 0;
         filter: blur(8px);
@@ -182,19 +170,19 @@
       60% {
         filter: blur(3px);
       }
-      100% {
+      100% { 
         transform: translateY(0) scale(1);
         opacity: 1;
         filter: blur(0);
       }
     }
-
+    
     .camel-option:hover, .camel-option:active {
       border-color: #FFD700;
       transform: translateY(-5px) scale(1.03);
       box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
     }
-
+    
     .camel-option.selected {
       border-color: #FF0000;
       background: linear-gradient(180deg, #FFD700 0%, #FF8C00 50%, #FFD700 100%);
@@ -202,58 +190,58 @@
       transform: scale(1.05);
       animation: slotPulse 0.5s ease-in-out infinite;
     }
-
+    
     .camel-option h3 {
       color: #FFD700;
-      font-size: 0.5em;
-      margin: 1px 0;
+      font-size: 0.9em;
+      margin: 3px 0;
       text-shadow: 0 0 8px #FF0000;
       font-weight: bold;
       line-height: 1;
     }
-
+    
     .bet-controls {
       background: linear-gradient(to bottom, #1a0000, #000);
       backdrop-filter: blur(10px);
       border-radius: 8px;
       border: 3px ridge #FFD700;
-      padding: 5px;
-      margin: 3px 0;
+      padding: 12px;
+      margin: 12px 0;
       box-shadow: inset 0 0 20px rgba(255,0,0,0.3);
     }
-
+    
     .bet-controls h3 {
       color: #FFD700;
-      font-size: 0.7em;
-      margin-bottom: 3px;
+      font-size: 1.1em;
+      margin-bottom: 8px;
       text-shadow: 0 0 15px #FF0000;
       text-transform: uppercase;
       letter-spacing: 1px;
     }
-
+    
     .bet-amount {
       width: 100%;
-      padding: 5px;
-      font-size: 0.95em;
+      padding: 12px;
+      font-size: 1.6em;
       border: 2px ridge #FFD700;
       border-radius: 6px;
       background: #000;
       color: #32CD32;
       text-align: center;
       font-family: 'Courier New', monospace;
-      margin-bottom: 3px;
+      margin-bottom: 8px;
       transition: all 0.1s;
       box-shadow: inset 0 0 20px rgba(0,255,0,0.3), 0 0 20px rgba(255,215,0,0.5);
       font-weight: bold;
       letter-spacing: 2px;
     }
-
+    
     .bet-amount.slot-spin {
       animation: numberSpin 0.3s ease-out;
     }
-
+    
     @keyframes numberSpin {
-      0% {
+      0% { 
         transform: translateY(-30px);
         opacity: 0;
         filter: blur(5px);
@@ -261,31 +249,31 @@
       50% {
         filter: blur(2px);
       }
-      100% {
+      100% { 
         transform: translateY(0);
         opacity: 1;
         filter: blur(0);
       }
     }
-
+    
     .bet-amount:focus {
       outline: none;
       border-color: #FFD700;
     }
-
+    
     .bet-buttons {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 3px;
-      margin-top: 3px;
+      gap: 8px;
+      margin-top: 8px;
     }
-
+    
     .bet-btn {
       background: linear-gradient(180deg, #8B0000, #000, #8B0000);
       color: #FFD700;
       border: 2px ridge #FFD700;
-      padding: 5px 3px;
-      font-size: 0.75em;
+      padding: 12px 8px;
+      font-size: 1.2em;
       font-weight: bold;
       border-radius: 5px;
       cursor: pointer;
@@ -293,78 +281,80 @@
       transition: all 0.3s;
       box-shadow: 0 0 15px rgba(255,0,0,0.5), inset 0 0 10px rgba(0,0,0,0.5);
     }
-
+    
     .bet-btn:hover, .bet-btn:active {
       border-color: #FFD700;
       transform: translateY(-3px);
     }
-
+    
     button {
       background: linear-gradient(180deg, #FFD700, #FF0000, #FFD700);
       color: #000;
       border: 3px ridge #FFD700;
-      padding: 8px 20px;
-      font-size: 0.9em;
+      padding: 18px 20px;
+      font-size: 1.4em;
       font-weight: bold;
       border-radius: 8px;
       cursor: pointer;
       font-family: 'Impact', sans-serif;
       width: 100%;
-      margin-top: 5px;
+      margin-top: 10px;
       transition: all 0.3s;
       touch-action: manipulation;
       box-shadow: 0 0 30px #FF0000, 0 0 50px #FFD700, inset 0 0 20px rgba(255,255,255,0.3);
-      position: relative;
+      position: sticky;
+      bottom: 0;
       overflow: hidden;
       text-transform: uppercase;
       letter-spacing: 2px;
       animation: buttonGlow 2s ease-in-out infinite;
+      z-index: 10;
     }
-
+    
     button:hover, button:active {
       transform: translateY(-3px) scale(1.02);
       box-shadow: 0 8px 30px rgba(255, 215, 0, 0.6);
     }
-
+    
     .payout-info {
       background: linear-gradient(to bottom, #1a0000, #000);
       backdrop-filter: blur(10px);
       border: 2px ridge #FFD700;
       border-radius: 6px;
-      padding: 4px;
-      margin: 3px 0;
+      padding: 10px;
+      margin: 10px 0;
       text-align: left;
       box-shadow: inset 0 0 20px rgba(255,0,0,0.3);
     }
-
+    
     .payout-info h4 {
       color: #FFD700;
-      font-size: 0.65em;
-      margin-bottom: 2px;
+      font-size: 1.1em;
+      margin-bottom: 8px;
       text-shadow: 0 0 15px #FF0000;
       text-transform: uppercase;
       letter-spacing: 1px;
     }
-
+    
     .payout-item {
       display: flex;
       justify-content: space-between;
-      padding: 2px 0;
+      padding: 6px 0;
       border-bottom: 1px solid rgba(255,215,0,0.3);
-      font-size: 0.6em;
+      font-size: 1em;
     }
-
+    
     .race-view {
       display: none;
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
-      height: 100vh;
+      height: 100%;
       z-index: 100;
       background: linear-gradient(to bottom, #87CEEB 0%, #F4A460 60%, #DEB887 100%);
     }
-
+    
     .race-info {
       position: absolute;
       top: 10px;
@@ -374,31 +364,32 @@
       backdrop-filter: blur(15px);
       border: 3px solid #FFD700;
       border-radius: 10px;
-      padding: 5px;
+      padding: 8px;
       z-index: 110;
       box-shadow: 0 4px 20px rgba(0,0,0,0.5);
     }
-
+    
     .race-info h2 {
       color: #FFD700;
-      font-size: clamp(1em, 4vw, 2em);
+      font-size: clamp(1.2em, 5vw, 2em);
       text-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+      line-height: 1.2;
     }
-
+    
     .race-commentary {
       position: absolute;
-      top: 80px;
+      top: 70px;
       left: 50%;
       transform: translateX(-50%);
       background: rgba(0,0,0,0.9);
       border: 3px solid #FF0000;
-      border-radius: 15px;
-      padding: 12px 25px;
-      font-size: clamp(1em, 3vw, 1.5em);
+      border-radius: 12px;
+      padding: 10px 20px;
+      font-size: clamp(1.1em, 4vw, 1.5em);
       color: #FFD700;
       text-shadow: 0 0 15px #FF0000;
       z-index: 115;
-      max-width: 80%;
+      max-width: 90%;
       text-align: center;
       font-weight: bold;
       text-transform: uppercase;
@@ -406,12 +397,12 @@
       animation: commentaryPop 0.3s ease-out;
       box-shadow: 0 0 30px #FF0000, 0 0 50px #FFD700;
     }
-
+    
     @keyframes commentaryPop {
       0% { transform: translateX(-50%) scale(0.8); opacity: 0; }
       100% { transform: translateX(-50%) scale(1); opacity: 1; }
     }
-
+    
     .overtake-flash {
       position: fixed;
       top: 0;
@@ -423,12 +414,12 @@
       z-index: 105;
       animation: flashEffect 0.3s ease-out;
     }
-
+    
     @keyframes flashEffect {
       0% { opacity: 1; }
       100% { opacity: 0; }
     }
-
+    
     .race-canvas-container {
       position: absolute;
       top: 0;
@@ -436,35 +427,36 @@
       width: 100%;
       height: 100%;
     }
-
+    
     canvas {
       display: block;
       width: 100%;
       height: 100%;
       object-fit: contain;
     }
-
+    
     .race-stats {
       position: absolute;
-      bottom: 10px;
-      left: 10px;
-      right: 10px;
+      bottom: 5px;
+      left: 5px;
+      right: 5px;
       background: rgba(0,0,0,0.85);
       backdrop-filter: blur(15px);
       border: 3px solid #FFD700;
-      border-radius: 18px;
-      padding: 15px;
+      border-radius: 12px;
+      padding: 10px;
       z-index: 110;
     }
-
+    
     .race-stats > div {
       display: flex;
       justify-content: space-around;
-      font-size: clamp(1em, 3.5vw, 1.3em);
+      font-size: clamp(1.3em, 5vw, 1.5em);
       flex-wrap: wrap;
-      gap: 15px;
+      gap: 20px;
+      font-weight: bold;
     }
-
+    
     .race-result {
       display: none;
       position: fixed;
@@ -485,36 +477,73 @@
       box-shadow: 0 10px 60px rgba(255, 215, 0, 0.5);
       animation: resultPopIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-
+    
     @keyframes resultPopIn {
       0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
       100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
     }
-
+    
     .race-result h2 {
       font-size: clamp(1.8em, 6vw, 3em);
       margin-bottom: 20px;
       animation: resultPulse 1s ease-in-out infinite;
     }
-
+    
     @keyframes resultPulse {
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.05); }
     }
-
+    
     .race-result p {
       font-size: clamp(1em, 4vw, 1.5em);
       margin: 20px 0;
     }
-
-    .race-result.win h2 {
-      color: #32CD32;
+    
+    .race-result.win h2 { 
+      color: #32CD32; 
       text-shadow: 0 0 30px #32CD32, 0 0 50px #32CD32;
     }
-
-    .race-result.lose h2 {
-      color: #FF6347;
+    
+    .race-result.lose h2 { 
+      color: #FF6347; 
       text-shadow: 0 0 30px #FF6347, 0 0 50px #FF6347;
+    }
+    
+    @media (min-width: 768px) {
+      .betting-screen {
+        max-width: 600px;
+        margin: 30px auto 2px;
+        padding: 8px;
+        border: 6px ridge #FFD700;
+        border-radius: 15px;
+      }
+      
+      .container {
+        padding: 10px;
+      }
+      
+      .race-info {
+        top: 20px;
+        left: 20px;
+        right: 20px;
+        border-radius: 18px;
+        padding: 15px;
+      }
+      
+      .race-commentary {
+        top: 120px;
+        border-radius: 15px;
+        padding: 12px 25px;
+        max-width: 70%;
+      }
+      
+      .race-stats {
+        bottom: 20px;
+        left: 20px;
+        right: 20px;
+        border-radius: 18px;
+        padding: 15px;
+      }
     }
   </style>
 </head>
@@ -526,15 +555,15 @@
   <div class="container">
     <div id="bettingScreen" class="betting-screen">
       <h1>🏜️ DUNE RUSH</h1>
-
+      
       <p>Pick your champion camel!</p>
-
+      
       <div class="camel-grid" id="camelGrid"></div>
-
+      
       <div class="bet-controls">
         <h3>💰 BET AMOUNT</h3>
         <input type="number" id="betInput" class="bet-amount" value="50" min="10" max="500">
-
+        
         <div class="bet-buttons">
           <button class="bet-btn" onclick="setBet(10)">10</button>
           <button class="bet-btn" onclick="setBet(50)">50</button>
@@ -542,7 +571,7 @@
           <button class="bet-btn" onclick="setBet(250)">250</button>
         </div>
       </div>
-
+      
       <div class="payout-info">
         <h4>🏆 PAYOUTS</h4>
         <div class="payout-item">
@@ -562,7 +591,7 @@
           <span style="color: #FF6347;">Lose</span>
         </div>
       </div>
-
+      
       <button onclick="startRace()">
         🏁 START RACE
       </button>
@@ -573,13 +602,13 @@
     <div class="race-canvas-container" id="canvasContainer">
       <canvas id="raceCanvas"></canvas>
     </div>
-
+    
     <div class="race-info">
       <h2>BET: <span id="displayBet">50</span>G on <span id="displayCamel">???</span></h2>
     </div>
-
+    
     <div id="commentary" class="race-commentary" style="display: none;"></div>
-
+    
     <div class="race-stats">
       <div>
         <div>
@@ -590,7 +619,7 @@
         </div>
       </div>
     </div>
-
+    
     <div id="raceResult" class="race-result">
       <h2 id="resultText"></h2>
       <p id="resultDetail"></p>
@@ -645,9 +674,9 @@
       const grid = document.getElementById('camelGrid');
       grid.innerHTML = CAMELS.map((camel, index) => `
         <div class="camel-option" onclick="selectCamel(${camel.id})">
-          <div class="camel-emoji" style="font-size: 1.3em; animation-delay: ${index * 0.1}s;">🐪</div>
+          <div class="camel-emoji" style="font-size: 2.2em; animation-delay: ${index * 0.1}s;">🐪</div>
           <h3>${camel.name}</h3>
-          <div style="color: #32CD32; font-size: 0.6em; margin-top: 1px; text-shadow: 0 0 8px rgba(50, 205, 50, 0.6);">
+          <div style="color: #32CD32; font-size: 0.9em; margin-top: 3px; text-shadow: 0 0 8px rgba(50, 205, 50, 0.6); font-weight: bold;">
             ${(3 + Math.random() * 5).toFixed(1)}:1
           </div>
         </div>
@@ -677,26 +706,26 @@
     function startRace() {
       const betInput = document.getElementById('betInput');
       GameState.betAmount = parseInt(betInput.value) || 50;
-
+      
       if (GameState.selectedCamel === null) {
         alert('🐪 Pick a camel first!');
         return;
       }
-
+      
       if (GameState.betAmount < 10 || GameState.betAmount > GameState.gold || GameState.betAmount > 500) {
         alert('❌ Invalid bet amount!');
         return;
       }
-
+      
       GameState.gold -= GameState.betAmount;
       updateGoldDisplay();
-
+      
       document.getElementById('displayBet').textContent = GameState.betAmount;
       document.getElementById('displayCamel').textContent = CAMELS[GameState.selectedCamel].name;
-
+      
       document.getElementById('bettingScreen').style.display = 'none';
       document.getElementById('raceView').style.display = 'block';
-
+      
       RaceEngine.init();
     }
 
@@ -704,7 +733,7 @@
       document.getElementById('raceResult').style.display = 'none';
       document.getElementById('raceView').style.display = 'none';
       document.getElementById('bettingScreen').style.display = 'block';
-
+      
       GameState.selectedCamel = null;
       document.querySelectorAll('.camel-option').forEach(el => {
         el.classList.remove('selected');
@@ -724,7 +753,7 @@
       init() {
         this.container = document.getElementById('canvasContainer');
         this.canvas = document.getElementById('raceCanvas');
-
+        
         const dpr = window.devicePixelRatio || 1;
         this.canvas.width = 1400 * dpr;
         this.canvas.height = 500 * dpr;
@@ -748,7 +777,7 @@
         this.dustParticles = [];
         this.commentaryTimer = 0;
         this.lastCommentary = 0;
-
+        
         setTimeout(() => {
           this.showCommentary("AND THEY'RE OFF!");
           this.animate();
@@ -808,12 +837,12 @@
         const bounceY = Math.sin(bounce) * 6;
         const baseY = y + bounceY;
         const scale = 1.3;
-
+        
         ctx.save();
         ctx.translate(x, baseY);
         ctx.scale(scale, scale);
         ctx.translate(-x, -baseY);
-
+        
         ctx.save();
         ctx.globalAlpha = 0.3;
         ctx.fillStyle = '#000';
@@ -924,7 +953,7 @@
         ctx.font = 'bold 14px Arial';
         ctx.strokeText(CAMELS[this.camels.indexOf(this.camels.find(c => c.y === y))].name, x + 10, baseY - 25);
         ctx.fillText(CAMELS[this.camels.indexOf(this.camels.find(c => c.y === y))].name, x + 10, baseY - 25);
-
+        
         ctx.restore();
       },
 
@@ -1012,21 +1041,21 @@
         }
         ctx.setLineDash([]);
 
-        const finishX = 1200;
+        const finishX = 1280;
         for (let i = 0; i < 12; i++) {
           for (let j = 0; j < 3; j++) {
             ctx.fillStyle = (i + j) % 2 === 0 ? '#000' : '#fff';
-            ctx.fillRect(finishX + j * 60, i * 60, 60, 60);
+            ctx.fillRect(finishX + j * 40, i * 40, 40, 40);
           }
         }
 
         ctx.save();
-        ctx.translate(finishX + 90, 250);
+        ctx.translate(finishX + 60, 250);
         ctx.rotate(-Math.PI / 2);
         ctx.fillStyle = '#FFD700';
         ctx.strokeStyle = '#000';
-        ctx.lineWidth = 5;
-        ctx.font = 'bold 48px Arial';
+        ctx.lineWidth = 4;
+        ctx.font = 'bold 36px Arial';
         ctx.strokeText('FINISH', 0, 0);
         ctx.fillText('FINISH', 0, 0);
         ctx.restore();
@@ -1035,7 +1064,7 @@
         this.drawDust();
 
         let winner = null;
-
+        
         this.commentaryTimer++;
 
         this.camels.forEach(c => {
@@ -1061,20 +1090,9 @@
           if (c.lastPosition !== index && this.commentaryTimer - this.lastCommentary > 60) {
             if (index < c.lastPosition && index <= 2) {
               if (c.isMe) {
-                const phrases = [
-                  "YOU'RE CHARGING AHEAD! 🔥",
-                  "INCREDIBLE MOVE! 💨",
-                  "WHAT A SURGE! ⚡",
-                  "UNSTOPPABLE! 🚀"
-                ];
-                this.showCommentary(phrases[Math.floor(Math.random() * phrases.length)]);
+                this.showCommentary("YOU'RE CHARGING AHEAD! 🔥");
               } else if (index === 0) {
-                const phrases = [
-                  c.name.toUpperCase() + " TAKES THE LEAD!",
-                  c.name.toUpperCase() + " SURGES AHEAD!",
-                  c.name.toUpperCase() + " IS ON FIRE! 🔥"
-                ];
-                this.showCommentary(phrases[Math.floor(Math.random() * phrases.length)]);
+                this.showCommentary(c.name.toUpperCase() + " TAKES THE LEAD!");
               }
               this.createFlash();
               this.lastCommentary = this.commentaryTimer;
@@ -1084,90 +1102,26 @@
         });
 
         const progress = this.myCamel.distance / this.raceLength;
-        if (progress > 0.25 && progress < 0.27 && this.commentaryTimer - this.lastCommentary > 60) {
-          const myPos = sorted.findIndex(c => c.isMe) + 1;
-          if (myPos === 1) {
-            const phrases = [
-              "EARLY LEAD! 🚀",
-              "SETTING THE PACE! ⚡",
-              "STRONG START! 💪"
-            ];
-            this.showCommentary(phrases[Math.floor(Math.random() * phrases.length)]);
-          } else if (myPos <= 3) {
-            const phrases = [
-              "GOOD POSITION! 👍",
-              "STAYING CLOSE! 🔥",
-              "IN THE HUNT! 🎯"
-            ];
-            this.showCommentary(phrases[Math.floor(Math.random() * phrases.length)]);
-          }
-          this.lastCommentary = this.commentaryTimer;
-        }
-
         if (progress > 0.5 && progress < 0.52 && this.commentaryTimer - this.lastCommentary > 60) {
           const myPos = sorted.findIndex(c => c.isMe) + 1;
           if (myPos === 1) {
-            const phrases = [
-              "YOU'RE IN THE LEAD! 🏆",
-              "DOMINATING THE RACE! 👑",
-              "INCREDIBLE PERFORMANCE! ⭐"
-            ];
-            this.showCommentary(phrases[Math.floor(Math.random() * phrases.length)]);
+            this.showCommentary("YOU'RE IN THE LEAD! 🏆");
           } else if (myPos === 6) {
-            const phrases = [
-              "LAST PLACE! COME ON! 😰",
-              "YOU'RE FALLING BEHIND! 😱",
-              "NEED A MIRACLE HERE! 🙏"
-            ];
-            this.showCommentary(phrases[Math.floor(Math.random() * phrases.length)]);
-          } else if (myPos === 2) {
-            const phrases = [
-              "NECK AND NECK! 🔥",
-              "SO CLOSE TO THE LEAD! 💨",
-              "PUSHING HARD! ⚡"
-            ];
-            this.showCommentary(phrases[Math.floor(Math.random() * phrases.length)]);
+            this.showCommentary("LAST PLACE! COME ON! 😰");
           } else {
-            const phrases = [
-              "HALFWAY THERE! 💨",
-              "MIDDLE OF THE PACK! 🐪",
-              "STILL IN THIS! 💪"
-            ];
-            this.showCommentary(phrases[Math.floor(Math.random() * phrases.length)]);
+            this.showCommentary("HALFWAY THERE! 💨");
           }
           this.lastCommentary = this.commentaryTimer;
         }
 
         if (progress > 0.85 && progress < 0.87 && this.commentaryTimer - this.lastCommentary > 60) {
-          const myPos = sorted.findIndex(c => c.isMe) + 1;
-          if (myPos === 1) {
-            const phrases = [
-              "VICTORY IS YOURS! 👑",
-              "DON'T LET UP NOW! 🔥",
-              "FINISH STRONG! 💪"
-            ];
-            this.showCommentary(phrases[Math.floor(Math.random() * phrases.length)]);
-          } else if (myPos <= 3) {
-            const phrases = [
-              "FINAL STRETCH! 🏁",
-              "PHOTO FINISH! 📸",
-              "IT'S ANYONE'S RACE! ⚡"
-            ];
-            this.showCommentary(phrases[Math.floor(Math.random() * phrases.length)]);
-          } else {
-            const phrases = [
-              "LAST CHANCE! 😱",
-              "NEED A MIRACLE! 🙏",
-              "GIVE IT EVERYTHING! 💨"
-            ];
-            this.showCommentary(phrases[Math.floor(Math.random() * phrases.length)]);
-          }
+          this.showCommentary("FINAL STRETCH! 🏁");
           this.lastCommentary = this.commentaryTimer;
         }
 
         const pos = sorted.findIndex(c => c.isMe) + 1;
         const pct = Math.min(100, ((this.myCamel.distance / this.raceLength) * 100)).toFixed(0);
-
+        
         document.getElementById('position').textContent = `${pos}/6`;
         document.getElementById('progress').textContent = `${pct}%`;
 
@@ -1223,21 +1177,6 @@
     };
 
     init();
-
-    // Add this at the very end of <script> section, before </script>
-    function requestFullscreen() {
-      const elem = document.documentElement;
-      if (elem.requestFullscreen) {
-        elem.requestFullscreen();
-      } else if (elem.webkitRequestFullscreen) {
-        elem.webkitRequestFullscreen();
-      }
-    }
-
-    // Auto-request fullscreen on first user interaction
-    document.addEventListener('click', function() {
-      requestFullscreen();
-    }, { once: true });
   </script>
 </body>
 </html>
