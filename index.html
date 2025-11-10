@@ -3,15 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🏜️ Dune Rush - 3D Racing</title>
+  <title>🏜️ Dune Rush - Casino Racing</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      font-family: 'Courier New', monospace;
+      background: linear-gradient(to bottom, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
       min-height: 100vh;
       color: #fff;
-      overflow: hidden;
     }
 
     .container { max-width: 1400px; margin: 0 auto; padding: 20px; text-align: center; }
@@ -21,10 +20,8 @@
       top: 0;
       left: 0;
       right: 0;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(15px);
-      border-bottom: 3px solid rgba(255, 215, 0, 0.5);
-      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+      background: rgba(0,0,0,0.9);
+      border-bottom: 3px solid #FFD700;
       padding: 15px;
       text-align: center;
       z-index: 1000;
@@ -34,25 +31,24 @@
       color: #FFD700;
       font-size: 2em;
       font-weight: bold;
-      text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+      text-shadow: 0 0 10px #FFD700;
     }
 
     .betting-screen {
       max-width: 600px;
       margin: 100px auto;
-      background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(20px);
-      border: 2px solid rgba(255, 215, 0, 0.3);
-      border-radius: 30px;
+      background: rgba(0,0,0,0.9);
+      border: 4px solid #FFD700;
+      border-radius: 20px;
       padding: 40px;
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.7);
+      box-shadow: 0 0 50px rgba(255,215,0,0.3);
     }
 
     .betting-screen h1 {
       color: #FFD700;
       font-size: 2.5em;
       margin-bottom: 30px;
-      text-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
+      text-shadow: 0 0 20px #FF8C00;
     }
 
     .camel-grid {
@@ -63,10 +59,9 @@
     }
 
     .camel-option {
-      background: linear-gradient(135deg, rgba(139,69,19,0.6), rgba(101,67,33,0.4));
-      backdrop-filter: blur(10px);
-      border: 2px solid rgba(255, 215, 0, 0.2);
-      border-radius: 20px;
+      background: rgba(139,69,19,0.5);
+      border: 3px solid #654321;
+      border-radius: 15px;
       padding: 20px;
       cursor: pointer;
       transition: all 0.3s;
@@ -74,15 +69,13 @@
 
     .camel-option:hover {
       border-color: #FFD700;
-      transform: translateY(-5px);
-      box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
+      transform: scale(1.05);
     }
 
     .camel-option.selected {
       border-color: #FFD700;
-      background: linear-gradient(135deg, rgba(255,215,0,0.3), rgba(255,140,0,0.2));
-      box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
-      transform: scale(1.05);
+      background: rgba(255,215,0,0.3);
+      box-shadow: 0 0 20px rgba(255,215,0,0.5);
     }
 
     .camel-option h3 {
@@ -92,12 +85,10 @@
     }
 
     .bet-controls {
-      background: rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(10px);
-      border-radius: 20px;
+      background: rgba(0,0,0,0.5);
+      border-radius: 15px;
       padding: 25px;
       margin: 30px 0;
-      border: 1px solid rgba(255, 215, 0, 0.2);
     }
 
     .bet-controls h3 {
@@ -110,12 +101,12 @@
       width: 100%;
       padding: 15px;
       font-size: 1.5em;
-      border: 2px solid rgba(255, 215, 0, 0.5);
-      border-radius: 15px;
-      background: rgba(0, 0, 0, 0.7);
+      border: 3px solid #FFD700;
+      border-radius: 10px;
+      background: rgba(0,0,0,0.7);
       color: #FFD700;
       text-align: center;
-      font-family: 'Segoe UI', sans-serif;
+      font-family: 'Courier New', monospace;
       margin-bottom: 15px;
     }
 
@@ -127,20 +118,20 @@
     }
 
     .bet-btn {
-      background: linear-gradient(135deg, rgba(139,69,19,0.8), rgba(101,67,33,0.6));
+      background: linear-gradient(135deg, #8B4513, #654321);
       color: #FFD700;
-      border: 2px solid rgba(255, 215, 0, 0.3);
+      border: 2px solid #654321;
       padding: 12px;
       font-size: 1.1em;
       font-weight: bold;
-      border-radius: 12px;
+      border-radius: 8px;
       cursor: pointer;
-      transition: all 0.3s;
+      font-family: 'Courier New', monospace;
     }
 
     .bet-btn:hover {
       border-color: #FFD700;
-      transform: translateY(-3px);
+      transform: scale(1.05);
     }
 
     button {
@@ -150,24 +141,23 @@
       padding: 20px 50px;
       font-size: 1.5em;
       font-weight: bold;
-      border-radius: 20px;
+      border-radius: 15px;
       cursor: pointer;
+      font-family: 'Courier New', monospace;
       width: 100%;
       margin-top: 20px;
       transition: all 0.3s;
-      box-shadow: 0 5px 25px rgba(255, 215, 0, 0.4);
     }
 
     button:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 40px rgba(255, 215, 0, 0.6);
+      transform: scale(1.05);
+      box-shadow: 0 5px 25px rgba(255,215,0,0.5);
     }
 
     .payout-info {
       background: rgba(139,69,19,0.3);
-      backdrop-filter: blur(10px);
-      border: 2px solid rgba(255, 215, 0, 0.2);
-      border-radius: 15px;
+      border: 2px solid #654321;
+      border-radius: 10px;
       padding: 20px;
       margin: 20px 0;
       text-align: left;
@@ -183,62 +173,59 @@
       display: flex;
       justify-content: space-between;
       padding: 8px 0;
-      border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+      border-bottom: 1px solid rgba(255,215,0,0.2);
     }
 
-    #race3d {
-      position: fixed;
+    .race-view {
+      display: none;
+      margin-top: 100px;
+    }
+
+    .race-info {
+      background: rgba(0,0,0,0.9);
+      border: 3px solid #FFD700;
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .race-canvas-container {
+      width: 100%;
+      height: 500px;
+      border: 4px solid #FF8C00;
+      border-radius: 15px;
+      background: #000;
+      position: relative;
+      overflow: hidden;
+    }
+
+    canvas {
+      position: absolute;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
-      display: none;
-      z-index: 10;
     }
 
-    .race-hud {
-      position: fixed;
-      top: 80px;
-      left: 20px;
-      right: 20px;
-      display: none;
-      z-index: 100;
-    }
-
-    .hud-panel {
-      background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(15px);
-      border: 2px solid rgba(255, 215, 0, 0.3);
-      border-radius: 20px;
+    .race-stats {
+      background: rgba(0,0,0,0.9);
+      border: 3px solid #FFD700;
+      border-radius: 15px;
       padding: 20px;
-      margin: 10px;
-      display: inline-block;
-    }
-
-    .hud-stat {
-      color: #FFD700;
-      font-size: 1.3em;
-      margin: 5px 0;
+      margin-top: 20px;
     }
 
     .race-result {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: rgba(0, 0, 0, 0.95);
-      backdrop-filter: blur(20px);
-      border: 3px solid #FFD700;
-      border-radius: 30px;
-      padding: 50px;
       display: none;
-      z-index: 200;
+      background: rgba(0,0,0,0.95);
+      border: 4px solid #FFD700;
+      border-radius: 20px;
+      padding: 40px;
+      margin: 30px auto;
+      max-width: 600px;
       text-align: center;
-      box-shadow: 0 10px 60px rgba(255, 215, 0, 0.5);
     }
 
     .race-result h2 {
-      font-size: 3em;
+      font-size: 2.5em;
       margin-bottom: 20px;
     }
 
@@ -253,10 +240,10 @@
 
   <div class="container">
     <div id="bettingScreen" class="betting-screen">
-      <h1>🏜️ DUNE RUSH 3D</h1>
+      <h1>🎰 PLACE YOUR BET</h1>
 
       <p style="color: #FF8C00; font-size: 1.2em; margin-bottom: 20px;">
-        Experience 3D camel racing!
+        Pick a camel and bet to race!
       </p>
 
       <div class="camel-grid" id="camelGrid"></div>
@@ -294,30 +281,44 @@
       </div>
 
       <button onclick="startRace()">
-        🏁 START 3D RACE
+        🏁 START RACE (30 SECONDS)
       </button>
     </div>
-  </div>
 
-  <!-- 3D Race View -->
-  <div id="race3d"></div>
+    <div id="raceView" class="race-view">
+      <div class="race-info">
+        <h2 style="color: #FFD700; font-size: 2em;">
+          YOUR BET: <span id="displayBet">50</span> GOLD on <span id="displayCamel">???</span>
+        </h2>
+      </div>
 
-  <div class="race-hud" id="raceHud">
-    <div class="hud-panel">
-      <div class="hud-stat">Position: <strong id="position">-</strong>/5</div>
-      <div class="hud-stat">Distance: <strong id="distance">0</strong> km / 10 km</div>
-      <div class="hud-stat">Speed: <strong id="speed">0</strong> km/h</div>
+      <div class="race-canvas-container" id="canvasContainer">
+        <canvas id="raceCanvas"></canvas>
+      </div>
+
+      <div class="race-stats">
+        <div style="display: flex; justify-content: space-around; font-size: 1.3em;">
+          <div>
+            Position: <strong style="color: #FFD700;" id="position">-</strong>
+          </div>
+          <div>
+            Distance: <strong style="color: #32CD32;" id="distance">0.0km</strong> / 5km
+          </div>
+          <div>
+            Progress: <strong style="color: #FF8C00;" id="progress">0%</strong>
+          </div>
+        </div>
+      </div>
+
+      <div id="raceResult" class="race-result">
+        <h2 id="resultText"></h2>
+        <p id="resultDetail" style="font-size: 1.3em; margin: 20px 0;"></p>
+        <button onclick="playAgain()" style="font-size: 1.4em; padding: 25px 60px;">
+          🎰 BET AGAIN
+        </button>
+      </div>
     </div>
   </div>
-
-  <div id="raceResult" class="race-result">
-    <h2 id="resultText"></h2>
-    <p id="resultDetail" style="font-size: 1.5em; margin: 20px 0;"></p>
-    <button onclick="playAgain()">🎰 BET AGAIN</button>
-  </div>
-
-  <!-- Three.js from CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
   <script>
     const GameState = {
@@ -327,11 +328,11 @@
     };
 
     const CAMELS = [
-      { id: 0, name: 'Desert Storm', color: 0x8B4513, jockey: '👳' },
-      { id: 1, name: 'Sand Runner', color: 0xD2691E, jockey: '🧔' },
-      { id: 2, name: 'Golden Wind', color: 0xDAA520, jockey: '👨' },
-      { id: 3, name: 'Oasis King', color: 0xCD853F, jockey: '🧑' },
-      { id: 4, name: 'Dune Dancer', color: 0xDEB887, jockey: '👴' }
+      { id: 0, name: 'Desert Storm', color: '#8B4513', jockey: '👳' },
+      { id: 1, name: 'Sand Runner', color: '#D2691E', jockey: '🧔' },
+      { id: 2, name: 'Golden Wind', color: '#DAA520', jockey: '👨' },
+      { id: 3, name: 'Oasis King', color: '#CD853F', jockey: '🧑' },
+      { id: 4, name: 'Dune Dancer', color: '#DEB887', jockey: '👴' }
     ];
 
     function init() {
@@ -385,17 +386,18 @@
       GameState.gold -= GameState.betAmount;
       updateGoldDisplay();
 
-      document.getElementById('bettingScreen').style.display = 'none';
-      document.getElementById('race3d').style.display = 'block';
-      document.getElementById('raceHud').style.display = 'block';
+      document.getElementById('displayBet').textContent = GameState.betAmount;
+      document.getElementById('displayCamel').textContent = CAMELS[GameState.selectedCamel].name;
 
-      RaceEngine3D.init();
+      document.getElementById('bettingScreen').style.display = 'none';
+      document.getElementById('raceView').style.display = 'block';
+
+      RaceEngine.init();
     }
 
     function playAgain() {
       document.getElementById('raceResult').style.display = 'none';
-      document.getElementById('race3d').style.display = 'none';
-      document.getElementById('raceHud').style.display = 'none';
+      document.getElementById('raceView').style.display = 'none';
       document.getElementById('bettingScreen').style.display = 'block';
 
       GameState.selectedCamel = null;
@@ -404,313 +406,147 @@
       });
     }
 
-    // 3D RACE ENGINE WITH THREE.JS!
-    const RaceEngine3D = {
-      scene: null,
-      camera: null,
-      renderer: null,
+    const RaceEngine = {
+      canvas: null,
+      ctx: null,
+      container: null,
       camels: [],
       myCamel: null,
       running: false,
-      raceLength: 300,
-      terrain: null,
+      raceLength: 5000,
+      cameraX: 0,
 
       init() {
-        this.setupScene();
-        this.createTerrain();
-        this.createCamels();
-        this.createLights();
-        this.running = true;
-        this.animate();
-      },
+        this.container = document.getElementById('canvasContainer');
+        this.canvas = document.getElementById('raceCanvas');
 
-      setupScene() {
-        // Scene
-        this.scene = new THREE.Scene();
-        this.scene.background = new THREE.Color(0x87CEEB);
-        this.scene.fog = new THREE.Fog(0xF4A460, 50, 500);
+        this.canvas.width = this.raceLength + 500;
+        this.canvas.height = 500;
+        this.ctx = this.canvas.getContext('2d');
 
-        // Camera
-        this.camera = new THREE.PerspectiveCamera(
-          75,
-          window.innerWidth / window.innerHeight,
-          0.1,
-          1000
-        );
-        this.camera.position.set(0, 15, 25);
-        this.camera.lookAt(0, 0, 0);
-
-        // Renderer
-        this.renderer = new THREE.WebGLRenderer({ antialias: true });
-        this.renderer.setSize(window.innerWidth, window.innerHeight);
-        this.renderer.shadowMap.enabled = true;
-        this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-        document.getElementById('race3d').appendChild(this.renderer.domElement);
-
-        // Handle resize
-        window.addEventListener('resize', () => {
-          this.camera.aspect = window.innerWidth / window.innerHeight;
-          this.camera.updateProjectionMatrix();
-          this.renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-      },
-
-      createTerrain() {
-        // Ground
-        const groundGeometry = new THREE.PlaneGeometry(500, 100);
-        const groundMaterial = new THREE.MeshLambertMaterial({
-          color: 0xDEB887,
-          side: THREE.DoubleSide
-        });
-        const ground = new THREE.Mesh(groundGeometry, groundMaterial);
-        ground.rotation.x = -Math.PI / 2;
-        ground.receiveShadow = true;
-        this.scene.add(ground);
-
-        // Racing track markers every 50m
-        for (let i = 0; i <= this.raceLength; i += 50) {
-          const markerGeometry = new THREE.BoxGeometry(8, 15, 1);
-          const markerMaterial = new THREE.MeshLambertMaterial({ color: 0xFFD700 });
-          const marker = new THREE.Mesh(markerGeometry, markerMaterial);
-          marker.position.set(i - 150, 7.5, -30);
-          marker.castShadow = true;
-          this.scene.add(marker);
-
-          // KM text (simplified)
-          const km = i / 30;
-          if (km % 1 === 0) {
-            const textGeo = new THREE.BoxGeometry(2, 2, 2);
-            const textMat = new THREE.MeshLambertMaterial({ color: 0xFFFFFF });
-            const textMesh = new THREE.Mesh(textGeo, textMat);
-            textMesh.position.set(i - 150, 2, -25);
-            this.scene.add(textMesh);
-          }
-        }
-
-        // Finish line
-        const finishGeometry = new THREE.BoxGeometry(8, 20, 2);
-        const finishMaterial = new THREE.MeshLambertMaterial({ color: 0x000000 });
-        const finishLine = new THREE.Mesh(finishGeometry, finishMaterial);
-        finishLine.position.set(this.raceLength - 150, 10, -30);
-        finishLine.castShadow = true;
-        this.scene.add(finishLine);
-
-        // Checkered pattern
-        for (let i = 0; i < 10; i++) {
-          if (i % 2 === 0) {
-            const checkGeometry = new THREE.BoxGeometry(8, 2, 2);
-            const checkMaterial = new THREE.MeshLambertMaterial({ color: 0xFFFFFF });
-            const check = new THREE.Mesh(checkGeometry, checkMaterial);
-            check.position.set(this.raceLength - 150, 2 + i * 2, -30);
-            this.scene.add(check);
-          }
-        }
-
-        // Dunes in background
-        for (let i = 0; i < 20; i++) {
-          const duneGeometry = new THREE.SphereGeometry(15, 16, 16);
-          const duneMaterial = new THREE.MeshLambertMaterial({ color: 0xF4A460 });
-          const dune = new THREE.Mesh(duneGeometry, duneMaterial);
-          dune.position.set(
-            Math.random() * 400 - 200,
-            -8,
-            -60 - Math.random() * 40
-          );
-          dune.scale.y = 0.5;
-          dune.receiveShadow = true;
-          this.scene.add(dune);
-        }
-      },
-
-      createCamel(camelData, lane) {
-        const camelGroup = new THREE.Group();
-
-        // Body
-        const bodyGeometry = new THREE.BoxGeometry(6, 3, 3);
-        const bodyMaterial = new THREE.MeshPhongMaterial({
-          color: camelData.color,
-          shininess: 30
-        });
-        const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
-        body.position.y = 4;
-        body.castShadow = true;
-        camelGroup.add(body);
-
-        // Humps
-        const hump1Geometry = new THREE.SphereGeometry(1.5, 16, 16);
-        const hump1 = new THREE.Mesh(hump1Geometry, bodyMaterial);
-        hump1.position.set(-1, 5.5, 0);
-        hump1.castShadow = true;
-        camelGroup.add(hump1);
-
-        const hump2 = new THREE.Mesh(hump1Geometry, bodyMaterial);
-        hump2.position.set(1, 5.5, 0);
-        hump2.scale.set(0.8, 0.8, 0.8);
-        hump2.castShadow = true;
-        camelGroup.add(hump2);
-
-        // Neck
-        const neckGeometry = new THREE.CylinderGeometry(0.8, 1.2, 4, 16);
-        const neck = new THREE.Mesh(neckGeometry, bodyMaterial);
-        neck.position.set(4, 5, 0);
-        neck.rotation.z = -Math.PI / 6;
-        neck.castShadow = true;
-        camelGroup.add(neck);
-
-        // Head
-        const headGeometry = new THREE.BoxGeometry(2, 1.5, 1.5);
-        const head = new THREE.Mesh(headGeometry, bodyMaterial);
-        head.position.set(5.5, 7, 0);
-        head.castShadow = true;
-        camelGroup.add(head);
-
-        // Legs
-        const legGeometry = new THREE.CylinderGeometry(0.4, 0.4, 3, 16);
-        const legMaterial = new THREE.MeshPhongMaterial({
-          color: new THREE.Color(camelData.color).multiplyScalar(0.8)
-        });
-
-        const legPositions = [
-          [-2, 1.5, -1],
-          [-2, 1.5, 1],
-          [2, 1.5, -1],
-          [2, 1.5, 1]
-        ];
-
-        legPositions.forEach(pos => {
-          const leg = new THREE.Mesh(legGeometry, legMaterial);
-          leg.position.set(...pos);
-          leg.castShadow = true;
-          camelGroup.add(leg);
-        });
-
-        // Position on track
-        camelGroup.position.set(-150, 0, lane * 8 - 20);
-
-        // Data
-        camelGroup.userData = {
-          ...camelData,
+        this.camels = CAMELS.map((c, i) => ({
+          ...c,
+          x: 50,
+          y: 100 + (i * 70),
           distance: 0,
-          speed: 0.8 + Math.random() * 0.4,
-          baseSpeed: 0.8 + Math.random() * 0.4,
-          lane: lane,
-          legPhase: 0
-        };
-
-        this.scene.add(camelGroup);
-        return camelGroup;
-      },
-
-      createCamels() {
-        this.camels = CAMELS.map((camelData, index) => {
-          return this.createCamel(camelData, index);
-        });
+          speed: 4 + Math.random() * 3,
+          baseSpeed: 4 + Math.random() * 3,
+          isMe: i === GameState.selectedCamel
+        }));
 
         this.myCamel = this.camels[GameState.selectedCamel];
+        this.running = true;
 
-        // Add glow to player's camel
-        const glowGeometry = new THREE.SphereGeometry(8, 32, 32);
-        const glowMaterial = new THREE.MeshBasicMaterial({
-          color: 0xFFD700,
-          transparent: true,
-          opacity: 0.2
-        });
-        const glow = new THREE.Mesh(glowGeometry, glowMaterial);
-        glow.position.y = 4;
-        this.myCamel.add(glow);
+        setTimeout(() => this.animate(), 500);
       },
 
-      createLights() {
-        // Sun (directional light)
-        const sun = new THREE.DirectionalLight(0xFFFFFF, 1);
-        sun.position.set(50, 100, 50);
-        sun.castShadow = true;
-        sun.shadow.mapSize.width = 2048;
-        sun.shadow.mapSize.height = 2048;
-        sun.shadow.camera.left = -100;
-        sun.shadow.camera.right = 100;
-        sun.shadow.camera.top = 100;
-        sun.shadow.camera.bottom = -100;
-        this.scene.add(sun);
+      drawScene() {
+        const ctx = this.ctx;
+        const canvas = this.canvas;
 
-        // Ambient light
-        const ambient = new THREE.AmbientLight(0xFFFFFF, 0.6);
-        this.scene.add(ambient);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Hemisphere light for sky/ground
-        const hemiLight = new THREE.HemisphereLight(0x87CEEB, 0xDEB887, 0.4);
-        this.scene.add(hemiLight);
+        // Sky
+        const skyGrad = ctx.createLinearGradient(0, 0, 0, canvas.height * 0.4);
+        skyGrad.addColorStop(0, '#87CEEB');
+        skyGrad.addColorStop(1, '#F4A460');
+        ctx.fillStyle = skyGrad;
+        ctx.fillRect(0, 0, canvas.width, canvas.height * 0.4);
+
+        // Ground
+        ctx.fillStyle = '#D2691E';
+        ctx.fillRect(0, canvas.height * 0.4, canvas.width, canvas.height * 0.6);
+
+        // Finish line
+        const finishX = canvas.width - 100;
+        ctx.fillStyle = '#000';
+        ctx.fillRect(finishX, 0, 100, canvas.height);
+        for (let i = 0; i < 10; i++) {
+          if (i % 2 === 0) {
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(finishX, i * 50, 100, 50);
+          }
+        }
+      },
+
+      drawCamel(c) {
+        const ctx = this.ctx;
+        const x = 50 + (c.distance / this.raceLength) * (this.canvas.width - 200);
+        const y = c.y;
+
+        // Simple camel
+        ctx.fillStyle = c.color;
+        ctx.fillRect(x, y, 60, 40);
+        ctx.fillRect(x + 50, y - 15, 18, 25);
+
+        ctx.beginPath();
+        ctx.arc(x + 20, y + 5, 15, Math.PI, 0);
+        ctx.fill();
+
+        ctx.fillRect(x + 12, y + 40, 6, 20);
+        ctx.fillRect(x + 28, y + 40, 6, 20);
+        ctx.fillRect(x + 44, y + 40, 6, 20);
+
+        ctx.font = '30px Arial';
+        ctx.fillText(c.jockey, x + 20, y + 28);
+
+        if (c.isMe) {
+          ctx.strokeStyle = '#FFD700';
+          ctx.lineWidth = 5;
+          ctx.strokeRect(x - 5, c.y - 25, 70, 90);
+        }
+
+        ctx.fillStyle = '#FFF';
+        ctx.font = 'bold 12px Courier';
+        ctx.fillText(c.name, x, y - 5);
       },
 
       animate() {
         if (!this.running) return;
 
+        this.drawScene();
+
         let winner = null;
 
-        // Update camels
-        this.camels.forEach(camel => {
-          const userData = camel.userData;
+        this.camels.forEach(c => {
+          c.speed = c.baseSpeed + (Math.random() - 0.5) * 2;
+          c.distance += c.speed;
 
-          // Speed variation
-          userData.speed = userData.baseSpeed + (Math.random() - 0.5) * 0.2;
-          userData.distance += userData.speed;
+          this.drawCamel(c);
 
-          // Move camel
-          camel.position.x = -150 + userData.distance;
-
-          // Leg animation
-          userData.legPhase += 0.2;
-          camel.children.forEach((child, i) => {
-            if (i >= 5 && i <= 8) { // Legs
-              child.rotation.x = Math.sin(userData.legPhase + i) * 0.3;
-            }
-          });
-
-          // Bob animation
-          camel.position.y = Math.sin(userData.legPhase) * 0.3;
-
-          // Check winner
-          if (userData.distance >= this.raceLength && !winner) {
-            winner = camel;
+          if (c.distance >= this.raceLength && !winner) {
+            winner = c;
           }
         });
 
-        // Camera follows player's camel
-        const targetX = this.myCamel.position.x + 15;
-        const targetZ = this.myCamel.position.z + 25;
-        this.camera.position.x += (targetX - this.camera.position.x) * 0.1;
-        this.camera.position.z += (targetZ - this.camera.position.z) * 0.1;
-        this.camera.lookAt(this.myCamel.position.x, 4, this.myCamel.position.z);
+        // Camera follows
+        this.cameraX = Math.max(0, Math.min(
+          this.canvas.width - this.container.clientWidth,
+          this.myCamel.distance - (this.container.clientWidth / 3)
+        ));
+        this.canvas.style.transform = `translateX(-${this.cameraX}px)`;
 
-        // Update HUD
-        const sorted = [...this.camels].sort((a, b) =>
-          b.userData.distance - a.userData.distance
-        );
-        const pos = sorted.findIndex(c => c === this.myCamel) + 1;
-        const km = (this.myCamel.userData.distance / 30).toFixed(1);
-        const speed = (this.myCamel.userData.speed * 100).toFixed(0);
+        const sorted = [...this.camels].sort((a, b) => b.distance - a.distance);
+        const pos = sorted.findIndex(c => c.isMe) + 1;
+        const km = (this.myCamel.distance / 1000).toFixed(2);
+        const pct = Math.min(100, ((this.myCamel.distance / this.raceLength) * 100)).toFixed(0);
 
-        document.getElementById('position').textContent = pos;
-        document.getElementById('distance').textContent = km;
-        document.getElementById('speed').textContent = speed;
+        document.getElementById('position').textContent = `${pos}/5`;
+        document.getElementById('distance').textContent = `${km}km`;
+        document.getElementById('progress').textContent = `${pct}%`;
 
-        // Check for winner
         if (winner) {
           this.finishRace(winner);
-          return;
+        } else {
+          requestAnimationFrame(() => this.animate());
         }
-
-        this.renderer.render(this.scene, this.camera);
-        requestAnimationFrame(() => this.animate());
       },
 
       finishRace(winner) {
         this.running = false;
 
-        const sorted = [...this.camels].sort((a, b) =>
-          b.userData.distance - a.userData.distance
-        );
-        const myPos = sorted.findIndex(c => c === this.myCamel) + 1;
+        const sorted = [...this.camels].sort((a, b) => b.distance - a.distance);
+        const myPos = sorted.findIndex(c => c.isMe) + 1;
 
         let winnings = 0;
         let resultClass = 'lose';
@@ -745,9 +581,6 @@
         document.getElementById('resultText').textContent = resultMsg;
         document.getElementById('resultDetail').textContent = detailMsg;
         resultDiv.style.display = 'block';
-
-        // Cleanup
-        this.renderer.domElement.remove();
       }
     };
 
