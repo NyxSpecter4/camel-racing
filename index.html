@@ -15,7 +15,6 @@
 
     .container { max-width: 1400px; margin: 0 auto; padding: 20px; text-align: center; }
 
-    /* Gold Bar */
     .gold-bar {
       position: fixed;
       top: 0;
@@ -35,7 +34,6 @@
       text-shadow: 0 0 10px #FFD700;
     }
 
-    /* Betting Screen */
     .betting-screen {
       max-width: 600px;
       margin: 100px auto;
@@ -156,12 +154,6 @@
       box-shadow: 0 5px 25px rgba(255,215,0,0.5);
     }
 
-    button:disabled {
-      background: #666;
-      cursor: not-allowed;
-      transform: none;
-    }
-
     .payout-info {
       background: rgba(139,69,19,0.3);
       border: 2px solid #654321;
@@ -184,7 +176,6 @@
       border-bottom: 1px solid rgba(255,215,0,0.2);
     }
 
-    /* Race View */
     .race-view {
       display: none;
       margin-top: 100px;
@@ -198,7 +189,7 @@
       margin-bottom: 20px;
     }
 
-    .race-canvas {
+    .race-canvas-container {
       width: 100%;
       height: 500px;
       border: 4px solid #FF8C00;
@@ -209,9 +200,9 @@
     }
 
     canvas {
-      display: block;
-      width: 100%;
-      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
     }
 
     .race-stats {
@@ -243,13 +234,11 @@
   </style>
 </head>
 <body>
-  <!-- Gold Bar -->
   <div class="gold-bar">
     <div class="gold-amount">💰 <span id="goldAmount">1000</span> GOLD</div>
   </div>
 
   <div class="container">
-    <!-- Betting Screen -->
     <div id="bettingScreen" class="betting-screen">
       <h1>🎰 PLACE YOUR BET</h1>
 
@@ -296,7 +285,6 @@
       </button>
     </div>
 
-    <!-- Race View -->
     <div id="raceView" class="race-view">
       <div class="race-info">
         <h2 style="color: #FFD700; font-size: 2em;">
@@ -304,7 +292,7 @@
         </h2>
       </div>
 
-      <div class="race-canvas">
+      <div class="race-canvas-container" id="canvasContainer">
         <canvas id="raceCanvas"></canvas>
       </div>
 
@@ -314,7 +302,10 @@
             Position: <strong style="color: #FFD700;" id="position">-</strong>
           </div>
           <div>
-            Progress: <strong style="color: #32CD32;" id="progress">0%</strong>
+            Distance: <strong style="color: #32CD32;" id="distance">0.0km</strong> / 10km
+          </div>
+          <div>
+            Progress: <strong style="color: #FF8C00;" id="progress">0%</strong>
           </div>
         </div>
       </div>
@@ -330,14 +321,12 @@
   </div>
 
   <script>
-    // GAME STATE
     const GameState = {
       gold: 1000,
       selectedCamel: null,
       betAmount: 50
     };
 
-    // CAMELS
     const CAMELS = [
       { id: 0, name: 'Desert Storm', color: '#8B4513', jockey: '👳' },
       { id: 1, name: 'Sand Runner', color: '#D2691E', jockey: '🧔' },
@@ -346,7 +335,6 @@
       { id: 4, name: 'Dune Dancer', color: '#DEB887', jockey: '👴' }
     ];
 
-    // Initialize
     function init() {
       loadCamels();
       updateGoldDisplay();
@@ -395,19 +383,15 @@
         return;
       }
 
-      // Deduct bet
       GameState.gold -= GameState.betAmount;
       updateGoldDisplay();
 
-      // Update display
       document.getElementById('displayBet').textContent = GameState.betAmount;
       document.getElementById('displayCamel').textContent = CAMELS[GameState.selectedCamel].name;
 
-      // Show race
       document.getElementById('bettingScreen').style.display = 'none';
       document.getElementById('raceView').style.display = 'block';
 
-      // Start race engine
       RaceEngine.init();
     }
 
@@ -416,33 +400,36 @@
       document.getElementById('raceView').style.display = 'none';
       document.getElementById('bettingScreen').style.display = 'block';
 
-      // Reset selection
       GameState.selectedCamel = null;
       document.querySelectorAll('.camel-option').forEach(el => {
         el.classList.remove('selected');
       });
     }
 
-    // RACE ENGINE - BETTER PROPORTIONS!
+    // RACE ENGINE - LONG RACE WITH SCROLLING!
     const RaceEngine = {
       canvas: null,
       ctx: null,
+      container: null,
       camels: [],
       myCamel: null,
       running: false,
-      raceLength: 1200,
+      raceLength: 10000, // 10KM RACE!
+      cameraX: 0,
 
       init() {
+        this.container = document.getElementById('canvasContainer');
         this.canvas = document.getElementById('raceCanvas');
-        this.canvas.width = 1400;
-        this.canvas.height = 500; // Better aspect ratio!
+
+        // Big canvas for long race!
+        this.canvas.width = this.raceLength + 1000;
+        this.canvas.height = 500;
         this.ctx = this.canvas.getContext('2d');
 
-        // Create camels with BETTER SPACING
         this.camels = CAMELS.map((c, i) => ({
           ...c,
-          x: 50,
-          y: 100 + (i * 70), // More space between camels
+          x: 100,
+          y: 100 + (i * 70),
           distance: 0,
           speed: 2 + Math.random() * 2,
           baseSpeed: 2 + Math.random() * 2,
@@ -459,7 +446,9 @@
         const ctx = this.ctx;
         const canvas = this.canvas;
 
-        // Sky gradient - BETTER PROPORTIONS
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Sky
         const skyGrad = ctx.createLinearGradient(0, 0, 0, canvas.height * 0.35);
         skyGrad.addColorStop(0, '#87CEEB');
         skyGrad.addColorStop(0.5, '#B0E0E6');
@@ -467,7 +456,7 @@
         ctx.fillStyle = skyGrad;
         ctx.fillRect(0, 0, canvas.width, canvas.height * 0.35);
 
-        // Sun - BETTER SIZE
+        // Sun
         ctx.fillStyle = 'rgba(255, 215, 0, 0.3)';
         ctx.beginPath();
         ctx.arc(150, 60, 50, 0, Math.PI * 2);
@@ -478,18 +467,17 @@
         ctx.arc(150, 60, 35, 0, Math.PI * 2);
         ctx.fill();
 
-        // Mountains - BETTER PROPORTIONS (wider, not tall)
+        // Mountains across the long track
         ctx.fillStyle = '#8B7355';
-        for (let i = 0; i < 6; i++) {
+        for (let i = 0; i < 40; i++) {
           const x = i * 280 - 50;
           ctx.beginPath();
           ctx.moveTo(x, canvas.height * 0.35);
-          ctx.lineTo(x + 140, 40 + Math.sin(i) * 15); // Lower peaks
+          ctx.lineTo(x + 140, 40 + Math.sin(i) * 15);
           ctx.lineTo(x + 280, canvas.height * 0.35);
           ctx.closePath();
           ctx.fill();
 
-          // Snow peaks
           ctx.fillStyle = '#FFF';
           ctx.beginPath();
           ctx.moveTo(x + 115, 70);
@@ -500,26 +488,34 @@
           ctx.fillStyle = '#8B7355';
         }
 
-        // Ground layers - BETTER PROPORTIONS
+        // Ground
         ctx.fillStyle = '#F4A460';
         ctx.fillRect(0, canvas.height * 0.35, canvas.width, canvas.height * 0.65);
 
         ctx.fillStyle = '#D2691E';
         ctx.fillRect(0, canvas.height * 0.5, canvas.width, canvas.height * 0.5);
 
-        // Racing track - not too tall
         ctx.fillStyle = 'rgba(139, 69, 19, 0.25)';
         ctx.fillRect(0, canvas.height * 0.15, canvas.width, canvas.height * 0.85);
 
-        // Palm trees - BETTER SIZE
-        const checkpoints = [250, 500, 750, 1000];
-        checkpoints.forEach(x => {
-          if (x < canvas.width - 100) {
-            // Trunk
+        // KM MARKERS!
+        for (let km = 0; km <= 10; km++) {
+          const x = 100 + (km * 1000);
+
+          // Marker line
+          ctx.fillStyle = 'rgba(255, 215, 0, 0.5)';
+          ctx.fillRect(x, 0, 4, canvas.height);
+
+          // KM text
+          ctx.fillStyle = '#FFD700';
+          ctx.font = 'bold 24px Courier';
+          ctx.fillText(`${km}km`, x + 10, 30);
+
+          // Palm tree every 2km
+          if (km % 2 === 0 && km < 10) {
             ctx.fillStyle = '#8B4513';
             ctx.fillRect(x - 6, canvas.height * 0.25, 12, 70);
 
-            // Leaves
             ctx.fillStyle = '#228B22';
             for (let i = 0; i < 6; i++) {
               ctx.beginPath();
@@ -527,10 +523,10 @@
               ctx.fill();
             }
           }
-        });
+        }
 
         // Finish line
-        const finishX = canvas.width - 100;
+        const finishX = 100 + this.raceLength;
         ctx.fillStyle = '#000';
         ctx.fillRect(finishX, 0, 100, canvas.height);
         for (let i = 0; i < 10; i++) {
@@ -540,7 +536,6 @@
           }
         }
 
-        // FINISH text
         ctx.fillStyle = '#FFD700';
         ctx.font = 'bold 35px Courier';
         ctx.save();
@@ -552,34 +547,28 @@
 
       drawCamel(c) {
         const ctx = this.ctx;
-        const x = 50 + (c.distance / this.raceLength) * (this.canvas.width - 200);
+        const x = 100 + c.distance;
         const y = c.y;
 
-        // Shadow
         ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
         ctx.beginPath();
         ctx.ellipse(x + 40, y + 55, 45, 12, 0, 0, Math.PI * 2);
         ctx.fill();
 
-        // FATTER, ROUNDER CAMEL!
         ctx.fillStyle = c.color;
 
-        // Main body - WIDER!
         ctx.beginPath();
         ctx.ellipse(x + 35, y + 25, 50, 22, 0, 0, Math.PI * 2);
         ctx.fill();
 
-        // Neck - THICKER
         ctx.beginPath();
         ctx.ellipse(x + 70, y + 12, 16, 28, 0.2, 0, Math.PI * 2);
         ctx.fill();
 
-        // Head - ROUNDER
         ctx.beginPath();
         ctx.ellipse(x + 78, y, 13, 15, 0.1, 0, Math.PI * 2);
         ctx.fill();
 
-        // Humps - ROUNDER
         ctx.beginPath();
         ctx.arc(x + 25, y + 15, 18, Math.PI, 0);
         ctx.fill();
@@ -587,18 +576,15 @@
         ctx.arc(x + 50, y + 15, 15, Math.PI, 0);
         ctx.fill();
 
-        // Legs - animated but not too long
-        const legMove = Math.sin(c.distance * 0.1) * 5;
+        const legMove = Math.sin(c.distance * 0.05) * 5;
         ctx.fillRect(x + 15, y + 45, 7, 20 + legMove);
         ctx.fillRect(x + 32, y + 45, 7, 20 - legMove);
         ctx.fillRect(x + 50, y + 45, 7, 20 - legMove);
         ctx.fillRect(x + 67, y + 45, 7, 20 + legMove);
 
-        // Jockey - BIGGER
         ctx.font = '35px Arial';
         ctx.fillText(c.jockey, x + 32, y + 32);
 
-        // Highlight player's camel
         if (c.isMe) {
           ctx.strokeStyle = '#FFD700';
           ctx.lineWidth = 5;
@@ -609,7 +595,6 @@
           ctx.fillText('⭐ YOU ⭐', x + 15, y - 30);
         }
 
-        // Name
         ctx.fillStyle = '#FFF';
         ctx.strokeStyle = '#000';
         ctx.lineWidth = 3;
@@ -621,31 +606,36 @@
       animate() {
         if (!this.running) return;
 
-        // Draw scene
         this.drawScene();
 
         let winner = null;
 
-        // Draw camels
         this.camels.forEach(c => {
-          // Random speed variation
           c.speed = c.baseSpeed + (Math.random() - 0.5) * 1.5;
           c.distance += c.speed;
 
           this.drawCamel(c);
 
-          // Check finish
           if (c.distance >= this.raceLength && !winner) {
             winner = c;
           }
         });
 
+        // CAMERA FOLLOWS YOUR CAMEL!
+        this.cameraX = Math.max(0, Math.min(
+          this.canvas.width - this.container.clientWidth,
+          this.myCamel.distance - (this.container.clientWidth / 3)
+        ));
+        this.canvas.style.transform = `translateX(-${this.cameraX}px)`;
+
         // Update stats
         const sorted = [...this.camels].sort((a, b) => b.distance - a.distance);
         const pos = sorted.findIndex(c => c.isMe) + 1;
+        const km = (this.myCamel.distance / 1000).toFixed(2);
         const pct = Math.min(100, ((this.myCamel.distance / this.raceLength) * 100)).toFixed(0);
 
         document.getElementById('position').textContent = `${pos}/5`;
+        document.getElementById('distance').textContent = `${km}km`;
         document.getElementById('progress').textContent = `${pct}%`;
 
         if (winner) {
@@ -686,11 +676,9 @@
           detailMsg = `Lost ${GameState.betAmount} gold 😔`;
         }
 
-        // Add winnings
         GameState.gold += winnings;
         updateGoldDisplay();
 
-        // Show result
         const resultDiv = document.getElementById('raceResult');
         resultDiv.className = `race-result ${resultClass}`;
         document.getElementById('resultText').textContent = resultMsg;
@@ -699,7 +687,6 @@
       }
     };
 
-    // Start game
     init();
   </script>
 </body>
