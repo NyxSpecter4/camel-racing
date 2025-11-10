@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🏜️ Dune Rush - Polished</title>
+  <title>🏜️ Dune Rush - 3D Racing</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
@@ -11,19 +11,18 @@
       background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
       min-height: 100vh;
       color: #fff;
-      overflow-x: hidden;
+      overflow: hidden;
     }
 
     .container { max-width: 1400px; margin: 0 auto; padding: 20px; text-align: center; }
 
-    /* Glassmorphism Gold Bar */
     .gold-bar {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(10px);
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(15px);
       border-bottom: 3px solid rgba(255, 215, 0, 0.5);
       box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
       padding: 15px;
@@ -35,27 +34,18 @@
       color: #FFD700;
       font-size: 2em;
       font-weight: bold;
-      text-shadow: 0 0 20px rgba(255, 215, 0, 0.8),
-                   0 0 40px rgba(255, 215, 0, 0.4);
-      animation: goldGlow 2s ease-in-out infinite;
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
     }
 
-    @keyframes goldGlow {
-      0%, 100% { text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 215, 0, 0.4); }
-      50% { text-shadow: 0 0 30px rgba(255, 215, 0, 1), 0 0 60px rgba(255, 215, 0, 0.6); }
-    }
-
-    /* Glassmorphism Betting Screen */
     .betting-screen {
       max-width: 600px;
       margin: 100px auto;
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(15px);
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(20px);
       border: 2px solid rgba(255, 215, 0, 0.3);
       border-radius: 30px;
       padding: 40px;
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.7),
-                  0 0 60px rgba(255, 215, 0, 0.2);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.7);
     }
 
     .betting-screen h1 {
@@ -63,12 +53,6 @@
       font-size: 2.5em;
       margin-bottom: 30px;
       text-shadow: 0 0 30px rgba(255, 215, 0, 0.8);
-      animation: titleFloat 3s ease-in-out infinite;
-    }
-
-    @keyframes titleFloat {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-10px); }
     }
 
     .camel-grid {
@@ -85,44 +69,19 @@
       border-radius: 20px;
       padding: 20px;
       cursor: pointer;
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .camel-option::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: linear-gradient(
-        45deg,
-        transparent,
-        rgba(255, 215, 0, 0.1),
-        transparent
-      );
-      transform: rotate(45deg);
-      transition: all 0.5s;
-    }
-
-    .camel-option:hover::before {
-      left: 100%;
+      transition: all 0.3s;
     }
 
     .camel-option:hover {
       border-color: #FFD700;
-      transform: translateY(-10px) scale(1.05);
-      box-shadow: 0 10px 40px rgba(255, 215, 0, 0.4),
-                  0 0 20px rgba(255, 215, 0, 0.3);
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(255, 215, 0, 0.4);
     }
 
     .camel-option.selected {
       border-color: #FFD700;
       background: linear-gradient(135deg, rgba(255,215,0,0.3), rgba(255,140,0,0.2));
-      box-shadow: 0 0 40px rgba(255, 215, 0, 0.6),
-                  inset 0 0 20px rgba(255, 215, 0, 0.2);
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
       transform: scale(1.05);
     }
 
@@ -130,7 +89,6 @@
       color: #FFD700;
       font-size: 1.5em;
       margin: 10px 0;
-      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
     }
 
     .bet-controls {
@@ -146,7 +104,6 @@
       color: #FFD700;
       font-size: 1.3em;
       margin-bottom: 15px;
-      text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
     }
 
     .bet-amount {
@@ -160,13 +117,6 @@
       text-align: center;
       font-family: 'Segoe UI', sans-serif;
       margin-bottom: 15px;
-      transition: all 0.3s;
-    }
-
-    .bet-amount:focus {
-      outline: none;
-      border-color: #FFD700;
-      box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
     }
 
     .bet-buttons {
@@ -191,7 +141,6 @@
     .bet-btn:hover {
       border-color: #FFD700;
       transform: translateY(-3px);
-      box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
     }
 
     button {
@@ -205,32 +154,12 @@
       cursor: pointer;
       width: 100%;
       margin-top: 20px;
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      transition: all 0.3s;
       box-shadow: 0 5px 25px rgba(255, 215, 0, 0.4);
-      position: relative;
-      overflow: hidden;
-    }
-
-    button::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 0;
-      height: 0;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.3);
-      transform: translate(-50%, -50%);
-      transition: width 0.6s, height 0.6s;
-    }
-
-    button:hover::before {
-      width: 300px;
-      height: 300px;
     }
 
     button:hover {
-      transform: translateY(-5px) scale(1.05);
+      transform: translateY(-5px);
       box-shadow: 0 10px 40px rgba(255, 215, 0, 0.6);
     }
 
@@ -248,7 +177,6 @@
       color: #FFD700;
       font-size: 1.2em;
       margin-bottom: 10px;
-      text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
     }
 
     .payout-item {
@@ -256,87 +184,62 @@
       justify-content: space-between;
       padding: 8px 0;
       border-bottom: 1px solid rgba(255, 215, 0, 0.2);
-      transition: all 0.3s;
     }
 
-    .payout-item:hover {
-      padding-left: 10px;
-      border-left: 3px solid #FFD700;
-    }
-
-    /* Race View */
-    .race-view {
-      display: none;
-      margin-top: 100px;
-    }
-
-    .race-info {
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(15px);
-      border: 2px solid rgba(255, 215, 0, 0.3);
-      border-radius: 20px;
-      padding: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
-    }
-
-    .race-canvas-container {
-      width: 100%;
-      height: 500px;
-      border: 3px solid rgba(255, 140, 0, 0.5);
-      border-radius: 20px;
-      background: #000;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 10px 50px rgba(0, 0, 0, 0.8),
-                  inset 0 0 50px rgba(0, 0, 0, 0.5);
-    }
-
-    canvas {
-      position: absolute;
+    #race3d {
+      position: fixed;
       top: 0;
       left: 0;
+      width: 100%;
+      height: 100%;
+      display: none;
+      z-index: 10;
     }
 
-    .race-stats {
-      background: rgba(0, 0, 0, 0.7);
+    .race-hud {
+      position: fixed;
+      top: 80px;
+      left: 20px;
+      right: 20px;
+      display: none;
+      z-index: 100;
+    }
+
+    .hud-panel {
+      background: rgba(0, 0, 0, 0.8);
       backdrop-filter: blur(15px);
       border: 2px solid rgba(255, 215, 0, 0.3);
       border-radius: 20px;
       padding: 20px;
-      margin-top: 20px;
-      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+      margin: 10px;
+      display: inline-block;
+    }
+
+    .hud-stat {
+      color: #FFD700;
+      font-size: 1.3em;
+      margin: 5px 0;
     }
 
     .race-result {
-      display: none;
-      background: rgba(0, 0, 0, 0.9);
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.95);
       backdrop-filter: blur(20px);
       border: 3px solid #FFD700;
       border-radius: 30px;
-      padding: 40px;
-      margin: 30px auto;
-      max-width: 600px;
+      padding: 50px;
+      display: none;
+      z-index: 200;
       text-align: center;
       box-shadow: 0 10px 60px rgba(255, 215, 0, 0.5);
-      animation: resultPopIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    @keyframes resultPopIn {
-      0% { transform: scale(0.5); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
     }
 
     .race-result h2 {
-      font-size: 2.5em;
+      font-size: 3em;
       margin-bottom: 20px;
-      text-shadow: 0 0 30px currentColor;
-      animation: resultGlow 1s ease-in-out infinite;
-    }
-
-    @keyframes resultGlow {
-      0%, 100% { text-shadow: 0 0 30px currentColor; }
-      50% { text-shadow: 0 0 50px currentColor; }
     }
 
     .race-result.win h2 { color: #32CD32; }
@@ -350,10 +253,10 @@
 
   <div class="container">
     <div id="bettingScreen" class="betting-screen">
-      <h1>🎰 DUNE RUSH</h1>
+      <h1>🏜️ DUNE RUSH 3D</h1>
 
-      <p style="color: #FF8C00; font-size: 1.2em; margin-bottom: 20px; text-shadow: 0 2px 10px rgba(0,0,0,0.5);">
-        Pick a camel and bet to race!
+      <p style="color: #FF8C00; font-size: 1.2em; margin-bottom: 20px;">
+        Experience 3D camel racing!
       </p>
 
       <div class="camel-grid" id="camelGrid"></div>
@@ -391,44 +294,30 @@
       </div>
 
       <button onclick="startRace()">
-        🏁 START RACE
+        🏁 START 3D RACE
       </button>
     </div>
+  </div>
 
-    <div id="raceView" class="race-view">
-      <div class="race-info">
-        <h2 style="color: #FFD700; font-size: 2em; text-shadow: 0 0 20px rgba(255,215,0,0.5);">
-          YOUR BET: <span id="displayBet">50</span> GOLD on <span id="displayCamel">???</span>
-        </h2>
-      </div>
+  <!-- 3D Race View -->
+  <div id="race3d"></div>
 
-      <div class="race-canvas-container" id="canvasContainer">
-        <canvas id="raceCanvas"></canvas>
-      </div>
-
-      <div class="race-stats">
-        <div style="display: flex; justify-content: space-around; font-size: 1.3em;">
-          <div>
-            Position: <strong style="color: #FFD700; text-shadow: 0 0 10px rgba(255,215,0,0.5);" id="position">-</strong>
-          </div>
-          <div>
-            Distance: <strong style="color: #32CD32; text-shadow: 0 0 10px rgba(50,205,50,0.5);" id="distance">0.0km</strong> / 10km
-          </div>
-          <div>
-            Progress: <strong style="color: #FF8C00; text-shadow: 0 0 10px rgba(255,140,0,0.5);" id="progress">0%</strong>
-          </div>
-        </div>
-      </div>
-
-      <div id="raceResult" class="race-result">
-        <h2 id="resultText"></h2>
-        <p id="resultDetail" style="font-size: 1.3em; margin: 20px 0;"></p>
-        <button onclick="playAgain()" style="font-size: 1.4em; padding: 25px 60px;">
-          🎰 BET AGAIN
-        </button>
-      </div>
+  <div class="race-hud" id="raceHud">
+    <div class="hud-panel">
+      <div class="hud-stat">Position: <strong id="position">-</strong>/5</div>
+      <div class="hud-stat">Distance: <strong id="distance">0</strong> km / 10 km</div>
+      <div class="hud-stat">Speed: <strong id="speed">0</strong> km/h</div>
     </div>
   </div>
+
+  <div id="raceResult" class="race-result">
+    <h2 id="resultText"></h2>
+    <p id="resultDetail" style="font-size: 1.5em; margin: 20px 0;"></p>
+    <button onclick="playAgain()">🎰 BET AGAIN</button>
+  </div>
+
+  <!-- Three.js from CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
   <script>
     const GameState = {
@@ -438,11 +327,11 @@
     };
 
     const CAMELS = [
-      { id: 0, name: 'Desert Storm', color: '#8B4513', jockey: '👳' },
-      { id: 1, name: 'Sand Runner', color: '#D2691E', jockey: '🧔' },
-      { id: 2, name: 'Golden Wind', color: '#DAA520', jockey: '👨' },
-      { id: 3, name: 'Oasis King', color: '#CD853F', jockey: '🧑' },
-      { id: 4, name: 'Dune Dancer', color: '#DEB887', jockey: '👴' }
+      { id: 0, name: 'Desert Storm', color: 0x8B4513, jockey: '👳' },
+      { id: 1, name: 'Sand Runner', color: 0xD2691E, jockey: '🧔' },
+      { id: 2, name: 'Golden Wind', color: 0xDAA520, jockey: '👨' },
+      { id: 3, name: 'Oasis King', color: 0xCD853F, jockey: '🧑' },
+      { id: 4, name: 'Dune Dancer', color: 0xDEB887, jockey: '👴' }
     ];
 
     function init() {
@@ -456,7 +345,7 @@
         <div class="camel-option" onclick="selectCamel(${camel.id})">
           <div style="font-size: 3em;">${camel.jockey}</div>
           <h3>${camel.name}</h3>
-          <div style="color: #32CD32; font-size: 1.1em; margin-top: 5px; text-shadow: 0 0 10px rgba(50,205,50,0.5);">
+          <div style="color: #32CD32; font-size: 1.1em; margin-top: 5px;">
             Odds: ${(3 + Math.random() * 5).toFixed(1)}:1
           </div>
         </div>
@@ -496,18 +385,17 @@
       GameState.gold -= GameState.betAmount;
       updateGoldDisplay();
 
-      document.getElementById('displayBet').textContent = GameState.betAmount;
-      document.getElementById('displayCamel').textContent = CAMELS[GameState.selectedCamel].name;
-
       document.getElementById('bettingScreen').style.display = 'none';
-      document.getElementById('raceView').style.display = 'block';
+      document.getElementById('race3d').style.display = 'block';
+      document.getElementById('raceHud').style.display = 'block';
 
-      RaceEngine.init();
+      RaceEngine3D.init();
     }
 
     function playAgain() {
       document.getElementById('raceResult').style.display = 'none';
-      document.getElementById('raceView').style.display = 'none';
+      document.getElementById('race3d').style.display = 'none';
+      document.getElementById('raceHud').style.display = 'none';
       document.getElementById('bettingScreen').style.display = 'block';
 
       GameState.selectedCamel = null;
@@ -516,433 +404,313 @@
       });
     }
 
-    // POLISHED RACE ENGINE WITH PARTICLE EFFECTS!
-    const RaceEngine = {
-      canvas: null,
-      ctx: null,
-      container: null,
+    // 3D RACE ENGINE WITH THREE.JS!
+    const RaceEngine3D = {
+      scene: null,
+      camera: null,
+      renderer: null,
       camels: [],
       myCamel: null,
       running: false,
-      raceLength: 10000,
-      cameraX: 0,
-      particles: [],
-      clouds: [],
+      raceLength: 300,
+      terrain: null,
 
       init() {
-        this.container = document.getElementById('canvasContainer');
-        this.canvas = document.getElementById('raceCanvas');
-
-        this.canvas.width = this.raceLength + 1000;
-        this.canvas.height = 500;
-        this.ctx = this.canvas.getContext('2d');
-
-        this.camels = CAMELS.map((c, i) => ({
-          ...c,
-          x: 100,
-          y: 100 + (i * 70),
-          distance: 0,
-          speed: 5 + Math.random() * 3,
-          baseSpeed: 5 + Math.random() * 3,
-          isMe: i === GameState.selectedCamel
-        }));
-
-        this.myCamel = this.camels[GameState.selectedCamel];
+        this.setupScene();
+        this.createTerrain();
+        this.createCamels();
+        this.createLights();
         this.running = true;
-
-        // Create clouds
-        for (let i = 0; i < 10; i++) {
-          this.clouds.push({
-            x: Math.random() * this.canvas.width,
-            y: Math.random() * 100 + 20,
-            size: Math.random() * 40 + 30,
-            speed: Math.random() * 0.3 + 0.1
-          });
-        }
-
-        setTimeout(() => this.animate(), 500);
+        this.animate();
       },
 
-      createParticles(x, y) {
-        // Dust particles behind camel
-        for (let i = 0; i < 3; i++) {
-          this.particles.push({
-            x: x,
-            y: y + 50,
-            vx: -Math.random() * 2 - 1,
-            vy: Math.random() * 2 - 1,
-            size: Math.random() * 5 + 3,
-            life: 1.0,
-            color: `rgba(210, 180, 140, ${0.6})`
-          });
-        }
-      },
+      setupScene() {
+        // Scene
+        this.scene = new THREE.Scene();
+        this.scene.background = new THREE.Color(0x87CEEB);
+        this.scene.fog = new THREE.Fog(0xF4A460, 50, 500);
 
-      updateParticles() {
-        this.particles = this.particles.filter(p => {
-          p.x += p.vx;
-          p.y += p.vy;
-          p.life -= 0.02;
-          return p.life > 0;
+        // Camera
+        this.camera = new THREE.PerspectiveCamera(
+          75,
+          window.innerWidth / window.innerHeight,
+          0.1,
+          1000
+        );
+        this.camera.position.set(0, 15, 25);
+        this.camera.lookAt(0, 0, 0);
+
+        // Renderer
+        this.renderer = new THREE.WebGLRenderer({ antialias: true });
+        this.renderer.setSize(window.innerWidth, window.innerHeight);
+        this.renderer.shadowMap.enabled = true;
+        this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        document.getElementById('race3d').appendChild(this.renderer.domElement);
+
+        // Handle resize
+        window.addEventListener('resize', () => {
+          this.camera.aspect = window.innerWidth / window.innerHeight;
+          this.camera.updateProjectionMatrix();
+          this.renderer.setSize(window.innerWidth, window.innerHeight);
         });
       },
 
-      drawParticles() {
-        const ctx = this.ctx;
-        this.particles.forEach(p => {
-          ctx.globalAlpha = p.life;
-          ctx.fillStyle = p.color;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-          ctx.fill();
+      createTerrain() {
+        // Ground
+        const groundGeometry = new THREE.PlaneGeometry(500, 100);
+        const groundMaterial = new THREE.MeshLambertMaterial({
+          color: 0xDEB887,
+          side: THREE.DoubleSide
         });
-        ctx.globalAlpha = 1;
-      },
+        const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+        ground.rotation.x = -Math.PI / 2;
+        ground.receiveShadow = true;
+        this.scene.add(ground);
 
-      drawScene() {
-        const ctx = this.ctx;
-        const canvas = this.canvas;
+        // Racing track markers every 50m
+        for (let i = 0; i <= this.raceLength; i += 50) {
+          const markerGeometry = new THREE.BoxGeometry(8, 15, 1);
+          const markerMaterial = new THREE.MeshLambertMaterial({ color: 0xFFD700 });
+          const marker = new THREE.Mesh(markerGeometry, markerMaterial);
+          marker.position.set(i - 150, 7.5, -30);
+          marker.castShadow = true;
+          this.scene.add(marker);
 
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        // Sky with gradient
-        const skyGrad = ctx.createLinearGradient(0, 0, 0, canvas.height * 0.35);
-        skyGrad.addColorStop(0, '#87CEEB');
-        skyGrad.addColorStop(0.3, '#B0E0E6');
-        skyGrad.addColorStop(0.7, '#F4A460');
-        skyGrad.addColorStop(1, '#FF8C69');
-        ctx.fillStyle = skyGrad;
-        ctx.fillRect(0, 0, canvas.width, canvas.height * 0.35);
-
-        // Animated clouds
-        this.clouds.forEach(cloud => {
-          cloud.x += cloud.speed;
-          if (cloud.x > canvas.width + 100) cloud.x = -100;
-
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-          ctx.beginPath();
-          ctx.arc(cloud.x, cloud.y, cloud.size, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.beginPath();
-          ctx.arc(cloud.x + cloud.size * 0.6, cloud.y, cloud.size * 0.8, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.beginPath();
-          ctx.arc(cloud.x - cloud.size * 0.6, cloud.y, cloud.size * 0.7, 0, Math.PI * 2);
-          ctx.fill();
-        });
-
-        // Sun with glow
-        const sunGrad = ctx.createRadialGradient(150, 60, 0, 150, 60, 80);
-        sunGrad.addColorStop(0, 'rgba(255, 255, 100, 1)');
-        sunGrad.addColorStop(0.4, 'rgba(255, 215, 0, 0.8)');
-        sunGrad.addColorStop(1, 'rgba(255, 215, 0, 0)');
-        ctx.fillStyle = sunGrad;
-        ctx.beginPath();
-        ctx.arc(150, 60, 80, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.fillStyle = '#FFD700';
-        ctx.beginPath();
-        ctx.arc(150, 60, 35, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Mountains with better shading
-        for (let i = 0; i < 40; i++) {
-          const x = i * 280 - 50;
-          const peakHeight = 40 + Math.sin(i) * 15;
-
-          // Mountain shadow
-          ctx.fillStyle = 'rgba(107, 92, 70, 0.6)';
-          ctx.beginPath();
-          ctx.moveTo(x, canvas.height * 0.35);
-          ctx.lineTo(x + 140, peakHeight);
-          ctx.lineTo(x + 280, canvas.height * 0.35);
-          ctx.closePath();
-          ctx.fill();
-
-          // Mountain highlight
-          const mountainGrad = ctx.createLinearGradient(x, peakHeight, x + 140, canvas.height * 0.35);
-          mountainGrad.addColorStop(0, '#A0826D');
-          mountainGrad.addColorStop(1, '#8B7355');
-          ctx.fillStyle = mountainGrad;
-          ctx.beginPath();
-          ctx.moveTo(x, canvas.height * 0.35);
-          ctx.lineTo(x + 140, peakHeight);
-          ctx.lineTo(x + 280, canvas.height * 0.35);
-          ctx.closePath();
-          ctx.fill();
-
-          // Snow peaks with glow
-          ctx.fillStyle = '#FFFFFF';
-          ctx.shadowColor = 'rgba(255, 255, 255, 0.5)';
-          ctx.shadowBlur = 10;
-          ctx.beginPath();
-          ctx.moveTo(x + 115, 70);
-          ctx.lineTo(x + 140, peakHeight);
-          ctx.lineTo(x + 165, 70);
-          ctx.closePath();
-          ctx.fill();
-          ctx.shadowBlur = 0;
-        }
-
-        // Ground with gradient
-        const groundGrad = ctx.createLinearGradient(0, canvas.height * 0.35, 0, canvas.height);
-        groundGrad.addColorStop(0, '#F4A460');
-        groundGrad.addColorStop(0.5, '#DEB887');
-        groundGrad.addColorStop(1, '#D2691E');
-        ctx.fillStyle = groundGrad;
-        ctx.fillRect(0, canvas.height * 0.35, canvas.width, canvas.height * 0.65);
-
-        // Heat shimmer effect
-        ctx.globalAlpha = 0.1;
-        for (let i = 0; i < 5; i++) {
-          const offset = Math.sin(Date.now() * 0.01 + i) * 3;
-          ctx.fillStyle = '#FFD700';
-          ctx.fillRect(0, canvas.height * 0.35 + i * 30 + offset, canvas.width, 2);
-        }
-        ctx.globalAlpha = 1;
-
-        // Racing track with lines
-        ctx.fillStyle = 'rgba(139, 69, 19, 0.25)';
-        ctx.fillRect(0, canvas.height * 0.15, canvas.width, canvas.height * 0.85);
-
-        // Track lines
-        for (let i = 0; i < 5; i++) {
-          ctx.strokeStyle = 'rgba(255, 215, 0, 0.2)';
-          ctx.lineWidth = 2;
-          ctx.setLineDash([20, 10]);
-          ctx.beginPath();
-          ctx.moveTo(0, canvas.height * 0.15 + i * 170);
-          ctx.lineTo(canvas.width, canvas.height * 0.15 + i * 170);
-          ctx.stroke();
-        }
-        ctx.setLineDash([]);
-
-        // KM markers with glow
-        for (let km = 0; km <= 10; km++) {
-          const x = 100 + (km * 1000);
-
-          // Marker glow
-          ctx.shadowColor = 'rgba(255, 215, 0, 0.5)';
-          ctx.shadowBlur = 20;
-          ctx.fillStyle = 'rgba(255, 215, 0, 0.6)';
-          ctx.fillRect(x - 2, 0, 8, canvas.height);
-          ctx.shadowBlur = 0;
-
-          // KM text with shadow
-          ctx.fillStyle = '#FFD700';
-          ctx.font = 'bold 26px Arial';
-          ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
-          ctx.shadowBlur = 5;
-          ctx.fillText(`${km}km`, x + 10, 35);
-          ctx.shadowBlur = 0;
-
-          // Palm trees
-          if (km % 2 === 0 && km < 10) {
-            // Trunk shadow
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
-            ctx.fillRect(x - 4, canvas.height * 0.25 + 5, 8, 65);
-
-            // Trunk
-            const trunkGrad = ctx.createLinearGradient(x - 6, 0, x + 6, 0);
-            trunkGrad.addColorStop(0, '#6B4423');
-            trunkGrad.addColorStop(0.5, '#8B4513');
-            trunkGrad.addColorStop(1, '#6B4423');
-            ctx.fillStyle = trunkGrad;
-            ctx.fillRect(x - 6, canvas.height * 0.25, 12, 70);
-
-            // Leaves with gradient
-            const leafGrad = ctx.createRadialGradient(x, canvas.height * 0.25 - 5, 0, x, canvas.height * 0.25 - 5, 28);
-            leafGrad.addColorStop(0, '#2E8B57');
-            leafGrad.addColorStop(1, '#228B22');
-            ctx.fillStyle = leafGrad;
-
-            for (let i = 0; i < 6; i++) {
-              ctx.beginPath();
-              ctx.ellipse(x, canvas.height * 0.25 - 5, 28, 10, (Math.PI / 3) * i, 0, Math.PI * 2);
-              ctx.fill();
-            }
+          // KM text (simplified)
+          const km = i / 30;
+          if (km % 1 === 0) {
+            const textGeo = new THREE.BoxGeometry(2, 2, 2);
+            const textMat = new THREE.MeshLambertMaterial({ color: 0xFFFFFF });
+            const textMesh = new THREE.Mesh(textGeo, textMat);
+            textMesh.position.set(i - 150, 2, -25);
+            this.scene.add(textMesh);
           }
         }
 
-        // Finish line with checkered pattern
-        const finishX = 100 + this.raceLength;
+        // Finish line
+        const finishGeometry = new THREE.BoxGeometry(8, 20, 2);
+        const finishMaterial = new THREE.MeshLambertMaterial({ color: 0x000000 });
+        const finishLine = new THREE.Mesh(finishGeometry, finishMaterial);
+        finishLine.position.set(this.raceLength - 150, 10, -30);
+        finishLine.castShadow = true;
+        this.scene.add(finishLine);
+
+        // Checkered pattern
         for (let i = 0; i < 10; i++) {
-          for (let j = 0; j < 2; j++) {
-            ctx.fillStyle = (i + j) % 2 === 0 ? '#000' : '#fff';
-            ctx.fillRect(finishX + j * 50, i * 50, 50, 50);
+          if (i % 2 === 0) {
+            const checkGeometry = new THREE.BoxGeometry(8, 2, 2);
+            const checkMaterial = new THREE.MeshLambertMaterial({ color: 0xFFFFFF });
+            const check = new THREE.Mesh(checkGeometry, checkMaterial);
+            check.position.set(this.raceLength - 150, 2 + i * 2, -30);
+            this.scene.add(check);
           }
         }
 
-        // FINISH text with glow
-        ctx.fillStyle = '#FFD700';
-        ctx.font = 'bold 40px Arial';
-        ctx.shadowColor = 'rgba(255, 215, 0, 0.8)';
-        ctx.shadowBlur = 20;
-        ctx.save();
-        ctx.translate(finishX + 50, canvas.height / 2);
-        ctx.rotate(-Math.PI / 2);
-        ctx.fillText('FINISH', 0, 0);
-        ctx.restore();
-        ctx.shadowBlur = 0;
+        // Dunes in background
+        for (let i = 0; i < 20; i++) {
+          const duneGeometry = new THREE.SphereGeometry(15, 16, 16);
+          const duneMaterial = new THREE.MeshLambertMaterial({ color: 0xF4A460 });
+          const dune = new THREE.Mesh(duneGeometry, duneMaterial);
+          dune.position.set(
+            Math.random() * 400 - 200,
+            -8,
+            -60 - Math.random() * 40
+          );
+          dune.scale.y = 0.5;
+          dune.receiveShadow = true;
+          this.scene.add(dune);
+        }
       },
 
-      drawCamel(c) {
-        const ctx = this.ctx;
-        const x = 100 + c.distance;
-        const y = c.y;
+      createCamel(camelData, lane) {
+        const camelGroup = new THREE.Group();
 
-        // Create dust particles
-        if (Math.random() < 0.3) {
-          this.createParticles(x, y);
-        }
+        // Body
+        const bodyGeometry = new THREE.BoxGeometry(6, 3, 3);
+        const bodyMaterial = new THREE.MeshPhongMaterial({
+          color: camelData.color,
+          shininess: 30
+        });
+        const body = new THREE.Mesh(bodyGeometry, bodyMaterial);
+        body.position.y = 4;
+        body.castShadow = true;
+        camelGroup.add(body);
 
-        // Shadow with blur
-        ctx.shadowColor = 'rgba(0, 0, 0, 0.4)';
-        ctx.shadowBlur = 10;
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
-        ctx.beginPath();
-        ctx.ellipse(x + 40, y + 58, 45, 12, 0, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.shadowBlur = 0;
+        // Humps
+        const hump1Geometry = new THREE.SphereGeometry(1.5, 16, 16);
+        const hump1 = new THREE.Mesh(hump1Geometry, bodyMaterial);
+        hump1.position.set(-1, 5.5, 0);
+        hump1.castShadow = true;
+        camelGroup.add(hump1);
 
-        // Camel body with gradient
-        const bodyGrad = ctx.createRadialGradient(x + 35, y + 25, 0, x + 35, y + 25, 50);
-        bodyGrad.addColorStop(0, this.lightenColor(c.color, 20));
-        bodyGrad.addColorStop(1, c.color);
-        ctx.fillStyle = bodyGrad;
-
-        ctx.beginPath();
-        ctx.ellipse(x + 35, y + 25, 50, 22, 0, 0, Math.PI * 2);
-        ctx.fill();
+        const hump2 = new THREE.Mesh(hump1Geometry, bodyMaterial);
+        hump2.position.set(1, 5.5, 0);
+        hump2.scale.set(0.8, 0.8, 0.8);
+        hump2.castShadow = true;
+        camelGroup.add(hump2);
 
         // Neck
-        ctx.beginPath();
-        ctx.ellipse(x + 70, y + 12, 16, 28, 0.2, 0, Math.PI * 2);
-        ctx.fill();
+        const neckGeometry = new THREE.CylinderGeometry(0.8, 1.2, 4, 16);
+        const neck = new THREE.Mesh(neckGeometry, bodyMaterial);
+        neck.position.set(4, 5, 0);
+        neck.rotation.z = -Math.PI / 6;
+        neck.castShadow = true;
+        camelGroup.add(neck);
 
         // Head
-        ctx.beginPath();
-        ctx.ellipse(x + 78, y, 13, 15, 0.1, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Humps with highlights
-        ctx.fillStyle = c.color;
-        ctx.beginPath();
-        ctx.arc(x + 25, y + 15, 18, Math.PI, 0);
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(x + 50, y + 15, 15, Math.PI, 0);
-        ctx.fill();
-
-        // Hump highlights
-        ctx.fillStyle = this.lightenColor(c.color, 30);
-        ctx.beginPath();
-        ctx.arc(x + 25, y + 12, 8, Math.PI, 0);
-        ctx.fill();
-        ctx.beginPath();
-        ctx.arc(x + 50, y + 12, 6, Math.PI, 0);
-        ctx.fill();
+        const headGeometry = new THREE.BoxGeometry(2, 1.5, 1.5);
+        const head = new THREE.Mesh(headGeometry, bodyMaterial);
+        head.position.set(5.5, 7, 0);
+        head.castShadow = true;
+        camelGroup.add(head);
 
         // Legs
-        const legMove = Math.sin(c.distance * 0.08) * 5;
-        ctx.fillStyle = c.color;
-        ctx.fillRect(x + 15, y + 45, 7, 20 + legMove);
-        ctx.fillRect(x + 32, y + 45, 7, 20 - legMove);
-        ctx.fillRect(x + 50, y + 45, 7, 20 - legMove);
-        ctx.fillRect(x + 67, y + 45, 7, 20 + legMove);
+        const legGeometry = new THREE.CylinderGeometry(0.4, 0.4, 3, 16);
+        const legMaterial = new THREE.MeshPhongMaterial({
+          color: new THREE.Color(camelData.color).multiplyScalar(0.8)
+        });
 
-        // Jockey
-        ctx.font = '35px Arial';
-        ctx.fillText(c.jockey, x + 32, y + 32);
+        const legPositions = [
+          [-2, 1.5, -1],
+          [-2, 1.5, 1],
+          [2, 1.5, -1],
+          [2, 1.5, 1]
+        ];
 
-        // Player highlight with glow
-        if (c.isMe) {
-          ctx.strokeStyle = '#FFD700';
-          ctx.lineWidth = 5;
-          ctx.shadowColor = 'rgba(255, 215, 0, 0.8)';
-          ctx.shadowBlur = 20;
-          ctx.strokeRect(x - 8, y - 25, 95, 95);
-          ctx.shadowBlur = 0;
+        legPositions.forEach(pos => {
+          const leg = new THREE.Mesh(legGeometry, legMaterial);
+          leg.position.set(...pos);
+          leg.castShadow = true;
+          camelGroup.add(leg);
+        });
 
-          ctx.fillStyle = '#FFD700';
-          ctx.font = 'bold 18px Arial';
-          ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
-          ctx.shadowBlur = 5;
-          ctx.fillText('⭐ YOU ⭐', x + 15, y - 30);
-          ctx.shadowBlur = 0;
-        }
+        // Position on track
+        camelGroup.position.set(-150, 0, lane * 8 - 20);
 
-        // Name with shadow
-        ctx.fillStyle = '#FFF';
-        ctx.strokeStyle = '#000';
-        ctx.lineWidth = 3;
-        ctx.font = 'bold 14px Arial';
-        ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
-        ctx.shadowBlur = 3;
-        ctx.strokeText(c.name, x + 5, y - 8);
-        ctx.fillText(c.name, x + 5, y - 8);
-        ctx.shadowBlur = 0;
+        // Data
+        camelGroup.userData = {
+          ...camelData,
+          distance: 0,
+          speed: 0.8 + Math.random() * 0.4,
+          baseSpeed: 0.8 + Math.random() * 0.4,
+          lane: lane,
+          legPhase: 0
+        };
+
+        this.scene.add(camelGroup);
+        return camelGroup;
       },
 
-      lightenColor(color, percent) {
-        const num = parseInt(color.replace("#",""), 16);
-        const amt = Math.round(2.55 * percent);
-        const R = Math.min(255, (num >> 16) + amt);
-        const G = Math.min(255, (num >> 8 & 0x00FF) + amt);
-        const B = Math.min(255, (num & 0x0000FF) + amt);
-        return "#" + (0x1000000 + R * 0x10000 + G * 0x100 + B).toString(16).slice(1);
+      createCamels() {
+        this.camels = CAMELS.map((camelData, index) => {
+          return this.createCamel(camelData, index);
+        });
+
+        this.myCamel = this.camels[GameState.selectedCamel];
+
+        // Add glow to player's camel
+        const glowGeometry = new THREE.SphereGeometry(8, 32, 32);
+        const glowMaterial = new THREE.MeshBasicMaterial({
+          color: 0xFFD700,
+          transparent: true,
+          opacity: 0.2
+        });
+        const glow = new THREE.Mesh(glowGeometry, glowMaterial);
+        glow.position.y = 4;
+        this.myCamel.add(glow);
+      },
+
+      createLights() {
+        // Sun (directional light)
+        const sun = new THREE.DirectionalLight(0xFFFFFF, 1);
+        sun.position.set(50, 100, 50);
+        sun.castShadow = true;
+        sun.shadow.mapSize.width = 2048;
+        sun.shadow.mapSize.height = 2048;
+        sun.shadow.camera.left = -100;
+        sun.shadow.camera.right = 100;
+        sun.shadow.camera.top = 100;
+        sun.shadow.camera.bottom = -100;
+        this.scene.add(sun);
+
+        // Ambient light
+        const ambient = new THREE.AmbientLight(0xFFFFFF, 0.6);
+        this.scene.add(ambient);
+
+        // Hemisphere light for sky/ground
+        const hemiLight = new THREE.HemisphereLight(0x87CEEB, 0xDEB887, 0.4);
+        this.scene.add(hemiLight);
       },
 
       animate() {
         if (!this.running) return;
 
-        this.drawScene();
-        this.updateParticles();
-        this.drawParticles();
-
         let winner = null;
 
-        this.camels.forEach(c => {
-          c.speed = c.baseSpeed + (Math.random() - 0.5) * 2;
-          c.distance += c.speed;
+        // Update camels
+        this.camels.forEach(camel => {
+          const userData = camel.userData;
 
-          this.drawCamel(c);
+          // Speed variation
+          userData.speed = userData.baseSpeed + (Math.random() - 0.5) * 0.2;
+          userData.distance += userData.speed;
 
-          if (c.distance >= this.raceLength && !winner) {
-            winner = c;
+          // Move camel
+          camel.position.x = -150 + userData.distance;
+
+          // Leg animation
+          userData.legPhase += 0.2;
+          camel.children.forEach((child, i) => {
+            if (i >= 5 && i <= 8) { // Legs
+              child.rotation.x = Math.sin(userData.legPhase + i) * 0.3;
+            }
+          });
+
+          // Bob animation
+          camel.position.y = Math.sin(userData.legPhase) * 0.3;
+
+          // Check winner
+          if (userData.distance >= this.raceLength && !winner) {
+            winner = camel;
           }
         });
 
-        // Camera follows
-        this.cameraX = Math.max(0, Math.min(
-          this.canvas.width - this.container.clientWidth,
-          this.myCamel.distance - (this.container.clientWidth / 3)
-        ));
-        this.canvas.style.transform = `translateX(-${this.cameraX}px)`;
+        // Camera follows player's camel
+        const targetX = this.myCamel.position.x + 15;
+        const targetZ = this.myCamel.position.z + 25;
+        this.camera.position.x += (targetX - this.camera.position.x) * 0.1;
+        this.camera.position.z += (targetZ - this.camera.position.z) * 0.1;
+        this.camera.lookAt(this.myCamel.position.x, 4, this.myCamel.position.z);
 
-        // Update stats
-        const sorted = [...this.camels].sort((a, b) => b.distance - a.distance);
-        const pos = sorted.findIndex(c => c.isMe) + 1;
-        const km = (this.myCamel.distance / 1000).toFixed(2);
-        const pct = Math.min(100, ((this.myCamel.distance / this.raceLength) * 100)).toFixed(0);
+        // Update HUD
+        const sorted = [...this.camels].sort((a, b) =>
+          b.userData.distance - a.userData.distance
+        );
+        const pos = sorted.findIndex(c => c === this.myCamel) + 1;
+        const km = (this.myCamel.userData.distance / 30).toFixed(1);
+        const speed = (this.myCamel.userData.speed * 100).toFixed(0);
 
-        document.getElementById('position').textContent = `${pos}/5`;
-        document.getElementById('distance').textContent = `${km}km`;
-        document.getElementById('progress').textContent = `${pct}%`;
+        document.getElementById('position').textContent = pos;
+        document.getElementById('distance').textContent = km;
+        document.getElementById('speed').textContent = speed;
 
+        // Check for winner
         if (winner) {
           this.finishRace(winner);
-        } else {
-          requestAnimationFrame(() => this.animate());
+          return;
         }
+
+        this.renderer.render(this.scene, this.camera);
+        requestAnimationFrame(() => this.animate());
       },
 
       finishRace(winner) {
         this.running = false;
 
-        const sorted = [...this.camels].sort((a, b) => b.distance - a.distance);
-        const myPos = sorted.findIndex(c => c.isMe) + 1;
+        const sorted = [...this.camels].sort((a, b) =>
+          b.userData.distance - a.userData.distance
+        );
+        const myPos = sorted.findIndex(c => c === this.myCamel) + 1;
 
         let winnings = 0;
         let resultClass = 'lose';
@@ -977,6 +745,9 @@
         document.getElementById('resultText').textContent = resultMsg;
         document.getElementById('resultDetail').textContent = detailMsg;
         resultDiv.style.display = 'block';
+
+        // Cleanup
+        this.renderer.domElement.remove();
       }
     };
 
