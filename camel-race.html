@@ -20,8 +20,11 @@
     <p id="status">No bet placed.</p>
   </div>
   <canvas id="raceCanvas" width="800" height="400"></canvas>
-
-  <script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+    const SUPABASE_URL = "https://itxbzfwtutozegelbwwt.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml0eGJ6Znd0dXRvemVnZWxid3d0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjI3NDg2NDcsImV4cCI6MjA3ODMyNDY0N30._1Oy-uaTvFxusKiooj2Pta7rYp_EOkor9wnfWQfWe7I";
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     const canvas = document.getElementById('raceCanvas');
     const ctx = canvas.getContext('2d');
     const camels = [
@@ -31,37 +34,53 @@
     ];
     let betCamel = null;
     let raceRunning = false;
-
     function placeBet(index){
       if(raceRunning) return;
       betCamel = index;
       document.getElementById('status').textContent = `Bet placed on Camel ${index+1}. Click canvas to start race!`;
     }
-
     canvas.addEventListener('click', startRace);
-
     function startRace(){
       if(betCamel===null || raceRunning) return;
       raceRunning = true;
+      camels.forEach(c => c.x = 0);
       requestAnimationFrame(raceLoop);
     }
-
+    async function logBet(camelId, outcome) {
+      const { data, error } = await supabaseClient
+        .from('camel_bets')
+        .insert([{
+          player_id: 'captain_default',
+          camel_id: camelId,
+          bet_amount: 100,
+          outcome
+        }]);
+      if (error) {
+        console.error("❌ Supabase error:", error);
+      } else {
+        console.log("✅ Bet logged:", data);
+      }
+    }
     function raceLoop(){
       ctx.clearRect(0,0,canvas.width,canvas.height);
       let winner = null;
       camels.forEach((c,i)=>{
-        c.x += Math.random()*5; // random speed
+        c.x += (Math.random()*4) + 1.2;
         ctx.fillStyle = c.color;
-        ctx.fillRect(c.x,c.y,40,30);
-        ctx.fillText(`Camel ${i+1}`,c.x, c.y-10);
-        if(c.x+40 >= canvas.width){ winner=i; }
+        ctx.fillRect(c.x, c.y, 40, 30);
+        ctx.fillStyle = '#111';
+        ctx.font = '14px Courier New';
+        ctx.fillText(`Camel ${i+1}`, c.x, c.y - 8);
+        if (c.x + 40 >= canvas.width) { winner = i; }
       });
-      if(winner!==null){
-        raceRunning=false;
-        if(winner===betCamel){
+      if (winner !== null) {
+        raceRunning = false;
+        if (winner === betCamel) {
           document.getElementById('status').textContent = `🎉 Camel ${winner+1} wins! You won your bet!`;
+          logBet(winner, 'win');
         } else {
           document.getElementById('status').textContent = `❌ Camel ${winner+1} wins. You lost your bet.`;
+          logBet(winner, 'lose');
         }
         return;
       }
@@ -70,3 +89,4 @@
   </script>
 </body>
 </html>
+
