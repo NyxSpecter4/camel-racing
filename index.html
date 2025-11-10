@@ -2,19 +2,33 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content-width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>🏜️ Dune Rush - Casino Racing</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
     body {
       font-family: 'Courier New', monospace;
       background: linear-gradient(to bottom, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
       min-height: 100vh;
       color: #fff;
+      overflow-x: hidden;
+      position: relative;
     }
 
-    .container { max-width: 1400px; margin: 0 auto; padding: 20px; text-align: center; }
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 10px;
+      text-align: center;
+    }
 
+    /* Gold Bar - Responsive */
     .gold-bar {
       position: fixed;
       top: 0;
@@ -22,52 +36,64 @@
       right: 0;
       background: rgba(0,0,0,0.9);
       border-bottom: 3px solid #FFD700;
-      padding: 15px;
+      padding: 10px;
       text-align: center;
       z-index: 1000;
     }
 
     .gold-amount {
       color: #FFD700;
-      font-size: 2em;
+      font-size: clamp(1.2em, 4vw, 2em);
       font-weight: bold;
       text-shadow: 0 0 10px #FFD700;
     }
 
+    /* Betting Screen - Responsive */
     .betting-screen {
       max-width: 600px;
-      margin: 100px auto;
+      margin: 70px auto 20px;
       background: rgba(0,0,0,0.9);
-      border: 4px solid #FFD700;
+      border: 3px solid #FFD700;
       border-radius: 20px;
-      padding: 40px;
+      padding: clamp(20px, 5vw, 40px);
       box-shadow: 0 0 50px rgba(255,215,0,0.3);
     }
 
     .betting-screen h1 {
       color: #FFD700;
-      font-size: 2.5em;
-      margin-bottom: 30px;
+      font-size: clamp(1.8em, 6vw, 2.5em);
+      margin-bottom: 20px;
       text-shadow: 0 0 20px #FF8C00;
+    }
+
+    .betting-screen p {
+      color: #FF8C00;
+      font-size: clamp(1em, 3vw, 1.2em);
+      margin-bottom: 20px;
     }
 
     .camel-grid {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 15px;
-      margin: 30px 0;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 10px;
+      margin: 20px 0;
     }
 
     .camel-option {
       background: rgba(139,69,19,0.5);
       border: 3px solid #654321;
       border-radius: 15px;
-      padding: 20px;
+      padding: 15px;
       cursor: pointer;
       transition: all 0.3s;
+      min-height: 140px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
 
-    .camel-option:hover {
+    .camel-option:hover, .camel-option:active {
       border-color: #FFD700;
       transform: scale(1.05);
     }
@@ -80,27 +106,27 @@
 
     .camel-option h3 {
       color: #FFD700;
-      font-size: 1.5em;
+      font-size: clamp(1em, 4vw, 1.5em);
       margin: 10px 0;
     }
 
     .bet-controls {
       background: rgba(0,0,0,0.5);
       border-radius: 15px;
-      padding: 25px;
-      margin: 30px 0;
+      padding: 20px;
+      margin: 20px 0;
     }
 
     .bet-controls h3 {
       color: #FFD700;
-      font-size: 1.3em;
+      font-size: clamp(1.1em, 4vw, 1.3em);
       margin-bottom: 15px;
     }
 
     .bet-amount {
       width: 100%;
       padding: 15px;
-      font-size: 1.5em;
+      font-size: clamp(1.2em, 4vw, 1.5em);
       border: 3px solid #FFD700;
       border-radius: 10px;
       background: rgba(0,0,0,0.7);
@@ -113,7 +139,7 @@
     .bet-buttons {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
+      gap: 8px;
       margin-top: 15px;
     }
 
@@ -121,15 +147,16 @@
       background: linear-gradient(135deg, #8B4513, #654321);
       color: #FFD700;
       border: 2px solid #654321;
-      padding: 12px;
-      font-size: 1.1em;
+      padding: 12px 8px;
+      font-size: clamp(0.9em, 3vw, 1.1em);
       font-weight: bold;
       border-radius: 8px;
       cursor: pointer;
       font-family: 'Courier New', monospace;
+      transition: all 0.2s;
     }
 
-    .bet-btn:hover {
+    .bet-btn:hover, .bet-btn:active {
       border-color: #FFD700;
       transform: scale(1.05);
     }
@@ -138,8 +165,8 @@
       background: linear-gradient(135deg, #FFD700, #FF8C00);
       color: #000;
       border: none;
-      padding: 20px 50px;
-      font-size: 1.5em;
+      padding: 18px 40px;
+      font-size: clamp(1.2em, 4vw, 1.5em);
       font-weight: bold;
       border-radius: 15px;
       cursor: pointer;
@@ -147,9 +174,10 @@
       width: 100%;
       margin-top: 20px;
       transition: all 0.3s;
+      touch-action: manipulation;
     }
 
-    button:hover {
+    button:hover, button:active {
       transform: scale(1.05);
       box-shadow: 0 5px 25px rgba(255,215,0,0.5);
     }
@@ -158,14 +186,14 @@
       background: rgba(139,69,19,0.3);
       border: 2px solid #654321;
       border-radius: 10px;
-      padding: 20px;
+      padding: 15px;
       margin: 20px 0;
       text-align: left;
     }
 
     .payout-info h4 {
       color: #FFD700;
-      font-size: 1.2em;
+      font-size: clamp(1em, 3.5vw, 1.2em);
       margin-bottom: 10px;
     }
 
@@ -174,63 +202,161 @@
       justify-content: space-between;
       padding: 8px 0;
       border-bottom: 1px solid rgba(255,215,0,0.2);
+      font-size: clamp(0.9em, 3vw, 1em);
     }
 
+    /* Race View - Responsive */
     .race-view {
       display: none;
-      margin-top: 100px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 100;
     }
 
     .race-info {
+      position: absolute;
+      top: 60px;
+      left: 10px;
+      right: 10px;
       background: rgba(0,0,0,0.9);
       border: 3px solid #FFD700;
       border-radius: 15px;
-      padding: 20px;
-      margin-bottom: 20px;
+      padding: 15px;
+      z-index: 110;
+    }
+
+    .race-info h2 {
+      color: #FFD700;
+      font-size: clamp(1em, 4vw, 2em);
     }
 
     .race-canvas-container {
-      width: 100%;
-      height: 500px;
-      border: 4px solid #FF8C00;
-      border-radius: 15px;
-      background: #000;
-      position: relative;
-      overflow: hidden;
-    }
-
-    canvas {
       position: absolute;
       top: 0;
       left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
     }
 
     .race-stats {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      right: 10px;
       background: rgba(0,0,0,0.9);
       border: 3px solid #FFD700;
       border-radius: 15px;
-      padding: 20px;
-      margin-top: 20px;
+      padding: 15px;
+      z-index: 110;
+    }
+
+    .race-stats > div {
+      display: flex;
+      justify-content: space-around;
+      font-size: clamp(1em, 3.5vw, 1.3em);
+      flex-wrap: wrap;
+      gap: 10px;
     }
 
     .race-result {
       display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       background: rgba(0,0,0,0.95);
       border: 4px solid #FFD700;
       border-radius: 20px;
-      padding: 40px;
-      margin: 30px auto;
-      max-width: 600px;
+      padding: clamp(30px, 8vw, 40px);
+      max-width: 90%;
+      width: 500px;
       text-align: center;
+      z-index: 200;
+      max-height: 90vh;
+      overflow-y: auto;
     }
 
     .race-result h2 {
-      font-size: 2.5em;
+      font-size: clamp(1.8em, 6vw, 2.5em);
       margin-bottom: 20px;
+    }
+
+    .race-result p {
+      font-size: clamp(1em, 4vw, 1.3em);
+      margin: 20px 0;
     }
 
     .race-result.win h2 { color: #32CD32; }
     .race-result.lose h2 { color: #FF6347; }
+
+    /* Mobile Optimizations */
+    @media (max-width: 768px) {
+      .betting-screen {
+        margin: 60px 10px 20px;
+        padding: 20px;
+      }
+
+      .camel-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .bet-buttons {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .race-info {
+        top: 50px;
+      }
+
+      .payout-item {
+        font-size: 0.9em;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .gold-bar {
+        padding: 8px;
+      }
+
+      .camel-option {
+        padding: 10px;
+        min-height: 120px;
+      }
+
+      .race-info h2 {
+        font-size: 0.9em;
+      }
+    }
+
+    /* Landscape Mobile */
+    @media (max-height: 500px) and (orientation: landscape) {
+      .betting-screen {
+        margin: 10px;
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+
+      .race-info {
+        padding: 8px;
+        font-size: 0.8em;
+      }
+
+      .race-stats {
+        padding: 8px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -242,9 +368,7 @@
     <div id="bettingScreen" class="betting-screen">
       <h1>🎰 DUNE RUSH</h1>
 
-      <p style="color: #FF8C00; font-size: 1.2em; margin-bottom: 20px;">
-        Pick a camel and bet to race!
-      </p>
+      <p>Pick a camel and bet to race!</p>
 
       <div class="camel-grid" id="camelGrid"></div>
 
@@ -263,20 +387,20 @@
       <div class="payout-info">
         <h4>🏆 PAYOUTS:</h4>
         <div class="payout-item">
-          <span>🥇 1st Place:</span>
-          <span style="color: #32CD32; font-weight: bold;">10x your bet!</span>
+          <span>🥇 1st:</span>
+          <span style="color: #32CD32; font-weight: bold;">10x</span>
         </div>
         <div class="payout-item">
-          <span>🥈 2nd Place:</span>
-          <span style="color: #32CD32; font-weight: bold;">3x your bet</span>
+          <span>🥈 2nd:</span>
+          <span style="color: #32CD32; font-weight: bold;">3x</span>
         </div>
         <div class="payout-item">
-          <span>🥉 3rd Place:</span>
-          <span style="color: #FFD700; font-weight: bold;">1.5x your bet</span>
+          <span>🥉 3rd:</span>
+          <span style="color: #FFD700; font-weight: bold;">1.5x</span>
         </div>
         <div class="payout-item">
-          <span>4th-5th Place:</span>
-          <span style="color: #FF6347;">Lose bet</span>
+          <span>4th-5th:</span>
+          <span style="color: #FF6347;">Lose</span>
         </div>
       </div>
 
@@ -284,36 +408,34 @@
         🏁 START RACE
       </button>
     </div>
+  </div>
 
-    <div id="raceView" class="race-view">
-      <div class="race-info">
-        <h2 style="color: #FFD700; font-size: 2em;">
-          YOUR BET: <span id="displayBet">50</span> GOLD on <span id="displayCamel">???</span>
-        </h2>
-      </div>
+  <div id="raceView" class="race-view">
+    <div class="race-canvas-container" id="canvasContainer">
+      <canvas id="raceCanvas"></canvas>
+    </div>
 
-      <div class="race-canvas-container" id="canvasContainer">
-        <canvas id="raceCanvas"></canvas>
-      </div>
+    <div class="race-info">
+      <h2>BET: <span id="displayBet">50</span>G on <span id="displayCamel">???</span></h2>
+    </div>
 
-      <div class="race-stats">
-        <div style="display: flex; justify-content: space-around; font-size: 1.3em;">
-          <div>
-            Position: <strong style="color: #FFD700;" id="position">-</strong>
-          </div>
-          <div>
-            Progress: <strong style="color: #32CD32;" id="progress">0%</strong>
-          </div>
+    <div class="race-stats">
+      <div>
+        <div>
+          Pos: <strong style="color: #FFD700;" id="position">-</strong>
+        </div>
+        <div>
+          Progress: <strong style="color: #32CD32;" id="progress">0%</strong>
         </div>
       </div>
+    </div>
 
-      <div id="raceResult" class="race-result">
-        <h2 id="resultText"></h2>
-        <p id="resultDetail" style="font-size: 1.3em; margin: 20px 0;"></p>
-        <button onclick="playAgain()" style="font-size: 1.4em; padding: 25px 60px;">
-          🎰 BET AGAIN
-        </button>
-      </div>
+    <div id="raceResult" class="race-result">
+      <h2 id="resultText"></h2>
+      <p id="resultDetail"></p>
+      <button onclick="playAgain()">
+        🎰 BET AGAIN
+      </button>
     </div>
   </div>
 
@@ -343,8 +465,8 @@
         <div class="camel-option" onclick="selectCamel(${camel.id})">
           <div style="font-size: 3em;">${camel.jockey}</div>
           <h3>${camel.name}</h3>
-          <div style="color: #32CD32; font-size: 1.1em; margin-top: 5px;">
-            Odds: ${(3 + Math.random() * 5).toFixed(1)}:1
+          <div style="color: #32CD32; font-size: 1em; margin-top: 5px;">
+            ${(3 + Math.random() * 5).toFixed(1)}:1
           </div>
         </div>
       `).join('');
@@ -416,9 +538,11 @@
         this.container = document.getElementById('canvasContainer');
         this.canvas = document.getElementById('raceCanvas');
 
-        this.canvas.width = 1400;
-        this.canvas.height = 500;
+        const dpr = window.devicePixelRatio || 1;
+        this.canvas.width = 1400 * dpr;
+        this.canvas.height = 500 * dpr;
         this.ctx = this.canvas.getContext('2d');
+        this.ctx.scale(dpr, dpr);
 
         this.camels = CAMELS.map((c, i) => ({
           ...c,
@@ -440,18 +564,17 @@
         if (!this.running) return;
 
         const ctx = this.ctx;
-        const canvas = this.canvas;
 
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.clearRect(0, 0, 1400, 500);
 
         // Ground
         ctx.fillStyle = '#D2691E';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillRect(0, 0, 1400, 500);
 
         // Finish line
-        const finishX = canvas.width - 100;
+        const finishX = 1300;
         ctx.fillStyle = '#000';
-        ctx.fillRect(finishX, 0, 100, canvas.height);
+        ctx.fillRect(finishX, 0, 100, 500);
         for (let i = 0; i < 10; i++) {
           if (i % 2 === 0) {
             ctx.fillStyle = '#fff';
@@ -461,14 +584,12 @@
 
         let winner = null;
 
-        // Draw camels
         this.camels.forEach(c => {
           c.speed = c.baseSpeed + (Math.random() - 0.5) * 1.5;
           c.distance += c.speed;
 
-          const x = 50 + (c.distance / this.raceLength) * (canvas.width - 200);
+          const x = 50 + (c.distance / this.raceLength) * 1200;
 
-          // Simple camel
           ctx.fillStyle = c.color;
           ctx.fillRect(x, c.y, 60, 40);
           ctx.fillRect(x + 50, c.y - 15, 18, 25);
@@ -499,7 +620,6 @@
           }
         });
 
-        // Update stats
         const sorted = [...this.camels].sort((a, b) => b.distance - a.distance);
         const pos = sorted.findIndex(c => c.isMe) + 1;
         const pct = Math.min(100, ((this.myCamel.distance / this.raceLength) * 100)).toFixed(0);
