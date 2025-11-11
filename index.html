@@ -70,7 +70,7 @@
     .container {
       max-width: 1400px;
       margin: 0 auto;
-      padding: 10px;
+      padding: 0;
       text-align: center;
       position: relative;
       z-index: 1;
@@ -106,8 +106,8 @@
     }
 
     .betting-screen {
-      max-width: 95%;
-      margin: 62px auto 5px;
+      max-width: 100%;
+      margin: 62px 0 5px 0;
       background: linear-gradient(to bottom, #1a0000 0%, #000 50%, #1a0000 100%);
       backdrop-filter: none;
       border: 6px ridge #FFD700;
@@ -145,8 +145,8 @@
     }
 
     @keyframes buttonGlow {
-      0%, 100% { box-shadow: 0 0 30px #FF0000, 0 0 50px #FFD700; }
-      50% { box-shadow: 0 0 50px #FF0000, 0 0 80px #FFD700; }
+      0%, 100% { box-shadow: 0 0 15px #FF0000, 0 0 25px #FFD700; }
+      50% { box-shadow: 0 0 20px #FF0000, 0 0 35px #FFD700; }
     }
 
     .betting-screen p {
@@ -290,7 +290,7 @@
       font-family: 'Courier New', monospace;
       margin-bottom: 5px;
       transition: all 0.1s;
-      box-shadow: inset 0 0 20px rgba(0,255,0,0.3), 0 0 20px rgba(255,215,0,0.5);
+      box-shadow: inset 0 0 10px rgba(0,255,0,0.2), 0 0 8px rgba(255,215,0,0.3);
       font-weight: bold;
       letter-spacing: 3px;
     }
@@ -366,7 +366,7 @@
       right: 0;
       transition: all 0.3s;
       touch-action: manipulation;
-      box-shadow: 0 0 30px #FF0000, 0 0 50px #FFD700, inset 0 0 20px rgba(255,255,255,0.3);
+      box-shadow: 0 0 15px #FF0000, 0 0 25px #FFD700, inset 0 0 10px rgba(255,255,255,0.2);
       overflow: hidden;
       text-transform: uppercase;
       letter-spacing: 3px;
@@ -589,13 +589,13 @@
 
       <div class="bet-controls">
         <h3>💰 BET AMOUNT</h3>
-        <input type="number" id="betInput" class="bet-amount" value="50" min="10" max="500">
+        <input type="number" id="betInput" class="bet-amount" value="50" min="10" max="500" oninput="updatePayouts(this.value)">
 
         <div class="bet-buttons">
-          <button class="bet-btn" onclick="setBet(10)">10</button>
-          <button class="bet-btn" onclick="setBet(50)">50</button>
+          <button class="bet-btn" onclick="setBet(25)">25</button>
           <button class="bet-btn" onclick="setBet(100)">100</button>
           <button class="bet-btn" onclick="setBet(250)">250</button>
+          <button class="bet-btn" onclick="setBet(500)">500</button>
         </div>
       </div>
 
@@ -603,15 +603,15 @@
         <h4>🏆 PAYOUTS</h4>
         <div class="payout-item">
           <span>🥇 1st:</span>
-          <span style="color: #32CD32;">10x</span>
+          <span style="color: #32CD32;"><span id="payout1">500</span>G (10x)</span>
         </div>
         <div class="payout-item">
           <span>🥈 2nd:</span>
-          <span style="color: #32CD32;">3x</span>
+          <span style="color: #32CD32;"><span id="payout2">150</span>G (3x)</span>
         </div>
         <div class="payout-item">
           <span>🥉 3rd:</span>
-          <span style="color: #FFD700;">1.5x</span>
+          <span style="color: #FFD700;"><span id="payout3">75</span>G (1.5x)</span>
         </div>
         <div class="payout-item">
           <span>4-6:</span>
@@ -756,7 +756,14 @@
       const input = document.getElementById('betInput');
       input.classList.add('slot-spin');
       input.value = amount;
+      updatePayouts(amount);
       setTimeout(() => input.classList.remove('slot-spin'), 300);
+    }
+
+    function updatePayouts(bet) {
+      document.getElementById('payout1').textContent = bet * 10;
+      document.getElementById('payout2').textContent = bet * 3;
+      document.getElementById('payout3').textContent = Math.floor(bet * 1.5);
     }
 
     function updateGoldDisplay() {
