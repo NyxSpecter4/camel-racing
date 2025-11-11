@@ -3,6 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#000000">
   <title>🏜️ Dune Rush - Premium Racing</title>
   <style>
     * {
@@ -16,9 +20,13 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: linear-gradient(to bottom, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
       min-height: 100vh;
+      height: 100vh;
       color: #fff;
-      overflow-x: hidden;
-      position: relative;
+      overflow: hidden;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      left: 0;
       overscroll-behavior: none;
       -webkit-overflow-scrolling: touch;
     }
@@ -50,7 +58,7 @@
     .container {
       max-width: 1400px;
       margin: 0 auto;
-      padding: 0;
+      padding: 10px;
       text-align: center;
       position: relative;
       z-index: 1;
@@ -64,7 +72,7 @@
       background: rgba(0,0,0,0.85);
       backdrop-filter: blur(10px);
       border-bottom: 3px solid #FFD700;
-      padding: 4px;
+      padding: 12px;
       text-align: center;
       z-index: 1000;
       box-shadow: 0 4px 20px rgba(255, 215, 0, 0.3);
@@ -72,10 +80,11 @@
 
     .gold-amount {
       color: #FFD700;
-      font-size: 1.1em;
+      font-size: 1.6em;
       font-weight: bold;
       text-shadow: 0 0 10px #FFD700, 0 0 20px #FF8C00;
       animation: goldPulse 2s ease-in-out infinite;
+      letter-spacing: 2px;
     }
 
     @keyframes goldPulse {
@@ -84,17 +93,19 @@
     }
 
     .betting-screen {
-      max-width: 100%;
-      margin: 26px 2px 0 2px;
+      max-width: 95%;
+      margin: 62px auto 5px;
       background: linear-gradient(to bottom, #1a0000 0%, #000 50%, #1a0000 100%);
       backdrop-filter: blur(15px);
-      border: 4px ridge #FFD700;
-      border-radius: 12px;
-      padding: 4px;
+      border: 6px ridge #FFD700;
+      border-radius: 15px;
+      padding: 8px;
       box-shadow: 0 0 40px rgba(255,0,0,0.5), 0 0 80px rgba(255,215,0,0.3), inset 0 0 30px rgba(255,215,0,0.1);
       animation: slideUp 0.6s ease-out;
-      height: calc(100vh - 26px);
-      overflow-y: auto;
+      height: calc(100vh - 72px);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
     }
 
     @keyframes slideUp {
@@ -104,8 +115,8 @@
 
     .betting-screen h1 {
       color: #FFD700;
-      font-size: 1.8em;
-      margin-bottom: 5px;
+      font-size: 1.5em;
+      margin-bottom: 8px;
       text-shadow: 0 0 20px #FF0000, 0 0 40px #FFD700;
       animation: titleGlow 3s ease-in-out infinite;
     }
@@ -127,8 +138,8 @@
 
     .betting-screen p {
       color: #FFD700;
-      font-size: 1em;
-      margin-bottom: 8px;
+      font-size: 0.8em;
+      margin-bottom: 3px;
       text-shadow: 0 0 10px #FF0000;
       text-transform: uppercase;
       letter-spacing: 1px;
@@ -137,18 +148,19 @@
     .camel-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
+      gap: 10px;
       margin: 10px 0;
+      flex-shrink: 0;
     }
 
     .camel-option {
       background: linear-gradient(180deg, #2a0000 0%, #000 50%, #2a0000 100%);
-      border: 2px ridge #FFD700;
-      border-radius: 5px;
-      padding: 10px;
+      border: 3px ridge #FFD700;
+      border-radius: 8px;
+      padding: 12px 8px;
       cursor: pointer;
       transition: all 0.2s;
-      min-height: 70px;
+      min-height: 105px;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -156,28 +168,84 @@
       position: relative;
       overflow: hidden;
       box-shadow: inset 0 0 10px rgba(255,0,0,0.3);
+      touch-action: manipulation;
+    }
+
+    .camel-option.spinning {
+      border-color: #FFD700;
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.8), inset 0 0 20px rgba(255, 215, 0, 0.4);
+      animation: slotGlow 1.2s ease-out;
+    }
+
+    @keyframes slotGlow {
+      0%, 100% {
+        box-shadow: 0 0 30px rgba(255, 215, 0, 0.8), inset 0 0 20px rgba(255, 215, 0, 0.4);
+        border-color: #FFD700;
+      }
+      50% {
+        box-shadow: 0 0 60px rgba(255, 215, 0, 1), 0 0 90px rgba(255, 0, 0, 0.6), inset 0 0 40px rgba(255, 215, 0, 0.8);
+        border-color: #FF0000;
+      }
+    }
+
+    .camel-option .emoji-reel {
+      height: 2.5em;
+      overflow: hidden;
+      position: relative;
     }
 
     .camel-option .camel-emoji {
-      animation: slotSpin 0.6s ease-out;
+      font-size: 2.2em;
+      margin-bottom: 5px;
       display: inline-block;
+      transition: all 0.3s;
     }
 
-    @keyframes slotSpin {
+    .camel-option.spinning .camel-emoji {
+      animation: slotMachineRoll 1.2s ease-out;
+    }
+
+    @keyframes slotMachineRoll {
       0% {
-        transform: translateY(-100px) scale(0.5);
+        transform: translateY(-800px) rotateY(720deg) scale(0.2);
         opacity: 0;
-        filter: blur(8px);
+        filter: blur(30px);
+      }
+      20% {
+        transform: translateY(-600px) rotateY(540deg) scale(0.4);
+        opacity: 0.3;
+        filter: blur(25px);
+      }
+      40% {
+        transform: translateY(-400px) rotateY(360deg) scale(0.6);
+        filter: blur(15px);
+        opacity: 0.6;
       }
       60% {
+        transform: translateY(-200px) rotateY(180deg) scale(0.8);
+        filter: blur(8px);
+        opacity: 0.8;
+      }
+      80% {
+        transform: translateY(30px) rotateY(30deg) scale(1.15);
         filter: blur(3px);
+        opacity: 1;
+      }
+      90% {
+        transform: translateY(-15px) rotateY(-10deg) scale(1.08);
+        filter: blur(1px);
+      }
+      95% {
+        transform: translateY(5px) rotateY(2deg) scale(1.02);
+        filter: blur(0.5px);
       }
       100% {
-        transform: translateY(0) scale(1);
+        transform: translateY(0) rotateY(0deg) scale(1);
         opacity: 1;
         filter: blur(0);
       }
     }
+
 
     .camel-option:hover, .camel-option:active {
       border-color: #FFD700;
@@ -195,11 +263,12 @@
 
     .camel-option h3 {
       color: #FFD700;
-      font-size: 0.9em;
+      font-size: 0.95em;
       margin: 3px 0;
       text-shadow: 0 0 8px #FF0000;
       font-weight: bold;
-      line-height: 1;
+      line-height: 1.2;
+      text-align: center;
     }
 
     .bet-controls {
@@ -207,35 +276,37 @@
       backdrop-filter: blur(10px);
       border-radius: 8px;
       border: 3px ridge #FFD700;
-      padding: 12px;
-      margin: 12px 0;
+      padding: 10px;
+      margin: 10px 0 0 0;
       box-shadow: inset 0 0 20px rgba(255,0,0,0.3);
+      flex-shrink: 0;
     }
 
     .bet-controls h3 {
       color: #FFD700;
       font-size: 1.1em;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       text-shadow: 0 0 15px #FF0000;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 2px;
+      font-weight: bold;
     }
 
     .bet-amount {
       width: 100%;
-      padding: 12px;
-      font-size: 1.6em;
-      border: 2px ridge #FFD700;
-      border-radius: 6px;
+      padding: 10px;
+      font-size: 1.5em;
+      border: 3px ridge #FFD700;
+      border-radius: 8px;
       background: #000;
       color: #32CD32;
       text-align: center;
       font-family: 'Courier New', monospace;
-      margin-bottom: 8px;
+      margin-bottom: 5px;
       transition: all 0.1s;
       box-shadow: inset 0 0 20px rgba(0,255,0,0.3), 0 0 20px rgba(255,215,0,0.5);
       font-weight: bold;
-      letter-spacing: 2px;
+      letter-spacing: 3px;
     }
 
     .bet-amount.slot-spin {
@@ -266,22 +337,24 @@
     .bet-buttons {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-      margin-top: 8px;
+      gap: 6px;
+      margin-top: 6px;
     }
 
     .bet-btn {
       background: linear-gradient(180deg, #8B0000, #000, #8B0000);
       color: #FFD700;
-      border: 2px ridge #FFD700;
-      padding: 12px 8px;
-      font-size: 1.2em;
+      border: 3px ridge #FFD700;
+      padding: 10px 6px;
+      font-size: 1.1em;
       font-weight: bold;
-      border-radius: 5px;
+      border-radius: 6px;
       cursor: pointer;
       font-family: 'Courier New', monospace;
       transition: all 0.3s;
       box-shadow: 0 0 15px rgba(255,0,0,0.5), inset 0 0 10px rgba(0,0,0,0.5);
+      letter-spacing: 2px;
+      touch-action: manipulation;
     }
 
     .bet-btn:hover, .bet-btn:active {
@@ -292,23 +365,21 @@
     button {
       background: linear-gradient(180deg, #FFD700, #FF0000, #FFD700);
       color: #000;
-      border: 3px ridge #FFD700;
-      padding: 18px 20px;
-      font-size: 1.4em;
+      border: 4px ridge #FFD700;
+      padding: 15px 20px;
+      font-size: 1.3em;
       font-weight: bold;
-      border-radius: 8px;
+      border-radius: 10px;
       cursor: pointer;
       font-family: 'Impact', sans-serif;
       width: 100%;
-      margin-top: 10px;
+      margin: 0;
       transition: all 0.3s;
       touch-action: manipulation;
       box-shadow: 0 0 30px #FF0000, 0 0 50px #FFD700, inset 0 0 20px rgba(255,255,255,0.3);
-      position: sticky;
-      bottom: 0;
       overflow: hidden;
       text-transform: uppercase;
-      letter-spacing: 2px;
+      letter-spacing: 3px;
       animation: buttonGlow 2s ease-in-out infinite;
       z-index: 10;
     }
@@ -320,30 +391,30 @@
 
     .payout-info {
       background: linear-gradient(to bottom, #1a0000, #000);
-      backdrop-filter: blur(10px);
-      border: 2px ridge #FFD700;
-      border-radius: 6px;
-      padding: 10px;
-      margin: 10px 0;
-      text-align: left;
-      box-shadow: inset 0 0 20px rgba(255,0,0,0.3);
+      border: 3px ridge #FFD700;
+      border-radius: 8px;
+      padding: 8px 10px;
+      margin: 8px 0;
+      font-size: 0.9em;
+      box-shadow: inset 0 0 15px rgba(255,0,0,0.3);
     }
 
     .payout-info h4 {
       color: #FFD700;
-      font-size: 1.1em;
-      margin-bottom: 8px;
-      text-shadow: 0 0 15px #FF0000;
+      font-size: 1.15em;
+      margin-bottom: 5px;
+      text-shadow: 0 0 10px #FF0000;
       text-transform: uppercase;
       letter-spacing: 1px;
+      font-weight: bold;
     }
 
     .payout-item {
       display: flex;
       justify-content: space-between;
-      padding: 6px 0;
-      border-bottom: 1px solid rgba(255,215,0,0.3);
-      font-size: 1em;
+      padding: 4px 0;
+      color: #FFD700;
+      font-weight: bold;
     }
 
     .race-view {
@@ -355,8 +426,6 @@
       height: 100vh;
       z-index: 100;
       background: linear-gradient(to bottom, #87CEEB 0%, #F4A460 60%, #DEB887 100%);
-      overflow: hidden;
-      touch-action: none;
     }
 
     .race-info {
@@ -368,32 +437,31 @@
       backdrop-filter: blur(15px);
       border: 3px solid #FFD700;
       border-radius: 10px;
-      padding: 8px;
+      padding: 5px;
       z-index: 110;
       box-shadow: 0 4px 20px rgba(0,0,0,0.5);
     }
 
     .race-info h2 {
       color: #FFD700;
-      font-size: clamp(1.2em, 5vw, 2em);
+      font-size: clamp(1em, 4vw, 2em);
       text-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
-      line-height: 1.2;
     }
 
     .race-commentary {
       position: absolute;
-      top: 70px;
+      top: 80px;
       left: 50%;
       transform: translateX(-50%);
       background: rgba(0,0,0,0.9);
       border: 3px solid #FF0000;
-      border-radius: 12px;
-      padding: 10px 20px;
-      font-size: clamp(1.1em, 4vw, 1.5em);
+      border-radius: 15px;
+      padding: 12px 25px;
+      font-size: clamp(1em, 3vw, 1.5em);
       color: #FFD700;
       text-shadow: 0 0 15px #FF0000;
       z-index: 115;
-      max-width: 90%;
+      max-width: 80%;
       text-align: center;
       font-weight: bold;
       text-transform: uppercase;
@@ -429,37 +497,35 @@
       top: 0;
       left: 0;
       width: 100%;
-      height: 100vh;
+      height: 100%;
     }
 
     canvas {
       display: block;
       width: 100%;
       height: 100%;
-      object-fit: fill;
-      touch-action: none;
+      object-fit: contain;
     }
 
     .race-stats {
       position: absolute;
-      bottom: 5px;
-      left: 5px;
-      right: 5px;
+      bottom: 10px;
+      left: 10px;
+      right: 10px;
       background: rgba(0,0,0,0.85);
       backdrop-filter: blur(15px);
       border: 3px solid #FFD700;
-      border-radius: 12px;
-      padding: 10px;
+      border-radius: 18px;
+      padding: 15px;
       z-index: 110;
     }
 
     .race-stats > div {
       display: flex;
       justify-content: space-around;
-      font-size: clamp(1.3em, 5vw, 1.5em);
+      font-size: clamp(1em, 3.5vw, 1.3em);
       flex-wrap: wrap;
-      gap: 20px;
-      font-weight: bold;
+      gap: 15px;
     }
 
     .race-result {
@@ -471,13 +537,13 @@
       background: rgba(0,0,0,0.95);
       backdrop-filter: blur(20px);
       border: 4px solid #FFD700;
-      border-radius: 20px;
-      padding: clamp(25px, 6vw, 50px);
-      max-width: 95%;
-      width: 95%;
+      border-radius: 25px;
+      padding: clamp(30px, 8vw, 50px);
+      max-width: 90%;
+      width: 500px;
       text-align: center;
       z-index: 200;
-      max-height: 80vh;
+      max-height: 90vh;
       overflow-y: auto;
       box-shadow: 0 10px 60px rgba(255, 215, 0, 0.5);
       animation: resultPopIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -489,8 +555,8 @@
     }
 
     .race-result h2 {
-      font-size: clamp(2em, 8vw, 3em);
-      margin-bottom: 15px;
+      font-size: clamp(1.8em, 6vw, 3em);
+      margin-bottom: 20px;
       animation: resultPulse 1s ease-in-out infinite;
     }
 
@@ -500,9 +566,8 @@
     }
 
     .race-result p {
-      font-size: clamp(1.3em, 5vw, 1.5em);
-      margin: 15px 0;
-      font-weight: bold;
+      font-size: clamp(1em, 4vw, 1.5em);
+      margin: 20px 0;
     }
 
     .race-result.win h2 {
@@ -514,49 +579,6 @@
       color: #FF6347;
       text-shadow: 0 0 30px #FF6347, 0 0 50px #FF6347;
     }
-
-    @media (min-width: 768px) {
-      .betting-screen {
-        max-width: 600px;
-        margin: 30px auto 2px;
-        padding: 8px;
-        border: 6px ridge #FFD700;
-        border-radius: 15px;
-      }
-
-      .container {
-        padding: 10px;
-      }
-
-      .race-info {
-        top: 20px;
-        left: 20px;
-        right: 20px;
-        border-radius: 18px;
-        padding: 15px;
-      }
-
-      .race-commentary {
-        top: 120px;
-        border-radius: 15px;
-        padding: 12px 25px;
-        max-width: 70%;
-      }
-
-      .race-stats {
-        bottom: 20px;
-        left: 20px;
-        right: 20px;
-        border-radius: 18px;
-        padding: 15px;
-      }
-
-      .race-result {
-        width: 500px;
-        max-width: 90%;
-        border-radius: 25px;
-      }
-    }
   </style>
 </head>
 <body>
@@ -566,9 +588,7 @@
 
   <div class="container">
     <div id="bettingScreen" class="betting-screen">
-      <h1>🏜️ DUNE RUSH</h1>
-
-      <p>Pick your champion camel!</p>
+      <h1>PICK YOUR CHAMPION CAMEL!</h1>
 
       <div class="camel-grid" id="camelGrid"></div>
 
@@ -588,15 +608,15 @@
         <h4>🏆 PAYOUTS</h4>
         <div class="payout-item">
           <span>🥇 1st:</span>
-          <span style="color: #32CD32; font-weight: bold;">10x</span>
+          <span style="color: #32CD32;">10x</span>
         </div>
         <div class="payout-item">
           <span>🥈 2nd:</span>
-          <span style="color: #32CD32; font-weight: bold;">3x</span>
+          <span style="color: #32CD32;">3x</span>
         </div>
         <div class="payout-item">
           <span>🥉 3rd:</span>
-          <span style="color: #FFD700; font-weight: bold;">1.5x</span>
+          <span style="color: #FFD700;">1.5x</span>
         </div>
         <div class="payout-item">
           <span>4-6:</span>
@@ -654,8 +674,19 @@
       { id: 2, name: 'Golden Wind', color: '#DAA520', jockey: '👨' },
       { id: 3, name: 'Oasis King', color: '#CD853F', jockey: '🧑' },
       { id: 4, name: 'Dune Dancer', color: '#DEB887', jockey: '👴' },
-      { id: 5, name: 'Sahara Swift', color: '#F4A460', jockey: '👲' }
+      { id: 5, name: 'Sahara Swift', color: '#F4A460', jockey: '👲' },
+      { id: 6, name: 'Mirage Master', color: '#D2691E', jockey: '🧕' },
+      { id: 7, name: 'Sand Phantom', color: '#CD853F', jockey: '👨' },
+      { id: 8, name: 'Dune Lightning', color: '#8B4513', jockey: '🧔' },
+      { id: 9, name: 'Desert Blaze', color: '#DAA520', jockey: '👳' },
+      { id: 10, name: 'Nomad Prince', color: '#DEB887', jockey: '🧑' },
+      { id: 11, name: 'Sand Tempest', color: '#F4A460', jockey: '👴' },
+      { id: 12, name: 'Oasis Warrior', color: '#8B4513', jockey: '🧕' },
+      { id: 13, name: 'Golden Fury', color: '#DAA520', jockey: '👲' },
+      { id: 14, name: 'Dune Raider', color: '#D2691E', jockey: '👨' }
     ];
+
+    let currentCamels = []; // Store the 6 randomly selected camels
 
     function saveGold() {
       try {
@@ -683,16 +714,42 @@
     }
 
     function loadCamels() {
+      const title = document.querySelector('.betting-screen h1');
+      title.textContent = '🎰 SPINNING THE SLOT MACHINE! 🎰';
+      title.style.animation = 'titleGlow 0.3s ease-in-out infinite';
+
+      // Shuffle and pick 6 random camels
+      const shuffled = [...CAMELS].sort(() => Math.random() - 0.5);
+      currentCamels = shuffled.slice(0, 6);
+
       const grid = document.getElementById('camelGrid');
-      grid.innerHTML = CAMELS.map((camel, index) => `
-        <div class="camel-option" onclick="selectCamel(${camel.id})">
-          <div class="camel-emoji" style="font-size: 2.2em; animation-delay: ${index * 0.1}s;">🐪</div>
+      grid.innerHTML = currentCamels.map((camel, index) => `
+        <div class="camel-option" data-index="${index}" onclick="selectCamel(${index})">
+          <div class="camel-emoji">🐪</div>
           <h3>${camel.name}</h3>
-          <div style="color: #32CD32; font-size: 0.9em; margin-top: 3px; text-shadow: 0 0 8px rgba(50, 205, 50, 0.6); font-weight: bold;">
+          <div style="color: #32CD32; font-size: 0.95em; margin-top: 3px; text-shadow: 0 0 10px rgba(50, 205, 50, 0.8); font-weight: bold;">
             ${(3 + Math.random() * 5).toFixed(1)}:1
           </div>
         </div>
       `).join('');
+
+      // Force animation to trigger with staggered timing
+      setTimeout(() => {
+        document.querySelectorAll('.camel-option').forEach((el, index) => {
+          setTimeout(() => {
+            el.classList.add('spinning');
+          }, index * 200);
+        });
+      }, 50);
+
+      // Remove spinning class after all animations complete (6 camels * 200ms delay + 1200ms animation)
+      setTimeout(() => {
+        document.querySelectorAll('.camel-option').forEach(el => {
+          el.classList.remove('spinning');
+        });
+        title.textContent = 'PICK YOUR CHAMPION CAMEL!';
+        title.style.animation = 'titleGlow 3s ease-in-out infinite';
+      }, 2500);
     }
 
     function selectCamel(id) {
@@ -733,7 +790,7 @@
       updateGoldDisplay();
 
       document.getElementById('displayBet').textContent = GameState.betAmount;
-      document.getElementById('displayCamel').textContent = CAMELS[GameState.selectedCamel].name;
+      document.getElementById('displayCamel').textContent = currentCamels[GameState.selectedCamel].name;
 
       document.getElementById('bettingScreen').style.display = 'none';
       document.getElementById('raceView').style.display = 'block';
@@ -747,9 +804,9 @@
       document.getElementById('bettingScreen').style.display = 'block';
 
       GameState.selectedCamel = null;
-      document.querySelectorAll('.camel-option').forEach(el => {
-        el.classList.remove('selected');
-      });
+
+      // Reload new random camels - slot machine style!
+      loadCamels();
     }
 
     const RaceEngine = {
@@ -767,22 +824,15 @@
         this.canvas = document.getElementById('raceCanvas');
 
         const dpr = window.devicePixelRatio || 1;
-        const viewportWidth = window.innerWidth;
-        const viewportHeight = window.innerHeight;
-        this.canvas.width = viewportWidth * dpr;
-        this.canvas.height = viewportHeight * dpr;
+        this.canvas.width = 1400 * dpr;
+        this.canvas.height = 500 * dpr;
         this.ctx = this.canvas.getContext('2d');
         this.ctx.scale(dpr, dpr);
 
-        this.raceLength = viewportWidth * 0.8;
-
-        const laneSpacing = viewportHeight / 8;
-        const startY = viewportHeight * 0.15;
-
-        this.camels = CAMELS.map((c, i) => ({
+        this.camels = currentCamels.map((c, i) => ({
           ...c,
           x: 50,
-          y: startY + (i * laneSpacing),
+          y: 65 + (i * 70),
           distance: 0,
           speed: 4 + Math.random() * 4,
           baseSpeed: 4 + Math.random() * 4,
@@ -852,7 +902,7 @@
         });
       },
 
-      drawProperCamel(ctx, x, y, color, bounce, isMe) {
+      drawProperCamel(ctx, x, y, color, bounce, isMe, name) {
         const bounceY = Math.sin(bounce) * 6;
         const baseY = y + bounceY;
         const scale = 1.3;
@@ -970,8 +1020,8 @@
         ctx.strokeStyle = '#000';
         ctx.lineWidth = 3;
         ctx.font = 'bold 14px Arial';
-        ctx.strokeText(CAMELS[this.camels.indexOf(this.camels.find(c => c.y === y))].name, x + 10, baseY - 25);
-        ctx.fillText(CAMELS[this.camels.indexOf(this.camels.find(c => c.y === y))].name, x + 10, baseY - 25);
+        ctx.strokeText(name, x + 10, baseY - 25);
+        ctx.fillText(name, x + 10, baseY - 25);
 
         ctx.restore();
       },
@@ -998,15 +1048,13 @@
         if (!this.running) return;
 
         const ctx = this.ctx;
-        const canvasWidth = this.canvas.width / (window.devicePixelRatio || 1);
-        const canvasHeight = this.canvas.height / (window.devicePixelRatio || 1);
 
-        const skyGrad = ctx.createLinearGradient(0, 0, 0, canvasHeight);
+        const skyGrad = ctx.createLinearGradient(0, 0, 0, 500);
         skyGrad.addColorStop(0, '#87CEEB');
         skyGrad.addColorStop(0.5, '#F4A460');
         skyGrad.addColorStop(1, '#DEB887');
         ctx.fillStyle = skyGrad;
-        ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+        ctx.fillRect(0, 0, 1400, 500);
 
         const sunGrad = ctx.createRadialGradient(200, 80, 0, 200, 80, 70);
         sunGrad.addColorStop(0, '#FFD700');
@@ -1023,33 +1071,30 @@
         ctx.fill();
 
         ctx.fillStyle = 'rgba(139, 115, 85, 0.6)';
-        const mountainSpacing = canvasWidth / 6;
         for (let i = 0; i < 6; i++) {
           ctx.beginPath();
-          ctx.moveTo(i * mountainSpacing - 50, canvasHeight * 0.4);
-          ctx.lineTo(i * mountainSpacing + 75, canvasHeight * 0.25 + Math.sin(i) * 20);
-          ctx.lineTo(i * mountainSpacing + 200, canvasHeight * 0.4);
+          ctx.moveTo(i * 250 - 50, 220);
+          ctx.lineTo(i * 250 + 75, 120 + Math.sin(i) * 20);
+          ctx.lineTo(i * 250 + 200, 220);
           ctx.closePath();
           ctx.fill();
         }
 
-        const groundGrad = ctx.createLinearGradient(0, canvasHeight * 0.4, 0, canvasHeight);
+        const groundGrad = ctx.createLinearGradient(0, 200, 0, 500);
         groundGrad.addColorStop(0, '#DEB887');
         groundGrad.addColorStop(0.5, '#D2B48C');
         groundGrad.addColorStop(1, '#CD853F');
         ctx.fillStyle = groundGrad;
-        ctx.fillRect(0, canvasHeight * 0.4, canvasWidth, canvasHeight * 0.6);
+        ctx.fillRect(0, 200, 1400, 300);
 
-        const palmSpacing = canvasWidth / 8;
         for (let i = 0; i < 8; i++) {
-          const px = i * palmSpacing + 100;
-          const treeY = canvasHeight * 0.35;
+          const px = i * 180 + 100;
           ctx.fillStyle = '#8B4513';
-          ctx.fillRect(px - 5, treeY, 10, 50);
+          ctx.fillRect(px - 5, 170, 10, 50);
           ctx.fillStyle = '#228B22';
           for (let j = 0; j < 6; j++) {
             ctx.beginPath();
-            ctx.ellipse(px, treeY, 25, 8, (Math.PI / 3) * j, 0, Math.PI * 2);
+            ctx.ellipse(px, 170, 25, 8, (Math.PI / 3) * j, 0, Math.PI * 2);
             ctx.fill();
           }
         }
@@ -1057,28 +1102,24 @@
         ctx.strokeStyle = 'rgba(139, 69, 19, 0.4)';
         ctx.lineWidth = 2;
         ctx.setLineDash([20, 15]);
-        const laneSpacing = canvasHeight / 8;
-        const startY = canvasHeight * 0.15;
         for (let i = 0; i < 6; i++) {
           ctx.beginPath();
-          ctx.moveTo(0, startY + i * laneSpacing);
-          ctx.lineTo(canvasWidth, startY + i * laneSpacing);
+          ctx.moveTo(0, 65 + i * 70);
+          ctx.lineTo(1400, 65 + i * 70);
           ctx.stroke();
         }
         ctx.setLineDash([]);
 
-        const finishX = canvasWidth * 0.85;
-        const finishSquareSize = canvasHeight / 15;
-        const numFinishRows = Math.floor(canvasHeight / finishSquareSize);
-        for (let i = 0; i < numFinishRows; i++) {
+        const finishX = 1200;
+        for (let i = 0; i < 12; i++) {
           for (let j = 0; j < 3; j++) {
             ctx.fillStyle = (i + j) % 2 === 0 ? '#000' : '#fff';
-            ctx.fillRect(finishX + j * finishSquareSize, i * finishSquareSize, finishSquareSize, finishSquareSize);
+            ctx.fillRect(finishX + j * 60, i * 60, 60, 60);
           }
         }
 
         ctx.save();
-        ctx.translate(finishX + finishSquareSize * 1.5, canvasHeight / 2);
+        ctx.translate(finishX + 90, 250);
         ctx.rotate(-Math.PI / 2);
         ctx.fillStyle = '#FFD700';
         ctx.strokeStyle = '#000';
@@ -1100,15 +1141,13 @@
           c.distance += c.speed;
           c.bounce += 0.2;
 
-          const canvasWidth = this.canvas.width / (window.devicePixelRatio || 1);
-          const travelDistance = canvasWidth * 0.8;
-          const x = 50 + (c.distance / this.raceLength) * travelDistance;
+          const x = 50 + (c.distance / this.raceLength) * 1180;
 
           if (Math.random() < 0.15) {
             this.createDust(x, c.y);
           }
 
-          this.drawProperCamel(ctx, x, c.y, c.color, c.bounce, c.isMe);
+          this.drawProperCamel(ctx, x, c.y, c.color, c.bounce, c.isMe, c.name);
 
           if (c.distance >= this.raceLength && !winner) {
             winner = c;
@@ -1120,9 +1159,20 @@
           if (c.lastPosition !== index && this.commentaryTimer - this.lastCommentary > 60) {
             if (index < c.lastPosition && index <= 2) {
               if (c.isMe) {
-                this.showCommentary("YOU'RE CHARGING AHEAD! 🔥");
+                const phrases = [
+                  "YOU'RE CHARGING AHEAD! 🔥",
+                  "INCREDIBLE MOVE! 💨",
+                  "WHAT A SURGE! ⚡",
+                  "UNSTOPPABLE! 🚀"
+                ];
+                this.showCommentary(phrases[Math.floor(Math.random() * phrases.length)]);
               } else if (index === 0) {
-                this.showCommentary(c.name.toUpperCase() + " TAKES THE LEAD!");
+                const phrases = [
+                  c.name.toUpperCase() + " TAKES THE LEAD!",
+                  c.name.toUpperCase() + " SURGES AHEAD!",
+                  c.name.toUpperCase() + " IS ON FIRE! 🔥"
+                ];
+                this.showCommentary(phrases[Math.floor(Math.random() * phrases.length)]);
               }
               this.createFlash();
               this.lastCommentary = this.commentaryTimer;
@@ -1132,20 +1182,84 @@
         });
 
         const progress = this.myCamel.distance / this.raceLength;
+        if (progress > 0.25 && progress < 0.27 && this.commentaryTimer - this.lastCommentary > 60) {
+          const myPos = sorted.findIndex(c => c.isMe) + 1;
+          if (myPos === 1) {
+            const phrases = [
+              "EARLY LEAD! 🚀",
+              "SETTING THE PACE! ⚡",
+              "STRONG START! 💪"
+            ];
+            this.showCommentary(phrases[Math.floor(Math.random() * phrases.length)]);
+          } else if (myPos <= 3) {
+            const phrases = [
+              "GOOD POSITION! 👍",
+              "STAYING CLOSE! 🔥",
+              "IN THE HUNT! 🎯"
+            ];
+            this.showCommentary(phrases[Math.floor(Math.random() * phrases.length)]);
+          }
+          this.lastCommentary = this.commentaryTimer;
+        }
+
         if (progress > 0.5 && progress < 0.52 && this.commentaryTimer - this.lastCommentary > 60) {
           const myPos = sorted.findIndex(c => c.isMe) + 1;
           if (myPos === 1) {
-            this.showCommentary("YOU'RE IN THE LEAD! 🏆");
+            const phrases = [
+              "YOU'RE IN THE LEAD! 🏆",
+              "DOMINATING THE RACE! 👑",
+              "INCREDIBLE PERFORMANCE! ⭐"
+            ];
+            this.showCommentary(phrases[Math.floor(Math.random() * phrases.length)]);
           } else if (myPos === 6) {
-            this.showCommentary("LAST PLACE! COME ON! 😰");
+            const phrases = [
+              "LAST PLACE! COME ON! 😰",
+              "YOU'RE FALLING BEHIND! 😱",
+              "NEED A MIRACLE HERE! 🙏"
+            ];
+            this.showCommentary(phrases[Math.floor(Math.random() * phrases.length)]);
+          } else if (myPos === 2) {
+            const phrases = [
+              "NECK AND NECK! 🔥",
+              "SO CLOSE TO THE LEAD! 💨",
+              "PUSHING HARD! ⚡"
+            ];
+            this.showCommentary(phrases[Math.floor(Math.random() * phrases.length)]);
           } else {
-            this.showCommentary("HALFWAY THERE! 💨");
+            const phrases = [
+              "HALFWAY THERE! 💨",
+              "MIDDLE OF THE PACK! 🐪",
+              "STILL IN THIS! 💪"
+            ];
+            this.showCommentary(phrases[Math.floor(Math.random() * phrases.length)]);
           }
           this.lastCommentary = this.commentaryTimer;
         }
 
         if (progress > 0.85 && progress < 0.87 && this.commentaryTimer - this.lastCommentary > 60) {
-          this.showCommentary("FINAL STRETCH! 🏁");
+          const myPos = sorted.findIndex(c => c.isMe) + 1;
+          if (myPos === 1) {
+            const phrases = [
+              "VICTORY IS YOURS! 👑",
+              "DON'T LET UP NOW! 🔥",
+              "FINISH STRONG! 💪"
+            ];
+            this.showCommentary(phrases[Math.floor(Math.random() * phrases.length)]);
+          } else if (myPos <= 3) {
+            const phrases = [
+              "FINAL STRETCH! 🏁",
+              "PHOTO FINISH! 📸",
+              "IT'S ANYONE'S RACE! ⚡"
+            ];
+            this.showCommentary(phrases[Math.floor(Math.random() * phrases.length)]);
+          } else {
+            const phrases = [
+              "LAST CHANCE! 😱",
+              "NEED A MIRACLE! 🙏",
+              "GIVE IT EVERYTHING! 💨"
+            ];
+            this.showCommentary(phrases[Math.floor(Math.random() * phrases.length)]);
+          }
           this.lastCommentary = this.commentaryTimer;
         }
 
