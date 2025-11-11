@@ -220,42 +220,15 @@
 
     @keyframes slotMachineRoll {
       0% {
-        transform: translateY(-800px) rotateY(720deg) scale(0.2);
+        transform: translateY(-100px) scale(0.5);
         opacity: 0;
-        filter: blur(30px);
-      }
-      20% {
-        transform: translateY(-600px) rotateY(540deg) scale(0.4);
-        opacity: 0.3;
-        filter: blur(25px);
-      }
-      40% {
-        transform: translateY(-400px) rotateY(360deg) scale(0.6);
-        filter: blur(15px);
-        opacity: 0.6;
       }
       60% {
-        transform: translateY(-200px) rotateY(180deg) scale(0.8);
-        filter: blur(8px);
-        opacity: 0.8;
-      }
-      80% {
-        transform: translateY(30px) rotateY(30deg) scale(1.15);
-        filter: blur(3px);
         opacity: 1;
-      }
-      90% {
-        transform: translateY(-15px) rotateY(-10deg) scale(1.08);
-        filter: blur(1px);
-      }
-      95% {
-        transform: translateY(5px) rotateY(2deg) scale(1.02);
-        filter: blur(0.5px);
       }
       100% {
-        transform: translateY(0) rotateY(0deg) scale(1);
+        transform: translateY(0) scale(1);
         opacity: 1;
-        filter: blur(0);
       }
     }
 
@@ -379,14 +352,18 @@
       background: linear-gradient(180deg, #FFD700, #FF0000, #FFD700);
       color: #000;
       border: 4px ridge #FFD700;
-      padding: 15px 20px;
-      font-size: 1.3em;
+      padding: 12px 20px;
+      font-size: 1.2em;
       font-weight: bold;
       border-radius: 10px;
       cursor: pointer;
       font-family: 'Impact', sans-serif;
-      width: 100%;
-      margin: 0;
+      width: calc(100% - 16px);
+      margin: 8px;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
       transition: all 0.3s;
       touch-action: manipulation;
       box-shadow: 0 0 30px #FF0000, 0 0 50px #FFD700, inset 0 0 20px rgba(255,255,255,0.3);
@@ -394,7 +371,7 @@
       text-transform: uppercase;
       letter-spacing: 3px;
       animation: buttonGlow 2s ease-in-out infinite;
-      z-index: 10;
+      z-index: 10000;
     }
 
     button:hover, button:active {
@@ -437,44 +414,48 @@
       left: 0;
       width: 100%;
       height: 100vh;
+      height: -webkit-fill-available;
       z-index: 100;
       background: linear-gradient(to bottom, #87CEEB 0%, #F4A460 60%, #DEB887 100%);
+      overflow: hidden;
     }
 
     .race-info {
-      position: absolute;
-      top: 10px;
-      left: 5px;
-      right: 5px;
-      background: rgba(0,0,0,0.85);
+      position: fixed;
+      top: 8px;
+      left: 8px;
+      right: 8px;
+      background: rgba(0,0,0,0.9);
       backdrop-filter: blur(15px);
       border: 3px solid #FFD700;
-      border-radius: 10px;
-      padding: 5px;
+      border-radius: 12px;
+      padding: 8px;
       z-index: 110;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.7);
     }
 
     .race-info h2 {
       color: #FFD700;
-      font-size: clamp(1em, 4vw, 2em);
+      font-size: clamp(0.9em, 3.5vw, 1.4em);
       text-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
+      margin: 0;
+      line-height: 1.2;
     }
 
     .race-commentary {
-      position: absolute;
-      top: 80px;
+      position: fixed;
+      top: 70px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(0,0,0,0.9);
+      background: rgba(0,0,0,0.95);
       border: 3px solid #FF0000;
-      border-radius: 15px;
-      padding: 12px 25px;
-      font-size: clamp(1em, 3vw, 1.5em);
+      border-radius: 12px;
+      padding: 10px 20px;
+      font-size: clamp(0.9em, 3vw, 1.3em);
       color: #FFD700;
       text-shadow: 0 0 15px #FF0000;
       z-index: 115;
-      max-width: 80%;
+      max-width: 85%;
       text-align: center;
       font-weight: bold;
       text-transform: uppercase;
@@ -506,39 +487,40 @@
     }
 
     .race-canvas-container {
-      position: absolute;
+      position: fixed;
       top: 0;
       left: 0;
       width: 100%;
-      height: 100%;
+      height: 100vh;
+      height: -webkit-fill-available;
     }
 
     canvas {
       display: block;
       width: 100%;
       height: 100%;
-      object-fit: contain;
+      object-fit: cover;
     }
 
     .race-stats {
-      position: absolute;
-      bottom: 10px;
-      left: 10px;
-      right: 10px;
-      background: rgba(0,0,0,0.85);
+      position: fixed;
+      bottom: 8px;
+      left: 8px;
+      right: 8px;
+      background: rgba(0,0,0,0.9);
       backdrop-filter: blur(15px);
       border: 3px solid #FFD700;
-      border-radius: 18px;
-      padding: 15px;
+      border-radius: 12px;
+      padding: 10px;
       z-index: 110;
     }
 
     .race-stats > div {
       display: flex;
       justify-content: space-around;
-      font-size: clamp(1em, 3.5vw, 1.3em);
+      font-size: clamp(0.9em, 3.2vw, 1.2em);
       flex-wrap: wrap;
-      gap: 15px;
+      gap: 12px;
     }
 
     .race-result {
@@ -829,7 +811,7 @@
       camels: [],
       myCamel: null,
       running: false,
-      raceLength: 1200,
+      raceLength: 3200,
       dustParticles: [],
 
       init() {
@@ -844,8 +826,8 @@
 
         this.camels = currentCamels.map((c, i) => ({
           ...c,
-          x: 50,
-          y: 65 + (i * 70),
+          x: 150,
+          y: 220 + (i * 45),
           distance: 0,
           speed: 4 + Math.random() * 4,
           baseSpeed: 4 + Math.random() * 4,
@@ -918,7 +900,7 @@
       drawProperCamel(ctx, x, y, color, bounce, isMe, name) {
         const bounceY = Math.sin(bounce) * 6;
         const baseY = y + bounceY;
-        const scale = 1.3;
+        const scale = 0.65;
 
         ctx.save();
         ctx.translate(x, baseY);
@@ -1117,27 +1099,48 @@
         ctx.setLineDash([20, 15]);
         for (let i = 0; i < 6; i++) {
           ctx.beginPath();
-          ctx.moveTo(0, 65 + i * 70);
-          ctx.lineTo(1400, 65 + i * 70);
+          ctx.moveTo(0, 220 + i * 45);
+          ctx.lineTo(1400, 220 + i * 45);
           ctx.stroke();
         }
         ctx.setLineDash([]);
 
-        const finishX = 1200;
-        for (let i = 0; i < 12; i++) {
+        // START LINE
+        const startX = 100;
+        for (let i = 0; i < 10; i++) {
           for (let j = 0; j < 3; j++) {
             ctx.fillStyle = (i + j) % 2 === 0 ? '#000' : '#fff';
-            ctx.fillRect(finishX + j * 60, i * 60, 60, 60);
+            ctx.fillRect(startX + j * 40, i * 40 + 180, 40, 40);
           }
         }
 
         ctx.save();
-        ctx.translate(finishX + 90, 250);
+        ctx.translate(startX + 60, 320);
+        ctx.rotate(-Math.PI / 2);
+        ctx.fillStyle = '#32CD32';
+        ctx.strokeStyle = '#000';
+        ctx.lineWidth = 4;
+        ctx.font = 'bold 36px Arial';
+        ctx.strokeText('START', 0, 0);
+        ctx.fillText('START', 0, 0);
+        ctx.restore();
+
+        // FINISH LINE
+        const finishX = 1050;
+        for (let i = 0; i < 10; i++) {
+          for (let j = 0; j < 3; j++) {
+            ctx.fillStyle = (i + j) % 2 === 0 ? '#000' : '#fff';
+            ctx.fillRect(finishX + j * 40, i * 40 + 180, 40, 40);
+          }
+        }
+
+        ctx.save();
+        ctx.translate(finishX + 60, 320);
         ctx.rotate(-Math.PI / 2);
         ctx.fillStyle = '#FFD700';
         ctx.strokeStyle = '#000';
-        ctx.lineWidth = 5;
-        ctx.font = 'bold 48px Arial';
+        ctx.lineWidth = 4;
+        ctx.font = 'bold 36px Arial';
         ctx.strokeText('FINISH', 0, 0);
         ctx.fillText('FINISH', 0, 0);
         ctx.restore();
@@ -1154,7 +1157,7 @@
           c.distance += c.speed;
           c.bounce += 0.2;
 
-          const x = 50 + (c.distance / this.raceLength) * 1180;
+          const x = 150 + (c.distance / this.raceLength) * 900;
 
           if (Math.random() < 0.15) {
             this.createDust(x, c.y);
