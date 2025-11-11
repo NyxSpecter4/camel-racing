@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>🏜️ Dune Rush - Premium Racing</title>
   <style>
-    * { 
-      margin: 0; 
-      padding: 0; 
+    * {
+      margin: 0;
+      padding: 0;
       box-sizing: border-box;
       -webkit-tap-highlight-color: transparent;
     }
-    
+
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: linear-gradient(to bottom, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
@@ -19,13 +19,15 @@
       color: #fff;
       overflow-x: hidden;
       position: relative;
+      overscroll-behavior: none;
+      -webkit-overflow-scrolling: touch;
     }
-    
+
     @keyframes twinkle {
       0%, 100% { opacity: 0.3; }
       50% { opacity: 1; }
     }
-    
+
     body::before {
       content: '';
       position: fixed;
@@ -33,7 +35,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background-image: 
+      background-image:
         radial-gradient(2px 2px at 20% 30%, white, transparent),
         radial-gradient(2px 2px at 60% 70%, white, transparent),
         radial-gradient(1px 1px at 50% 50%, white, transparent),
@@ -44,16 +46,16 @@
       pointer-events: none;
       opacity: 0.4;
     }
-    
-    .container { 
-      max-width: 1400px; 
-      margin: 0 auto; 
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
       padding: 0;
       text-align: center;
       position: relative;
       z-index: 1;
     }
-    
+
     .gold-bar {
       position: fixed;
       top: 0;
@@ -67,7 +69,7 @@
       z-index: 1000;
       box-shadow: 0 4px 20px rgba(255, 215, 0, 0.3);
     }
-    
+
     .gold-amount {
       color: #FFD700;
       font-size: 1.1em;
@@ -75,12 +77,12 @@
       text-shadow: 0 0 10px #FFD700, 0 0 20px #FF8C00;
       animation: goldPulse 2s ease-in-out infinite;
     }
-    
+
     @keyframes goldPulse {
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.05); }
     }
-    
+
     .betting-screen {
       max-width: 100%;
       margin: 26px 2px 0 2px;
@@ -94,12 +96,12 @@
       height: calc(100vh - 26px);
       overflow-y: auto;
     }
-    
+
     @keyframes slideUp {
       from { opacity: 0; transform: translateY(30px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    
+
     .betting-screen h1 {
       color: #FFD700;
       font-size: 1.8em;
@@ -107,22 +109,22 @@
       text-shadow: 0 0 20px #FF0000, 0 0 40px #FFD700;
       animation: titleGlow 3s ease-in-out infinite;
     }
-    
+
     @keyframes titleGlow {
       0%, 100% { text-shadow: 0 0 20px #FF0000, 0 0 40px #FFD700; }
       50% { text-shadow: 0 0 30px #FF0000, 0 0 60px #FFD700; }
     }
-    
+
     @keyframes slotPulse {
       0%, 100% { box-shadow: 0 0 30px #FFD700, 0 0 50px #FF0000; }
       50% { box-shadow: 0 0 50px #FFD700, 0 0 80px #FF0000; }
     }
-    
+
     @keyframes buttonGlow {
       0%, 100% { box-shadow: 0 0 30px #FF0000, 0 0 50px #FFD700; }
       50% { box-shadow: 0 0 50px #FF0000, 0 0 80px #FFD700; }
     }
-    
+
     .betting-screen p {
       color: #FFD700;
       font-size: 1em;
@@ -131,14 +133,14 @@
       text-transform: uppercase;
       letter-spacing: 1px;
     }
-    
+
     .camel-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 8px;
       margin: 10px 0;
     }
-    
+
     .camel-option {
       background: linear-gradient(180deg, #2a0000 0%, #000 50%, #2a0000 100%);
       border: 2px ridge #FFD700;
@@ -155,14 +157,14 @@
       overflow: hidden;
       box-shadow: inset 0 0 10px rgba(255,0,0,0.3);
     }
-    
+
     .camel-option .camel-emoji {
       animation: slotSpin 0.6s ease-out;
       display: inline-block;
     }
-    
+
     @keyframes slotSpin {
-      0% { 
+      0% {
         transform: translateY(-100px) scale(0.5);
         opacity: 0;
         filter: blur(8px);
@@ -170,19 +172,19 @@
       60% {
         filter: blur(3px);
       }
-      100% { 
+      100% {
         transform: translateY(0) scale(1);
         opacity: 1;
         filter: blur(0);
       }
     }
-    
+
     .camel-option:hover, .camel-option:active {
       border-color: #FFD700;
       transform: translateY(-5px) scale(1.03);
       box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
     }
-    
+
     .camel-option.selected {
       border-color: #FF0000;
       background: linear-gradient(180deg, #FFD700 0%, #FF8C00 50%, #FFD700 100%);
@@ -190,7 +192,7 @@
       transform: scale(1.05);
       animation: slotPulse 0.5s ease-in-out infinite;
     }
-    
+
     .camel-option h3 {
       color: #FFD700;
       font-size: 0.9em;
@@ -199,7 +201,7 @@
       font-weight: bold;
       line-height: 1;
     }
-    
+
     .bet-controls {
       background: linear-gradient(to bottom, #1a0000, #000);
       backdrop-filter: blur(10px);
@@ -209,7 +211,7 @@
       margin: 12px 0;
       box-shadow: inset 0 0 20px rgba(255,0,0,0.3);
     }
-    
+
     .bet-controls h3 {
       color: #FFD700;
       font-size: 1.1em;
@@ -218,7 +220,7 @@
       text-transform: uppercase;
       letter-spacing: 1px;
     }
-    
+
     .bet-amount {
       width: 100%;
       padding: 12px;
@@ -235,13 +237,13 @@
       font-weight: bold;
       letter-spacing: 2px;
     }
-    
+
     .bet-amount.slot-spin {
       animation: numberSpin 0.3s ease-out;
     }
-    
+
     @keyframes numberSpin {
-      0% { 
+      0% {
         transform: translateY(-30px);
         opacity: 0;
         filter: blur(5px);
@@ -249,25 +251,25 @@
       50% {
         filter: blur(2px);
       }
-      100% { 
+      100% {
         transform: translateY(0);
         opacity: 1;
         filter: blur(0);
       }
     }
-    
+
     .bet-amount:focus {
       outline: none;
       border-color: #FFD700;
     }
-    
+
     .bet-buttons {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       gap: 8px;
       margin-top: 8px;
     }
-    
+
     .bet-btn {
       background: linear-gradient(180deg, #8B0000, #000, #8B0000);
       color: #FFD700;
@@ -281,12 +283,12 @@
       transition: all 0.3s;
       box-shadow: 0 0 15px rgba(255,0,0,0.5), inset 0 0 10px rgba(0,0,0,0.5);
     }
-    
+
     .bet-btn:hover, .bet-btn:active {
       border-color: #FFD700;
       transform: translateY(-3px);
     }
-    
+
     button {
       background: linear-gradient(180deg, #FFD700, #FF0000, #FFD700);
       color: #000;
@@ -310,12 +312,12 @@
       animation: buttonGlow 2s ease-in-out infinite;
       z-index: 10;
     }
-    
+
     button:hover, button:active {
       transform: translateY(-3px) scale(1.02);
       box-shadow: 0 8px 30px rgba(255, 215, 0, 0.6);
     }
-    
+
     .payout-info {
       background: linear-gradient(to bottom, #1a0000, #000);
       backdrop-filter: blur(10px);
@@ -326,7 +328,7 @@
       text-align: left;
       box-shadow: inset 0 0 20px rgba(255,0,0,0.3);
     }
-    
+
     .payout-info h4 {
       color: #FFD700;
       font-size: 1.1em;
@@ -335,7 +337,7 @@
       text-transform: uppercase;
       letter-spacing: 1px;
     }
-    
+
     .payout-item {
       display: flex;
       justify-content: space-between;
@@ -343,18 +345,20 @@
       border-bottom: 1px solid rgba(255,215,0,0.3);
       font-size: 1em;
     }
-    
+
     .race-view {
       display: none;
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
-      height: 100%;
+      height: 100vh;
       z-index: 100;
       background: linear-gradient(to bottom, #87CEEB 0%, #F4A460 60%, #DEB887 100%);
+      overflow: hidden;
+      touch-action: none;
     }
-    
+
     .race-info {
       position: absolute;
       top: 10px;
@@ -368,14 +372,14 @@
       z-index: 110;
       box-shadow: 0 4px 20px rgba(0,0,0,0.5);
     }
-    
+
     .race-info h2 {
       color: #FFD700;
       font-size: clamp(1.2em, 5vw, 2em);
       text-shadow: 0 0 15px rgba(255, 215, 0, 0.8);
       line-height: 1.2;
     }
-    
+
     .race-commentary {
       position: absolute;
       top: 70px;
@@ -397,12 +401,12 @@
       animation: commentaryPop 0.3s ease-out;
       box-shadow: 0 0 30px #FF0000, 0 0 50px #FFD700;
     }
-    
+
     @keyframes commentaryPop {
       0% { transform: translateX(-50%) scale(0.8); opacity: 0; }
       100% { transform: translateX(-50%) scale(1); opacity: 1; }
     }
-    
+
     .overtake-flash {
       position: fixed;
       top: 0;
@@ -414,27 +418,28 @@
       z-index: 105;
       animation: flashEffect 0.3s ease-out;
     }
-    
+
     @keyframes flashEffect {
       0% { opacity: 1; }
       100% { opacity: 0; }
     }
-    
+
     .race-canvas-container {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
-      height: 100%;
+      height: 100vh;
     }
-    
+
     canvas {
       display: block;
       width: 100%;
       height: 100%;
-      object-fit: contain;
+      object-fit: fill;
+      touch-action: none;
     }
-    
+
     .race-stats {
       position: absolute;
       bottom: 5px;
@@ -447,7 +452,7 @@
       padding: 10px;
       z-index: 110;
     }
-    
+
     .race-stats > div {
       display: flex;
       justify-content: space-around;
@@ -456,7 +461,7 @@
       gap: 20px;
       font-weight: bold;
     }
-    
+
     .race-result {
       display: none;
       position: fixed;
@@ -466,49 +471,50 @@
       background: rgba(0,0,0,0.95);
       backdrop-filter: blur(20px);
       border: 4px solid #FFD700;
-      border-radius: 25px;
-      padding: clamp(30px, 8vw, 50px);
-      max-width: 90%;
-      width: 500px;
+      border-radius: 20px;
+      padding: clamp(25px, 6vw, 50px);
+      max-width: 95%;
+      width: 95%;
       text-align: center;
       z-index: 200;
-      max-height: 90vh;
+      max-height: 80vh;
       overflow-y: auto;
       box-shadow: 0 10px 60px rgba(255, 215, 0, 0.5);
       animation: resultPopIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-    
+
     @keyframes resultPopIn {
       0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
       100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
     }
-    
+
     .race-result h2 {
-      font-size: clamp(1.8em, 6vw, 3em);
-      margin-bottom: 20px;
+      font-size: clamp(2em, 8vw, 3em);
+      margin-bottom: 15px;
       animation: resultPulse 1s ease-in-out infinite;
     }
-    
+
     @keyframes resultPulse {
       0%, 100% { transform: scale(1); }
       50% { transform: scale(1.05); }
     }
-    
+
     .race-result p {
-      font-size: clamp(1em, 4vw, 1.5em);
-      margin: 20px 0;
+      font-size: clamp(1.3em, 5vw, 1.5em);
+      margin: 15px 0;
+      font-weight: bold;
     }
-    
-    .race-result.win h2 { 
-      color: #32CD32; 
+
+    .race-result.win h2 {
+      color: #32CD32;
       text-shadow: 0 0 30px #32CD32, 0 0 50px #32CD32;
     }
-    
-    .race-result.lose h2 { 
-      color: #FF6347; 
+
+    .race-result.lose h2 {
+      color: #FF6347;
       text-shadow: 0 0 30px #FF6347, 0 0 50px #FF6347;
     }
-    
+
     @media (min-width: 768px) {
       .betting-screen {
         max-width: 600px;
@@ -517,11 +523,11 @@
         border: 6px ridge #FFD700;
         border-radius: 15px;
       }
-      
+
       .container {
         padding: 10px;
       }
-      
+
       .race-info {
         top: 20px;
         left: 20px;
@@ -529,20 +535,26 @@
         border-radius: 18px;
         padding: 15px;
       }
-      
+
       .race-commentary {
         top: 120px;
         border-radius: 15px;
         padding: 12px 25px;
         max-width: 70%;
       }
-      
+
       .race-stats {
         bottom: 20px;
         left: 20px;
         right: 20px;
         border-radius: 18px;
         padding: 15px;
+      }
+
+      .race-result {
+        width: 500px;
+        max-width: 90%;
+        border-radius: 25px;
       }
     }
   </style>
@@ -555,15 +567,15 @@
   <div class="container">
     <div id="bettingScreen" class="betting-screen">
       <h1>🏜️ DUNE RUSH</h1>
-      
+
       <p>Pick your champion camel!</p>
-      
+
       <div class="camel-grid" id="camelGrid"></div>
-      
+
       <div class="bet-controls">
         <h3>💰 BET AMOUNT</h3>
         <input type="number" id="betInput" class="bet-amount" value="50" min="10" max="500">
-        
+
         <div class="bet-buttons">
           <button class="bet-btn" onclick="setBet(10)">10</button>
           <button class="bet-btn" onclick="setBet(50)">50</button>
@@ -571,7 +583,7 @@
           <button class="bet-btn" onclick="setBet(250)">250</button>
         </div>
       </div>
-      
+
       <div class="payout-info">
         <h4>🏆 PAYOUTS</h4>
         <div class="payout-item">
@@ -591,7 +603,7 @@
           <span style="color: #FF6347;">Lose</span>
         </div>
       </div>
-      
+
       <button onclick="startRace()">
         🏁 START RACE
       </button>
@@ -602,13 +614,13 @@
     <div class="race-canvas-container" id="canvasContainer">
       <canvas id="raceCanvas"></canvas>
     </div>
-    
+
     <div class="race-info">
       <h2>BET: <span id="displayBet">50</span>G on <span id="displayCamel">???</span></h2>
     </div>
-    
+
     <div id="commentary" class="race-commentary" style="display: none;"></div>
-    
+
     <div class="race-stats">
       <div>
         <div>
@@ -619,7 +631,7 @@
         </div>
       </div>
     </div>
-    
+
     <div id="raceResult" class="race-result">
       <h2 id="resultText"></h2>
       <p id="resultDetail"></p>
@@ -706,26 +718,26 @@
     function startRace() {
       const betInput = document.getElementById('betInput');
       GameState.betAmount = parseInt(betInput.value) || 50;
-      
+
       if (GameState.selectedCamel === null) {
         alert('🐪 Pick a camel first!');
         return;
       }
-      
+
       if (GameState.betAmount < 10 || GameState.betAmount > GameState.gold || GameState.betAmount > 500) {
         alert('❌ Invalid bet amount!');
         return;
       }
-      
+
       GameState.gold -= GameState.betAmount;
       updateGoldDisplay();
-      
+
       document.getElementById('displayBet').textContent = GameState.betAmount;
       document.getElementById('displayCamel').textContent = CAMELS[GameState.selectedCamel].name;
-      
+
       document.getElementById('bettingScreen').style.display = 'none';
       document.getElementById('raceView').style.display = 'block';
-      
+
       RaceEngine.init();
     }
 
@@ -733,7 +745,7 @@
       document.getElementById('raceResult').style.display = 'none';
       document.getElementById('raceView').style.display = 'none';
       document.getElementById('bettingScreen').style.display = 'block';
-      
+
       GameState.selectedCamel = null;
       document.querySelectorAll('.camel-option').forEach(el => {
         el.classList.remove('selected');
@@ -753,17 +765,24 @@
       init() {
         this.container = document.getElementById('canvasContainer');
         this.canvas = document.getElementById('raceCanvas');
-        
+
         const dpr = window.devicePixelRatio || 1;
-        this.canvas.width = 1400 * dpr;
-        this.canvas.height = 500 * dpr;
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+        this.canvas.width = viewportWidth * dpr;
+        this.canvas.height = viewportHeight * dpr;
         this.ctx = this.canvas.getContext('2d');
         this.ctx.scale(dpr, dpr);
+
+        this.raceLength = viewportWidth * 0.8;
+
+        const laneSpacing = viewportHeight / 8;
+        const startY = viewportHeight * 0.15;
 
         this.camels = CAMELS.map((c, i) => ({
           ...c,
           x: 50,
-          y: 65 + (i * 70),
+          y: startY + (i * laneSpacing),
           distance: 0,
           speed: 4 + Math.random() * 4,
           baseSpeed: 4 + Math.random() * 4,
@@ -777,7 +796,7 @@
         this.dustParticles = [];
         this.commentaryTimer = 0;
         this.lastCommentary = 0;
-        
+
         setTimeout(() => {
           this.showCommentary("AND THEY'RE OFF!");
           this.animate();
@@ -837,12 +856,12 @@
         const bounceY = Math.sin(bounce) * 6;
         const baseY = y + bounceY;
         const scale = 1.3;
-        
+
         ctx.save();
         ctx.translate(x, baseY);
         ctx.scale(scale, scale);
         ctx.translate(-x, -baseY);
-        
+
         ctx.save();
         ctx.globalAlpha = 0.3;
         ctx.fillStyle = '#000';
@@ -953,7 +972,7 @@
         ctx.font = 'bold 14px Arial';
         ctx.strokeText(CAMELS[this.camels.indexOf(this.camels.find(c => c.y === y))].name, x + 10, baseY - 25);
         ctx.fillText(CAMELS[this.camels.indexOf(this.camels.find(c => c.y === y))].name, x + 10, baseY - 25);
-        
+
         ctx.restore();
       },
 
@@ -979,13 +998,15 @@
         if (!this.running) return;
 
         const ctx = this.ctx;
+        const canvasWidth = this.canvas.width / (window.devicePixelRatio || 1);
+        const canvasHeight = this.canvas.height / (window.devicePixelRatio || 1);
 
-        const skyGrad = ctx.createLinearGradient(0, 0, 0, 500);
+        const skyGrad = ctx.createLinearGradient(0, 0, 0, canvasHeight);
         skyGrad.addColorStop(0, '#87CEEB');
         skyGrad.addColorStop(0.5, '#F4A460');
         skyGrad.addColorStop(1, '#DEB887');
         ctx.fillStyle = skyGrad;
-        ctx.fillRect(0, 0, 1400, 500);
+        ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
         const sunGrad = ctx.createRadialGradient(200, 80, 0, 200, 80, 70);
         sunGrad.addColorStop(0, '#FFD700');
@@ -1002,30 +1023,33 @@
         ctx.fill();
 
         ctx.fillStyle = 'rgba(139, 115, 85, 0.6)';
+        const mountainSpacing = canvasWidth / 6;
         for (let i = 0; i < 6; i++) {
           ctx.beginPath();
-          ctx.moveTo(i * 250 - 50, 220);
-          ctx.lineTo(i * 250 + 75, 120 + Math.sin(i) * 20);
-          ctx.lineTo(i * 250 + 200, 220);
+          ctx.moveTo(i * mountainSpacing - 50, canvasHeight * 0.4);
+          ctx.lineTo(i * mountainSpacing + 75, canvasHeight * 0.25 + Math.sin(i) * 20);
+          ctx.lineTo(i * mountainSpacing + 200, canvasHeight * 0.4);
           ctx.closePath();
           ctx.fill();
         }
 
-        const groundGrad = ctx.createLinearGradient(0, 200, 0, 500);
+        const groundGrad = ctx.createLinearGradient(0, canvasHeight * 0.4, 0, canvasHeight);
         groundGrad.addColorStop(0, '#DEB887');
         groundGrad.addColorStop(0.5, '#D2B48C');
         groundGrad.addColorStop(1, '#CD853F');
         ctx.fillStyle = groundGrad;
-        ctx.fillRect(0, 200, 1400, 300);
+        ctx.fillRect(0, canvasHeight * 0.4, canvasWidth, canvasHeight * 0.6);
 
+        const palmSpacing = canvasWidth / 8;
         for (let i = 0; i < 8; i++) {
-          const px = i * 180 + 100;
+          const px = i * palmSpacing + 100;
+          const treeY = canvasHeight * 0.35;
           ctx.fillStyle = '#8B4513';
-          ctx.fillRect(px - 5, 170, 10, 50);
+          ctx.fillRect(px - 5, treeY, 10, 50);
           ctx.fillStyle = '#228B22';
           for (let j = 0; j < 6; j++) {
             ctx.beginPath();
-            ctx.ellipse(px, 170, 25, 8, (Math.PI / 3) * j, 0, Math.PI * 2);
+            ctx.ellipse(px, treeY, 25, 8, (Math.PI / 3) * j, 0, Math.PI * 2);
             ctx.fill();
           }
         }
@@ -1033,29 +1057,33 @@
         ctx.strokeStyle = 'rgba(139, 69, 19, 0.4)';
         ctx.lineWidth = 2;
         ctx.setLineDash([20, 15]);
+        const laneSpacing = canvasHeight / 8;
+        const startY = canvasHeight * 0.15;
         for (let i = 0; i < 6; i++) {
           ctx.beginPath();
-          ctx.moveTo(0, 65 + i * 70);
-          ctx.lineTo(1400, 65 + i * 70);
+          ctx.moveTo(0, startY + i * laneSpacing);
+          ctx.lineTo(canvasWidth, startY + i * laneSpacing);
           ctx.stroke();
         }
         ctx.setLineDash([]);
 
-        const finishX = 1280;
-        for (let i = 0; i < 12; i++) {
+        const finishX = canvasWidth * 0.85;
+        const finishSquareSize = canvasHeight / 15;
+        const numFinishRows = Math.floor(canvasHeight / finishSquareSize);
+        for (let i = 0; i < numFinishRows; i++) {
           for (let j = 0; j < 3; j++) {
             ctx.fillStyle = (i + j) % 2 === 0 ? '#000' : '#fff';
-            ctx.fillRect(finishX + j * 40, i * 40, 40, 40);
+            ctx.fillRect(finishX + j * finishSquareSize, i * finishSquareSize, finishSquareSize, finishSquareSize);
           }
         }
 
         ctx.save();
-        ctx.translate(finishX + 60, 250);
+        ctx.translate(finishX + finishSquareSize * 1.5, canvasHeight / 2);
         ctx.rotate(-Math.PI / 2);
         ctx.fillStyle = '#FFD700';
         ctx.strokeStyle = '#000';
-        ctx.lineWidth = 4;
-        ctx.font = 'bold 36px Arial';
+        ctx.lineWidth = 5;
+        ctx.font = 'bold 48px Arial';
         ctx.strokeText('FINISH', 0, 0);
         ctx.fillText('FINISH', 0, 0);
         ctx.restore();
@@ -1064,7 +1092,7 @@
         this.drawDust();
 
         let winner = null;
-        
+
         this.commentaryTimer++;
 
         this.camels.forEach(c => {
@@ -1072,7 +1100,9 @@
           c.distance += c.speed;
           c.bounce += 0.2;
 
-          const x = 50 + (c.distance / this.raceLength) * 1180;
+          const canvasWidth = this.canvas.width / (window.devicePixelRatio || 1);
+          const travelDistance = canvasWidth * 0.8;
+          const x = 50 + (c.distance / this.raceLength) * travelDistance;
 
           if (Math.random() < 0.15) {
             this.createDust(x, c.y);
@@ -1121,7 +1151,7 @@
 
         const pos = sorted.findIndex(c => c.isMe) + 1;
         const pct = Math.min(100, ((this.myCamel.distance / this.raceLength) * 100)).toFixed(0);
-        
+
         document.getElementById('position').textContent = `${pos}/6`;
         document.getElementById('progress').textContent = `${pct}%`;
 
