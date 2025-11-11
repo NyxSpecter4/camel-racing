@@ -112,11 +112,11 @@
       backdrop-filter: none;
       border: 6px ridge #FFD700;
       border-radius: 15px;
-      padding: 8px;
+      padding: 8px 8px 80px 8px;
       box-shadow: 0 0 40px rgba(255,0,0,0.5), 0 0 80px rgba(255,215,0,0.3), inset 0 0 30px rgba(255,215,0,0.1);
       animation: slideUp 0.6s ease-out;
       height: calc(100vh - 72px);
-      overflow: hidden;
+      overflow-y: auto;
       display: flex;
       flex-direction: column;
     }
@@ -681,7 +681,7 @@
       { id: 14, name: 'Dune Raider', color: '#D2691E', jockey: '👨' }
     ];
 
-    let currentCamels = []; // Store the 6 randomly selected camels
+    let currentCamels = [];
 
     function saveGold() {
       try {
@@ -713,7 +713,6 @@
       title.textContent = '🎰 SPINNING THE SLOT MACHINE! 🎰';
       title.style.animation = 'titleGlow 0.3s ease-in-out infinite';
 
-      // Shuffle and pick 6 random camels
       const shuffled = [...CAMELS].sort(() => Math.random() - 0.5);
       currentCamels = shuffled.slice(0, 6);
 
@@ -728,7 +727,6 @@
         </div>
       `).join('');
 
-      // Force animation to trigger with staggered timing
       setTimeout(() => {
         document.querySelectorAll('.camel-option').forEach((el, index) => {
           setTimeout(() => {
@@ -737,7 +735,6 @@
         });
       }, 50);
 
-      // Remove spinning class after all animations complete (6 camels * 200ms delay + 1200ms animation)
       setTimeout(() => {
         document.querySelectorAll('.camel-option').forEach(el => {
           el.classList.remove('spinning');
@@ -799,8 +796,6 @@
       document.getElementById('bettingScreen').style.display = 'block';
 
       GameState.selectedCamel = null;
-
-      // Reload new random camels - slot machine style!
       loadCamels();
     }
 
@@ -1105,7 +1100,6 @@
         }
         ctx.setLineDash([]);
 
-        // START LINE
         const startX = 100;
         for (let i = 0; i < 10; i++) {
           for (let j = 0; j < 3; j++) {
@@ -1125,7 +1119,6 @@
         ctx.fillText('START', 0, 0);
         ctx.restore();
 
-        // FINISH LINE
         const finishX = 1050;
         for (let i = 0; i < 10; i++) {
           for (let j = 0; j < 3; j++) {
