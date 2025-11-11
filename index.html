@@ -16,17 +16,29 @@
       -webkit-tap-highlight-color: transparent;
     }
 
+    html {
+      background: #0f3460;
+      min-height: 100vh;
+      min-height: -webkit-fill-available;
+      height: 100%;
+    }
+
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: linear-gradient(to bottom, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      background-attachment: fixed;
+      background-size: 100% 100%;
       min-height: 100vh;
-      height: 100vh;
+      min-height: -webkit-fill-available;
+      height: 100%;
+      width: 100%;
       color: #fff;
       overflow: hidden;
       position: fixed;
-      width: 100%;
       top: 0;
       left: 0;
+      right: 0;
+      bottom: 0;
       overscroll-behavior: none;
       -webkit-overflow-scrolling: touch;
     }
@@ -62,6 +74,7 @@
       text-align: center;
       position: relative;
       z-index: 1;
+      background: transparent;
     }
 
     .gold-bar {
@@ -96,7 +109,7 @@
       max-width: 95%;
       margin: 62px auto 5px;
       background: linear-gradient(to bottom, #1a0000 0%, #000 50%, #1a0000 100%);
-      backdrop-filter: blur(15px);
+      backdrop-filter: none;
       border: 6px ridge #FFD700;
       border-radius: 15px;
       padding: 8px;
